@@ -1,0 +1,127 @@
+\documentclass[10pt,journal]{IEEEtran}
+\usepackage{booktabs,tabularx,array}
+\usepackage{amsmath}
+\usepackage[hidelinks]{hyperref}
+\usepackage{siunitx}
+\title{Supplemental Material for TSUSC-2026-07-0200}
+\author{Nuonan Ouyang et al.}
+\begin{document}
+\maketitle
+
+\section{Additional Experimental Details}
+This supplement provides additional calibration, per-seed statistical, online deployment, energy, and test-set results for ``Shielded Q-learning for Thermally-Safe, Energy-Aware Multi-Model Intrusion Detection Scheduling on Lightweight Edge Devices.'' Calibration, Q training, online hardware experiments, physical-energy measurement, and statistical analysis were completed before the official UNSW-NB15 test was accessed. The test set was then evaluated once using fixed preprocessing and detector thresholds.
+
+\section{Device-Specific Guard Calibration}
+Both devices use independent fit, margin, and held-out coverage splits over 72 action/workload/background cells. Each split contains 2,880 windows. No coverage observation is used to refit a predictor or change a margin.
+
+\begin{table}[h]
+\caption{Accepted held-out calibration coverage.}
+\centering\footnotesize
+\begin{tabular}{lrrrr}
+\toprule
+Device & $n$ & Latency & Thermal & Joint \\
+\midrule
+Pi 3B+ & 2880 & 2879/2880 & 2880/2880 & 2879/2880 \\
+Pi 4B 8GB & 2880 & 2880/2880 & 2877/2880 & 2877/2880 \\
+\bottomrule
+\end{tabular}
+\end{table}
+
+For Pi 4B, by-action joint coverage is 1.0000 for FISVDD and TinyDL, 0.99722 for LUCID, and 0.99861 for OI-SVDD+AS-ELM. Three thermal-side uncovered observations are retained. The lowest 40-window cell coverage is 0.975. The Pi 3B+ calibration likewise retains its single uncovered joint observation and is reported without rounding to 1.0.
+
+\section{Pi 3B+ Binding-Resource Comparison}
+The accepted binding-resource campaign contains 6 policies $\times$ 10 matched seeds $\times$ 600 windows = 36,000 windows. The guard has exactly three admissible actions in every window and excludes LUCID. No fallback occurs.
+
+\begin{table*}[h]
+\caption{Pi 3B+ matched-seed aggregate results.}
+\centering\footnotesize
+\begin{tabular}{lrrrrrrrr}
+\toprule
+Policy & F1 & Cum. reward & Mean E2E ms & P99 E2E ms & Controller ms & Switches & Switch cost & Viol. \\
+\midrule
+FSSQL-R & 0.8523 & 326.06 & 8.3149 & 9.5477 & 5.9033 & 267.4 & 5.348 & 0 \\
+Safe-Greedy & 0.8708 & 350.34 & 7.9775 & 8.9389 & 5.9146 & 0.0 & 0 & 0 \\
+Threshold & 0.8704 & 350.04 & 7.9704 & 9.1303 & 5.9035 & 0.6 & 0.012 & 1 \\
+Unshielded-Q & 0.8523 & 329.35 & 10.1141 & 16.3117 & 5.8988 & 221.9 & 4.438 & 0 \\
+Round-Robin & 0.8148 & 288.04 & 10.6571 & 18.2874 & 5.8860 & 599.0 & 11.980 & 0 \\
+Static-Light & 0.7203 & 203.31 & 8.2550 & 9.2435 & 5.8915 & 0.0 & 0 & 0 \\
+\bottomrule
+\end{tabular}
+\end{table*}
+
+For the primary FSSQL-R minus Safe-Greedy comparison, exact paired sign-flip tests give $p=0.00195$ for F1, cumulative reward, and switching cost, and $p=0.00586$ for mean E2E latency. The mean controller-overhead difference is $-0.0113$ ms ($p=0.23242$). Both policies have zero realized violations.
+
+The single Threshold violation occurs at seed 4109, window 111. TinyDL is selected with a guarded predicted latency of 5.147 ms and 24.297 ms headroom, but complete E2E latency is 52.522 ms. Detector inference is 0.446 ms and total controller time is 50.414 ms; no switching, thermal, frequency, or undervoltage anomaly is present. This event motivates the distinction between action-level guard calibration and complete pipeline latency.
+
+\section{Q-learning Stability Diagnostics}
+The Q-learning implementation uses 1280 states and 5120 state-action pairs, $\gamma=0.95$, $\alpha=\min\{0.5,(1+N(s,a))^{-0.6}\}$, epsilon linearly decayed from 1.0 to 0.05 by window 4500, a replay capacity of 512, and one online plus four replay updates per training window.
+
+\begin{table}[h]
+\caption{Learning checkpoints (mean across 10 training seeds).}
+\centering\scriptsize
+\setlength{\tabcolsep}{3pt}
+\begin{tabular}{lrrrr}
+\toprule
+Policy & R@600 & U@600 & R@6000 & U@6000 \\
+\midrule
+FSSQL-R & 0.483742 & 0.575863 & 0.526027 & 0.610795 \\
+Unshielded-Q & 0.488472 & 0.581728 & 0.518533 & 0.603689 \\
+\bottomrule
+\end{tabular}
+\end{table}
+
+FSSQL-R visits 29.7 states/96.3 state-actions by window 600 and 34.9/118.9 by window 6000. Its greedy-policy change rate falls from 0.006875 to 0.000156. These diagnostics support late-budget behavioral stability on visited states, not mathematical convergence over the entire state space.
+
+\section{Pi 4B Online and Physical-Energy Results}
+The Pi 4B online evaluation contains 60 policy-condition-seed cells and 36,000 windows. Two runs had incomplete contemporaneous POWER-Z traces and were repeated once under the same fixed configuration. Analyses use only complete runs, and measurements are not mixed across attempts.
+
+\begin{table*}[h]
+\caption{FSSQL-R minus Safe-Greedy paired differences on Pi 4B (five matched seeds per condition).}
+\centering\scriptsize
+\setlength{\tabcolsep}{3pt}
+\begin{tabular}{llrrrrr}
+\toprule
+Load & Metric & Mean diff. & 95\% bootstrap CI & Paired $t$ $p$ & Exact Wilcoxon $p$ & $d_z$ \\
+\midrule
+B0 & F1 & 0.1209 & [0.0664, 0.1535] & 0.0114 & 0.0625 & 1.984 \\
+B0 & Cum. reward & 129.4 & [72.0, 162.6] & 0.0106 & 0.0625 & 2.026 \\
+B0 & P99 E2E ms & 0.323 & [0.091, 0.548] & 0.0562 & 0.1250 & 1.191 \\
+B0 & Total energy J & -0.471 & [-13.829, 12.078] & 0.9516 & 1.0000 & -0.029 \\
+\midrule
+B1 & F1 & 0.1172 & [0.0596, 0.1515] & 0.0152 & 0.0625 & 1.821 \\
+B1 & Cum. reward & 124.8 & [64.0, 159.4] & 0.0147 & 0.0625 & 1.838 \\
+B1 & P99 E2E ms & -0.129 & [-0.560, 0.300] & 0.6341 & 0.6250 & -0.230 \\
+B1 & Total energy J & -3.427 & [-7.088, -0.695] & 0.1360 & 0.0625 & -0.833 \\
+\midrule
+B2 & F1 & 0.1141 & [0.0602, 0.1489] & 0.0136 & 0.0625 & 1.882 \\
+B2 & Cum. reward & 122.0 & [65.2, 157.8] & 0.0126 & 0.0625 & 1.923 \\
+B2 & P99 E2E ms & 0.033 & [-0.506, 0.700] & 0.9281 & 0.8125 & 0.043 \\
+B2 & Total energy J & -1.210 & [-11.564, 10.608] & 0.8533 & 0.6250 & -0.088 \\
+\bottomrule
+\end{tabular}
+\end{table*}
+
+The Pi 4B guard is nonbinding in the accepted online conditions: the mean safe-set size is four for every policy/condition. Mean controller time across all conditions is 3.919 ms for FSSQL-R, 3.885 ms for Safe-Greedy, 4.277 ms for Static-Light, and 3.946 ms for Threshold. Mean selected-detector inference is 0.415, 0.426, 0.648, and 0.299 ms, respectively. This confirms that controller work is a material part of online cost.
+
+\section{One-shot Official Test}
+After model, preprocessing, threshold, and scheduling choices were fixed, all 82,332 rows of the official UNSW-NB15 test were evaluated once. No retraining or threshold selection followed test access.
+
+\begin{table*}[h]
+\caption{Official test confusion matrices and ranking metrics.}
+\centering\footnotesize
+\begin{tabular}{lrrrrrrrrrr}
+\toprule
+Detector & TP & FP & FN & TN & Precision & Recall & F1 & FPR & AUROC & PR-AUC \\
+\midrule
+FISVDD & 45332 & 37000 & 0 & 0 & 0.5506 & 1.0000 & 0.7102 & 1.0000 & 0.5351 & 0.6219 \\
+LUCID & 45211 & 19188 & 121 & 17812 & 0.7020 & 0.9973 & 0.8240 & 0.5186 & 0.8621 & 0.8469 \\
+TinyDL & 44414 & 12514 & 918 & 24486 & 0.7802 & 0.9797 & 0.8686 & 0.3382 & 0.9704 & 0.9784 \\
+OI-SVDD+AS-ELM & 45218 & 15581 & 114 & 21419 & 0.7437 & 0.9975 & 0.8521 & 0.4211 & 0.9513 & 0.9584 \\
+\bottomrule
+\end{tabular}
+\end{table*}
+
+\section{Stateful Extension Stop Result}
+A planned Pi 3B+ stateful-transition extension measured action-dependent service timing under B0/B1/B2, but the predefined service-model check could not simultaneously demonstrate backlog accumulation in B2/B1 and recovery in B0 without introducing a new arrival rate or changing the service criterion. The extension was therefore stopped before policy runs. This result does not provide evidence for or against Q-learning superiority.
+
+\end{document}

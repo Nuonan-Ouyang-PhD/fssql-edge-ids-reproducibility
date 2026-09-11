@@ -1,0 +1,325 @@
+\documentclass[journal]{IEEEtran}
+\usepackage{cite}
+\usepackage{amsmath,amssymb,amsfonts,mathtools,amsthm}
+\usepackage{graphicx}
+\usepackage{booktabs,multirow,array,tabularx}
+\usepackage{algorithm}
+\usepackage{algpseudocode}
+\usepackage{siunitx}
+\usepackage{balance}
+\usepackage[hidelinks]{hyperref}
+\usepackage[capitalize,nameinlink]{cleveref}
+\usepackage{xurl}
+\usepackage{doi}
+\usepackage{enumitem}
+\usepackage{microtype}
+\usepackage{tikz}
+\usetikzlibrary{positioning,arrows.meta}
+\hypersetup{pdftitle={Shielded Q-learning for Thermally-Safe, Energy-Aware Multi-Model Intrusion Detection Scheduling on Lightweight Edge Devices},pdfauthor={Nuonan Ouyang et al.}}
+\newtheorem{proposition}{Proposition}
+\newcommand{\Aset}{\mathcal{A}}
+\newcommand{\Asafe}{\mathcal{A}_{\mathrm{safe}}}
+\newcommand{\E}{\mathbb{E}}
+\newcommand{\ind}{\mathbb{I}}
+\newcommand{\clipplus}[1]{\left[#1\right]_{+}}
+\newcommand{\clipunit}[1]{\left[#1\right]_{0}^{1}}
+\newcommand{\tauMax}{40}
+\newcommand{\TMax}{82}
+
+\title{Shielded Q-learning for Thermally-Safe, Energy-Aware Multi-Model Intrusion Detection Scheduling on Lightweight Edge Devices}
+\author{Nuonan~Ouyang, Adrian~Shatte, Zhigang~Lu, Chao~Chen, and~Wei~Xiang%
+\thanks{N. Ouyang (corresponding author) and A. Shatte are with the College of Science and Engineering, James Cook University, Australia (e-mail: nuonan.ouyang@my.jcu.edu.au; adrian.shatte@jcu.edu.au).}%
+\thanks{Z. Lu is with the School of Computer, Data and Mathematical Sciences, Western Sydney University, Australia (e-mail: z.lu@westernsydney.edu.au).}%
+\thanks{C. Chen is with the School of Accounting, Information Systems \& Supply Chain, RMIT University, Australia (e-mail: chao.chen@rmit.edu.au).}%
+\thanks{W. Xiang is with the Australian Centre for AI in Medical Innovation and the Cisco--La Trobe Centre for AI and Internet of Things, La Trobe University, Australia (e-mail: w.xiang@latrobe.edu.au).}%
+}
+\markboth{IEEE Transactions on Sustainable Computing}{Ouyang \MakeLowercase{et al.}: Shielded Q-learning for Thermally-Safe IDS Scheduling}
+
+\begin{document}
+\maketitle
+
+\begin{abstract}
+Lightweight edge intrusion detection must balance detection quality with strict latency, thermal, and energy budgets. We formulate multi-model intrusion-detection-system (IDS) scheduling as a constrained Markov decision process and propose Feasible-Set Shielded Q-learning (FSSQL-R): a calibrated runtime guard first restricts model selection to actions predicted to satisfy per-window latency and temperature caps, after which masked Q-learning selects within the admissible set. We evaluate the method through online measurements on Raspberry Pi 3B+ and Raspberry Pi 4B 8GB platforms, with separate device-specific calibration. Held-out guard coverage is 2879/2880 (0.999653) on the Pi 3B+ and 0.998958 joint coverage on the Pi 4B, with device-specific calibration. Under a binding Pi 3B+ regime, the shield excludes LUCID but FSSQL-R does not outperform the simpler Safe-Greedy controller: mean F1 is 0.8523 versus 0.8708 and mean reward is 0.5434 versus 0.5839. In contrast, in 60 Pi 4B online runs across three background-load conditions, FSSQL-R improves paired-seed F1 over Safe-Greedy by 0.114--0.121 and cumulative reward by 122--129, while P99 latency remains similar and both have zero realized violations. A conventional threshold controller remains highly competitive. Direct POWER-Z KM003C measurements quantify DC input energy, but do not establish a consistent FSSQL-R energy advantage. These results support calibrated feasible-set enforcement while showing that the incremental value of Q-learning is device- and regime-dependent rather than universal.
+\end{abstract}
+
+\begin{IEEEkeywords}
+Lightweight IoT, intrusion detection, dynamic model scheduling, safe reinforcement learning, shielding, Q-learning, thermal safety, energy measurement, Raspberry Pi.
+\end{IEEEkeywords}
+
+\section{Introduction}
+Lightweight edge devices increasingly execute intrusion detection close to data sources, but deployability is constrained by latency deadlines, thermal headroom, and energy budgets. The central challenge is not only classification accuracy: a detector that is strong offline can become impractical when sustained execution increases latency, heats the device, or consumes excessive energy \cite{banbury2021mlperftiny,reddi2019mlperfinference,tan2024thermalnpu}. Maintaining a heterogeneous model pool and selecting among detectors online is therefore attractive, particularly when traffic risk and resource state vary over time.
+
+Reinforcement learning (RL) provides a natural mechanism for long-horizon model selection, but unconstrained exploration can violate deployment limits. Constrained MDP approaches typically control expected cost \cite{altman1999cmdp,achiam2017cpo,chow2018lyapunov}, whereas embedded deadlines and temperature limits are operational constraints that may need runtime enforcement. Shielding addresses this by blocking actions that fail an admissibility test before the RL policy acts \cite{alshiekh2018shielding,carr2023partialshielding,koenighofer2025shields}. Recent IDS work has likewise combined a safety-aware RL policy with a runtime shield, although in a 5G self-healing remediation setting rather than resource-constrained detector scheduling \cite{malwi2026safetyaware}.
+
+This paper studies the deployment problem of selecting among heterogeneous on-device IDS models while accounting for detector utility, switching, latency, temperature, and energy. FSSQL-R constructs a calibrated feasible set and applies Q-learning only within that set. We examine whether learning adds practical value beyond the shield, whether the controller is viable in online execution, how a simple threshold controller compares, and how latency, thermal behavior, and measured energy trade off across devices and operating conditions.
+
+The results show that shielding is useful as a device-specific feasibility layer, but Q-learning is not universally superior. On the Pi 3B+, Safe-Greedy outperforms FSSQL-R under a stationary binding regime; on the Pi 4B, FSSQL-R consistently improves F1 and reward over Safe-Greedy, while a no-training threshold controller remains competitive. Physical energy differences are small and not consistently significant. We therefore make four contributions:
+\begin{enumerate}[leftmargin=*,itemsep=1pt]
+\item We formulate the guard as a device-calibrated feasible-set mechanism whose empirical margins constrain action selection without implying an unconditional end-to-end safety guarantee.
+\item We compare FSSQL-R with a conventional threshold controller and other baselines using matched-seed analysis, and examine learning stability over 6000 training windows, 1280 states, and 5120 state-action pairs.
+\item We evaluate real online closed-loop execution on two Raspberry Pi configurations, including controller and switching overhead, independent device-specific guard calibration, and background-load robustness.
+\item We measure DC input-side power and energy directly with a POWER-Z KM003C and evaluate all 82,332 official UNSW-NB15 test rows once using fixed preprocessing and detector thresholds, keeping deployment-workload results separate from independent detector generalization.
+\end{enumerate}
+
+\section{Related Work and Positioning}
+\subsection{Lightweight IDS and adaptive inference}
+Lightweight IDS research spans classical one-class methods, extreme learning machines, compact deep models, and TinyML-style deployment \cite{tax2004svdd,huang2006elm,doriguzzi2020lucid,fusco2024tinyids,warden2019tinyml,lin2020mcunet}. The practical problem addressed here is complementary: given several frozen detectors with different quality/resource profiles, which detector should run at each decision window?
+
+\subsection{Safe RL and shielding}
+Safe RL covers expectation-constrained optimization, Lyapunov methods, and action shielding \cite{garcia2015safesurvey,achiam2017cpo,chow2018lyapunov,alshiekh2018shielding}. FSSQL-R is not novel because shielding itself is new; rather, it instantiates a calibrated, device-specific feasible-action layer for multi-model IDS scheduling and separates this from utility optimization. Malwi \emph{et al.} \cite{malwi2026safetyaware} use a runtime safety shield for self-healing remediation actions in 5G-IoT. Our setting differs in the action semantics and physical constraints: the actions are heterogeneous IDS models, and admissibility is derived from latency/thermal calibration under an explicit resource budget.
+
+\subsection{Relationship to simpler and earlier controllers}
+The baseline set includes Static-Light, Round-Robin, Safe-Greedy, Unshielded-Q, and a conventional threshold controller. The Unshielded-Q baseline uses the same state, reward, and Q-learning implementation without feasible-set masking. Earlier energy-aware and multi-objective precursor formulations are not archival publications and are not used to establish novelty. The Q-learning configuration used in the experiments is reported explicitly and was fixed before formal evaluation.
+
+\section{Problem Formulation}
+We consider fixed decision windows of length $\Delta=100$ ms. An action $a_t\in\Aset=\{1,\ldots,K\}$ selects one of $K=4$ frozen IDS models. The state is
+\begin{equation}
+s_t=(z_t,T_t,b_t,q_t,a_{t-1}),
+\label{eq:state}
+\end{equation}
+where $z_t$ is a lightweight risk/workload descriptor, $T_t$ is CPU temperature, $b_t$ is a normalized energy-state proxy used by the controller reward, $q_t$ is backlog state, and $a_{t-1}$ captures switching history.
+
+The per-window utility is
+\begin{equation}
+\begin{split}
+r_t = r_{\rm sec}(z_t,a_t)-\lambda_E e(a_t)
+-\lambda_Q\psi(q_t)-\lambda_S c_{\rm sw}(a_{t-1},a_t),
+\end{split}
+\label{eq:reward}
+\end{equation}
+where $r_{\rm sec}$ combines the risk estimate with fixed validation TPR/FPR, and the remaining terms penalize compute/energy proxy, backlog, and switching. The deployment constraints are
+\begin{equation}
+\tau(s_t,a_t)\le \tau_{\max}=40\;\text{ms},\qquad
+T_{t+1}(s_t,a_t)\le T_{\max}=82^\circ\text{C}.
+\label{eq:caps}
+\end{equation}
+
+Let $\widehat{\tau}(s,a)$ and $\widehat{T}_{t+1}(s,a)$ be device-calibrated one-step predictors. With one-sided residual margins $\epsilon_{\tau,a}$ and $\epsilon_T$, the feasible set is
+\begin{equation}
+\begin{split}
+\Asafe(s)=\{a\in\Aset:\;&\widehat{\tau}(s,a)+\epsilon_{\tau,a}\le\tau_{\max},\\
+&\widehat{T}_{t+1}(s,a)+\epsilon_T\le T_{\max}\}.
+\end{split}
+\label{eq:safeset}
+\end{equation}
+If $\Asafe$ is nonempty, FSSQL-R chooses the maximizing Q action inside this set. Empty-set handling uses the fixed least-violating fallback, although no fallback occurred in the accepted formal online campaigns.
+
+\section{Feasible-Set Shielded Q-learning}
+\subsection{Calibrated guard}
+The guard is calibrated separately for each hardware configuration. Latency uses per-action/workload/background empirical predictors; thermal prediction uses a fitted one-step model. Predictor fitting, residual-margin estimation, and held-out coverage evaluation are separated. We use a Q0.99 one-sided residual margin with a fixed conservative buffer selected before held-out coverage is evaluated.
+
+\subsection{Masked Q-learning}
+For a nonterminal transition $(s_t,a_t,r_t,s_{t+1})$, the update is
+\begin{equation}
+\begin{split}
+Q(s_t,a_t)\leftarrow Q(s_t,a_t)+\alpha_t\big[&r_t+\gamma \max_{a'\in\Asafe(s_{t+1})}Q(s_{t+1},a')\\
+&-Q(s_t,a_t)\big].
+\end{split}
+\label{eq:q}
+\end{equation}
+The implementation has 1280 discretized states and 5120 state-action pairs. We use $\gamma=0.95$, $\alpha=\min\{0.5,(1+N(s,a))^{-0.6}\}$, and linearly decay $\epsilon$ from 1.0 to 0.05 by window 4500, retaining 0.05 thereafter. A FIFO replay buffer of 512 transitions performs one online update plus four uniformly sampled replay updates per training window. Formal evaluation uses $\epsilon=0$ and disables Q/replay updates.
+
+\subsection{Conditional safety statement}
+The safety result is conditional rather than absolute.
+\begin{proposition}[Conditional one-step admissibility]
+If the true latency and next-temperature errors are bounded by the calibrated guard margins for a state-action pair, every action admitted by \eqref{eq:safeset} satisfies the modeled one-step caps in \eqref{eq:caps}.
+\end{proposition}
+\begin{proof}
+For an admitted action, $\widehat{\tau}+\epsilon_{\tau,a}\le\tau_{\max}$ and $\widehat{T}_{t+1}+\epsilon_T\le T_{\max}$. If the corresponding positive prediction errors do not exceed the margins, the true quantities are bounded by the same cap. \qed
+\end{proof}
+The empirical residual distribution can violate this assumption. Moreover, complete end-to-end latency includes controller/runtime effects beyond the modeled detector/service component. We therefore report held-out coverage and realized online violations explicitly rather than describing the calibration as an unconditional guarantee.
+
+\section{Experimental Method}
+\subsection{Data and model pool}
+We use UNSW-NB15 \cite{moustafa2015unsw}. The official training file is split into group-safe development partitions for model training, validation, and scheduler development. The official 82,332-row test set is sealed throughout calibration, scheduler training, hardware experiments, and statistical analysis, then opened once for the final detector-generalization evaluation. The fixed action pool is FISVDD, LUCID, TinyDL, and OI-SVDD+AS-ELM.
+
+\subsection{Hardware and calibration}
+We evaluate a Raspberry Pi 3 Model B+ and a Raspberry Pi 4 Model B with 8 GB RAM. The Pi 3B+ is operated with a heatsink and continuously active fan inside an open-top case; the Pi 4B uses active cooling. Accepted formal runs use the \texttt{performance} governor and reject current throttling/undervoltage events or frequency violations. The two devices are calibrated independently; Pi 3B+ predictor/margin artifacts are never reused on the Pi 4B.
+
+\begin{table}[t]
+\caption{Consolidated experimental parameters.}
+\label{tab:params}
+\centering\footnotesize
+\begin{tabularx}{\columnwidth}{@{}l>{\raggedright\arraybackslash}X@{}}
+\toprule
+Parameter & Value \\
+\midrule
+Decision window & 100 ms \\
+Latency cap $\tau_{\max}$ & 40 ms \\
+Thermal cap $T_{\max}$ & $82^\circ$C \\
+Actions & 4 IDS models \\
+Q states / state-actions & 1280 / 5120 \\
+Discount $\gamma$ & 0.95 \\
+Replay capacity & 512 \\
+Pi 3B+ binding matrix & 6 policies $\times$ 10 seeds $\times$ 600 windows \\
+Pi 4B online matrix & 4 policies $\times$ 3 loads $\times$ 5 seeds $\times$ 600 windows \\
+Pi 4B loads & $n=16$, B0/B1/B2 background CPU \\
+Energy meter & POWER-Z KM003C, direct HID \\
+Energy boundary & DC input side of Pi 4B power path \\
+\bottomrule
+\end{tabularx}
+\end{table}
+
+Calibration uses 72 action/workload/background cells (4 actions $\times$ 6 batch sizes $\times$ 3 background conditions) with separate fit, margin, and held-out coverage splits, each containing 2880 windows. Table~\ref{tab:coverage} reports the accepted held-out coverage.
+
+\begin{table}[t]
+\caption{Held-out empirical guard coverage (no post-coverage tuning).}
+\label{tab:coverage}
+\centering\footnotesize
+\begin{tabular}{lccc}
+\toprule
+Device & Latency & Thermal & Joint \\
+\midrule
+Pi 3B+ & 0.999653 & 1.000000 & 0.999653 \\
+Pi 4B 8GB & 1.000000 & 0.998958 & 0.998958 \\
+\bottomrule
+\end{tabular}
+\end{table}
+
+\subsection{Baselines and online execution}
+Safe-Greedy uses the same $\Asafe$ as FSSQL-R but maximizes current security utility without temporal learning. Unshielded-Q removes feasible-set masking. Static-Light fixes the light action. Round-Robin cycles through the pool. The added no-training Threshold controller uses development-calibrated temperature/backlog/risk thresholds: high temperature or backlog selects the light action; sufficiently cool/low-backlog high-risk state selects the highest-validation-utility action; otherwise it retains the previous action.
+
+On the Pi 3B+, a stationary binding-resource matrix compares six policies over 10 matched seeds. The accepted guard has $|\Asafe|=3$ in every window and excludes LUCID. On the Pi 4B, we run 60 complete online experiments: FSSQL-R, Safe-Greedy, Threshold, and Static-Light under B0, B1, and B2 background load, with five matched seeds and 600 windows per run. Every window records preprocessing, telemetry, state construction, guard/admissible-set construction, policy selection, Q lookup, detector inference, switching, total controller time, complete end-to-end latency, temperature, frequency, fault flags, action, and post-action confusion-matrix contributions.
+
+\subsection{Physical energy measurement}
+A POWER-Z KM003C measures the Pi 4B DC input path at approximately 10 samples/s. Each formal run includes at least 5 s pre-roll and 5 s post-roll. Energy is computed by trapezoidal integration of measured power using actual Mac monotonic timestamps over the run ACK boundaries. Two initial runs with invalid meter binding were preserved as technical failures and repeated under the predefined technical invalidation rule; the accepted set contains 60 complete scientific cells and 36,000 windows. Primary energy results are absolute input energy without idle subtraction.
+
+\subsection{Statistics}
+The statistical unit is the matched run/seed, never a pooled window. Pi 3B+ paired comparisons use 10 matched seeds; Pi 4B uses five matched seeds per condition. We report raw paired values, mean/SD, bootstrap 95\% CIs for mean differences, paired tests, and effect sizes. Because $n=5$ limits exact nonparametric power, we report both paired $t$ and exact Wilcoxon results for the Pi 4B comparison rather than treating one test as definitive.
+
+\section{Results}
+\subsection{RQ1: Does calibrated shielding create a meaningful feasible set?}
+The Pi 3B+ held-out joint coverage is 2879/2880 (0.999653); the single uncovered point is retained. Under the binding-resource experiment, the guard excludes LUCID and maintains exactly three admissible actions in all 36,000 windows. Thus, on this constrained device the shield actively changes the action set. In contrast, all Pi 4B online windows retain all four actions ($|\Asafe|=4$). This cross-device result shows why calibration is hardware-specific: the same 40-ms operating cap is binding on the Pi 3B+ workload but nonbinding on the stronger Pi 4B for the evaluated online conditions.
+
+One Pi 3B+ Threshold window exceeds the 40-ms complete E2E cap (52.522 ms) despite the selected TinyDL action having a guarded predicted latency of 5.147 ms with 24.297 ms headroom. Detector inference is only 0.446 ms; the event is dominated by a 50.414-ms controller/runtime outlier. This retained event motivates the claim boundary: the guard calibrates modeled action/service latency and thermal feasibility, while complete pipeline timing must be measured empirically.
+
+\subsection{RQ2: Does Q-learning add value over Safe-Greedy?}
+Table~\ref{tab:pi3} reports the Pi 3B+ binding regime. In this regime, FSSQL-R does not improve on Safe-Greedy. Its mean F1 and reward are lower, mean E2E latency is higher, and switching is substantially greater; both methods have zero realized violations. Exact paired sign-flip tests give $p=0.00195$ for F1, reward, and switching cost, and $p=0.00586$ for mean E2E latency. The mean controller-overhead difference is not significant ($p=0.23242$).
+
+\begin{table}[t]
+\caption{Pi 3B+ binding-resource results, mean over 10 matched seeds.}
+\label{tab:pi3}
+\centering\footnotesize
+\begin{tabular}{lrrrrr}
+\toprule
+Policy & F1 & Reward & E2E ms & Switch cost & Viol. \\
+\midrule
+FSSQL-R & 0.8523 & 0.5434 & 8.3149 & 5.348 & 0 \\
+Safe-Greedy & \textbf{0.8708} & \textbf{0.5839} & \textbf{7.9775} & \textbf{0} & 0 \\
+Threshold & 0.8704 & 0.5834 & 7.9704 & 0.012 & 1 \\
+Unshielded-Q & 0.8523 & 0.5489 & 10.1141 & 4.438 & 0 \\
+Round-Robin & 0.8148 & 0.4801 & 10.6571 & 11.980 & 0 \\
+Static-Light & 0.7203 & 0.3389 & 8.2550 & 0 & 0 \\
+\bottomrule
+\end{tabular}
+\end{table}
+
+A predefined stateful-transition extension was stopped before policy evaluation because measured action service rates could not simultaneously establish the required backlog accumulation under B2/B1 and recovery under B0 without inventing a new arrival-rate rule. We therefore do not use it as evidence for or against Q-learning.
+
+On Pi 4B, the result differs. Table~\ref{tab:pi4} shows that FSSQL-R has higher F1 and cumulative reward than Safe-Greedy under all three background loads. The paired F1 mean differences are +0.1209 (B0), +0.1172 (B1), and +0.1141 (B2), with bootstrap 95\% CIs that remain positive. Paired $t$-test $p$ values are 0.011--0.015, while exact Wilcoxon $p=0.0625$ in each condition because only five pairs are available. We therefore describe this as a consistent paired advantage with large effects, not as universal significance across all tests.
+
+\begin{table*}[t]
+\caption{Pi 4B 8GB online results (mean $\pm$ SD across five matched seeds per condition).}
+\label{tab:pi4}
+\centering\footnotesize
+\begin{tabular}{llcccccc}
+\toprule
+Load & Policy & F1 & Cum. reward & P99 E2E (ms) & Controller (ms) & Energy (J) & Viol. \\
+\midrule
+B0 & FSSQL-R & $0.9235\pm0.0534$ & $333.8\pm52.2$ & $5.386\pm0.151$ & $3.909\pm0.164$ & $173.93\pm12.46$ & 0 \\
+B0 & Safe-Greedy & $0.8025\pm0.0117$ & $204.4\pm19.5$ & $5.063\pm0.279$ & $3.872\pm0.023$ & $174.40\pm9.42$ & 0 \\
+B0 & Static-Light & $0.9332\pm0.0120$ & $346.2\pm17.9$ & $5.727\pm0.936$ & $4.114\pm0.170$ & $175.47\pm19.98$ & 0 \\
+B0 & Threshold & $\mathbf{0.9491\pm0.0117}$ & $\mathbf{362.0\pm16.5}$ & $5.436\pm1.118$ & $3.834\pm0.189$ & $183.66\pm6.24$ & 0 \\
+\midrule
+B1 & FSSQL-R & $0.9271\pm0.0580$ & $341.6\pm58.3$ & $5.021\pm0.328$ & $3.897\pm0.156$ & $164.50\pm0.58$ & 0 \\
+B1 & Safe-Greedy & $0.8099\pm0.0117$ & $216.8\pm19.9$ & $5.150\pm0.542$ & $3.879\pm0.066$ & $167.93\pm3.85$ & 0 \\
+B1 & Static-Light & $0.9387\pm0.0065$ & $356.2\pm9.5$ & $5.481\pm0.223$ & $4.075\pm0.019$ & $168.80\pm5.08$ & 0 \\
+B1 & Threshold & $\mathbf{0.9533\pm0.0106}$ & $\mathbf{371.0\pm15.1}$ & $7.927\pm5.707$ & $4.258\pm1.067$ & $181.38\pm10.36$ & 1 \\
+\midrule
+B2 & FSSQL-R & $0.9222\pm0.0711$ & $336.0\pm83.5$ & $5.352\pm0.576$ & $3.951\pm0.119$ & $171.32\pm8.16$ & 0 \\
+B2 & Safe-Greedy & $0.8081\pm0.0199$ & $214.0\pm33.8$ & $5.318\pm0.573$ & $3.905\pm0.093$ & $172.53\pm8.11$ & 0 \\
+B2 & Static-Light & $0.9374\pm0.0071$ & $354.2\pm21.1$ & $8.919\pm7.298$ & $4.643\pm1.193$ & $175.17\pm21.45$ & 1 \\
+B2 & Threshold & $\mathbf{0.9627\pm0.0040}$ & $\mathbf{377.0\pm13.6}$ & $\mathbf{4.913\pm0.283}$ & $\mathbf{3.747\pm0.026}$ & $168.24\pm4.56$ & 0 \\
+\bottomrule
+\end{tabular}
+\end{table*}
+
+These results also answer the request for a simple controller. Threshold is the strongest detector-selection baseline by mean F1 in all three Pi 4B conditions, and Static-Light is also strong. FSSQL-R therefore should not be interpreted as an overall winner; its main comparison is the incremental effect of learning relative to Safe-Greedy under the same fixed model pool.
+
+\subsection{Learning stability and complexity}
+At 600 training windows, FSSQL-R has mean rolling reward 0.4837, utility 0.5759, and visits 29.7 states/96.3 state-action pairs. At 6000 windows, these become 0.5260, 0.6108, and 34.9/118.9. The greedy-policy change rate falls from 0.006875 to 0.000156. Unshielded-Q shows a similar reduction. Because state support remains sparse and the absolute TD error remains nonzero, this evidence supports late-budget behavioral stability over visited states, not mathematical convergence over the complete 1280-state space.
+
+\subsection{RQ3: What is the measured deployment cost?}
+Controller work is material relative to detector inference. Across all Pi 4B conditions, mean controller time is 3.919 ms for FSSQL-R and 3.885 ms for Safe-Greedy, whereas mean selected-detector inference is about 0.415 and 0.426 ms, respectively. Thus, telemetry/state/guard/policy logic must be included when assessing deployment cost. FSSQL-R also switches more often (mean 26.8 switches/run across the three conditions) than Safe-Greedy (zero under the fixed utility rule).
+
+Physical power results are shown in Fig.~\ref{fig:energy}. The FSSQL-R minus Safe-Greedy paired mean energy differences are $-0.471$ J (B0), $-3.427$ J (B1), and $-1.210$ J (B2). These differences do not provide consistent statistical evidence for a physical energy advantage: B0/B2 CIs span zero, and the B1 exact Wilcoxon result is $p=0.0625$. We therefore report energy as a measured operating trade-off rather than a demonstrated energy saving.
+
+\begin{figure}[t]
+\centering
+\includegraphics[width=\columnwidth]{figures/PI4B8_POWER_ENERGY_COMPARISON.png}
+\caption{Absolute Pi 4B DC input energy measured by POWER-Z KM003C. Bars aggregate the accepted formal online runs; absolute input energy is reported without idle subtraction.}
+\label{fig:energy}
+\end{figure}
+
+\begin{figure*}[t]
+\centering
+\includegraphics[width=0.95\textwidth]{figures/PI4B8_B0_B1_B2_ROBUSTNESS.png}
+\caption{Pi 4B robustness across B0/B1/B2 background CPU load. F1 is comparatively stable; controller/E2E tails show occasional operating-system/runtime variability, while average DC input power changes modestly.}
+\label{fig:robust}
+\end{figure*}
+
+\subsection{RQ4: Independent detector generalization}
+After model, preprocessing, threshold, and scheduling choices were fixed, the official UNSW-NB15 test was evaluated once on all 82,332 rows. Table~\ref{tab:test} reports independent detector generalization. TinyDL provides the best F1 (0.8686) and the best AUROC/PR-AUC. FISVDD is retained as an adverse result: at its frozen threshold it predicts all test rows positive, yielding recall 1.0 but FPR 1.0. These test results are not mixed with the Pi 4B scheduler-development online F1 values.
+
+\begin{table}[t]
+\caption{Official UNSW-NB15 test with fixed thresholds (82,332 rows).}
+\label{tab:test}
+\centering\footnotesize
+\begin{tabular}{lrrrr}
+\toprule
+Detector & F1 & Precision & Recall & FPR \\
+\midrule
+FISVDD & 0.7102 & 0.5506 & 1.0000 & 1.0000 \\
+LUCID & 0.8240 & 0.7020 & 0.9973 & 0.5186 \\
+TinyDL & \textbf{0.8686} & \textbf{0.7802} & 0.9797 & \textbf{0.3382} \\
+OI-SVDD+AS-ELM & 0.8521 & 0.7437 & \textbf{0.9975} & 0.4211 \\
+\bottomrule
+\end{tabular}
+\end{table}
+
+\section{Discussion}
+\subsection{What the shield establishes}
+The strongest repeatable conclusion is the calibrated feasibility mechanism. On the Pi 3B+ binding workload, the guard changes the action set by excluding LUCID; on the Pi 4B, the same operating cap is nonbinding under the evaluated online loads. The shield is therefore not universally ``necessary for safety.'' Rather, it provides a device-calibrated mechanism for preventing an adaptive policy from selecting actions that are predicted to exceed the calibrated operating envelope when that envelope becomes binding.
+
+\subsection{When is Q-learning worth its complexity?}
+The two devices do not support a universal answer. In the stationary Pi 3B+ binding regime, learning adds switching cost and reduces F1/reward relative to Safe-Greedy. On Pi 4B, FSSQL-R consistently improves F1 and reward over Safe-Greedy, but Threshold and Static-Light remain highly competitive. A predefined queue-state extension could not establish the required accumulation/recovery dynamics and was stopped before policy runs. Consequently, we do not claim that long-horizon RL is always required; the evidence indicates that its value is operating-regime dependent.
+
+\subsection{Sustainability interpretation}
+We directly measure DC input energy rather than relying on a normalized proxy. This closes an important deployment-evidence gap but changes the claim: FSSQL-R does not demonstrate a consistent physical energy saving. Sustainability is therefore interpreted as measured operation under latency/thermal constraints with explicit energy accounting, not as a guaranteed reduction in joules.
+
+\section{Limitations and Threats to Validity}
+First, both hardware platforms are Raspberry Pi-class devices; MCU applicability remains prospective. Second, guard coverage is empirical and device/configuration dependent. The 0.999653 and 0.998958 joint coverage values are strong held-out evidence but not mathematical guarantees against all runtime tails. Third, complete E2E latency includes controller and operating-system effects that are not fully represented by the action-level guard; the retained Pi 3B+ controller outlier illustrates this boundary. Fourth, the Pi 4B online F1 values are measured on a fixed labeled scheduler-development workload and are intended for matched deployment comparison, not independent generalization. The official test results in Table~\ref{tab:test} provide the independent detector-generalization evidence. Fifth, only five matched Pi 4B seeds are available per condition, limiting exact nonparametric power. Finally, the original experimental artifacts were unavailable; the Q-learning configuration reported here was therefore fixed before the new experiments and is documented explicitly. The conclusions apply to this configuration.
+
+\section{Conclusion}
+This work studies multi-model IDS scheduling under explicit latency and thermal operating limits. FSSQL-R separates calibrated feasible-set construction from masked Q-learning, allowing safety enforcement and long-horizon utility optimization to be examined independently. The experiments clarify the strength and scope of the conclusions. Independent calibration gives joint coverage of 0.999653 on Pi 3B+ and 0.998958 on Pi 4B. The shield actively restricts actions on the constrained Pi 3B+ but is nonbinding on Pi 4B under the tested online loads. Q-learning is not universally superior: Safe-Greedy outperforms FSSQL-R on the Pi 3B+ stationary binding regime, while FSSQL-R consistently improves F1 and reward over Safe-Greedy on Pi 4B. A conventional threshold controller remains a strong baseline. Direct KM003C measurements provide physical DC input-energy evidence but do not establish a consistent FSSQL-R energy advantage. The resulting contribution is therefore a deployment-grounded account of calibrated feasible-set scheduling, controller cost, and the conditions under which additional learning complexity is or is not justified.
+
+\balance
+\bibliographystyle{IEEEtran}
+\bibliography{references}
+
+\begin{IEEEbiographynophoto}{Nuonan Ouyang}
+Nuonan Ouyang is a Ph.D. candidate at James Cook University, Australia. His research focuses on lightweight edge/IoT cybersecurity, on-device intrusion detection, and deployable learning-based control under resource constraints.
+\end{IEEEbiographynophoto}
+\begin{IEEEbiographynophoto}{Adrian Shatte}
+Adrian Shatte is a Senior Lecturer in Information Technology at James Cook University, Australia. His research interests include data science, intelligent systems, digital wellbeing, and applied machine learning.
+\end{IEEEbiographynophoto}
+\begin{IEEEbiographynophoto}{Zhigang Lu}
+Zhigang Lu is a Senior Lecturer with Western Sydney University, Australia. His research interests include privacy, security, robustness, and trustworthy AI/ML systems.
+\end{IEEEbiographynophoto}
+\begin{IEEEbiographynophoto}{Chao Chen}
+Chao Chen is an Associate Professor at RMIT University, Australia. His research spans AI for cybersecurity, data analytics, and security of AI systems.
+\end{IEEEbiographynophoto}
+\begin{IEEEbiographynophoto}{Wei Xiang}
+Wei Xiang is a La Trobe Distinguished Professor and Cisco Research Chair of AI and IoT at La Trobe University, Australia. His research spans communications, IoT, and applied AI.
+\end{IEEEbiographynophoto}
+\end{document}
