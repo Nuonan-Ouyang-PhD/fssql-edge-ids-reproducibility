@@ -103,6 +103,8 @@ B2 & Total energy J & -1.210 & [-11.564, 10.608] & 0.8533 & 0.6250 & -0.088 \\
 
 The Pi 4B guard is nonbinding in the accepted online conditions: the mean safe-set size is four for every policy/condition. Mean controller time across all conditions is 3.919 ms for FSSQL-R, 3.885 ms for Safe-Greedy, 4.277 ms for Static-Light, and 3.946 ms for Threshold. Mean selected-detector inference is 0.415, 0.426, 0.648, and 0.299 ms, respectively. This confirms that controller work is a material part of online cost.
 
+The detector-selection confusion counts show why the Safe-Greedy comparison must be interpreted carefully: Safe-Greedy has FPR $=1.0000$ and TN $=0$ in all 15 Pi 4B cells, i.e., it is an all-positive lower-bound controller under the frozen action-utility rule. Mean FPR for FSSQL-R is 0.2936, 0.3060, and 0.3109 for B0, B1, and B2, respectively, whereas Threshold has 0.0726, 0.0581, and 0.0490. Thus the FSSQL-R--Safe-Greedy F1 difference partly represents recovery from a degenerate all-positive point, while Threshold recovers more F1 with substantially fewer false positives.
+
 \section{One-shot Official Test}
 After model, preprocessing, threshold, and scheduling choices were fixed, all 82,332 rows of the official UNSW-NB15 test were evaluated once. No retraining or threshold selection followed test access.
 

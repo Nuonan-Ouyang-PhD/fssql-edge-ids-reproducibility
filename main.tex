@@ -39,7 +39,7 @@
 \maketitle
 
 \begin{abstract}
-Lightweight edge intrusion detection must balance detection quality with strict latency, thermal, and energy budgets. We formulate multi-model intrusion-detection-system (IDS) scheduling as a constrained Markov decision process and propose Feasible-Set Shielded Q-learning (FSSQL-R): a calibrated runtime guard first restricts model selection to actions predicted to satisfy per-window latency and temperature caps, after which masked Q-learning selects within the admissible set. We evaluate the method through online measurements on Raspberry Pi 3B+ and Raspberry Pi 4B 8GB platforms, with separate device-specific calibration. Held-out guard coverage is 2879/2880 (0.999653) on the Pi 3B+ and 0.998958 joint coverage on the Pi 4B, with device-specific calibration. Under a binding Pi 3B+ regime, the shield excludes LUCID but FSSQL-R does not outperform the simpler Safe-Greedy controller: mean F1 is 0.8523 versus 0.8708 and mean reward is 0.5434 versus 0.5839. In contrast, in 60 Pi 4B online runs across three background-load conditions, FSSQL-R improves paired-seed F1 over Safe-Greedy by 0.114--0.121 and cumulative reward by 122--129, while P99 latency remains similar and both have zero realized violations. A conventional threshold controller remains highly competitive. Direct POWER-Z KM003C measurements quantify DC input energy, but do not establish a consistent FSSQL-R energy advantage. These results support calibrated feasible-set enforcement while showing that the incremental value of Q-learning is device- and regime-dependent rather than universal.
+Lightweight edge intrusion detection must balance detection quality with strict latency, thermal, and energy budgets. We formulate multi-model intrusion-detection-system (IDS) scheduling as a constrained Markov decision process and propose Feasible-Set Shielded Q-learning (FSSQL-R): a calibrated runtime guard first restricts model selection to actions predicted to satisfy per-window latency and temperature caps, after which masked Q-learning selects within the admissible set. We evaluate the method through online measurements on Raspberry Pi 3B+ and Raspberry Pi 4B 8GB platforms, with separate device-specific calibration. Held-out guard coverage is 2879/2880 (0.999653) on the Pi 3B+ and 0.998958 joint coverage on the Pi 4B. Under a binding Pi 3B+ regime, FSSQL-R does not outperform Safe-Greedy. In 60 Pi 4B online runs, FSSQL-R improves paired-seed F1 over the degenerate all-positive Safe-Greedy baseline by 0.114--0.121, while Threshold is the strongest detector-selection baseline by mean F1 in every condition and has much lower FPR. P99 latency remains similar and neither FSSQL-R nor Safe-Greedy records a realized violation. Direct POWER-Z KM003C measurements quantify DC input energy, but do not establish a consistent FSSQL-R energy advantage. These results support calibrated feasible-set enforcement while showing that the incremental value of Q-learning is device- and regime-dependent rather than universal.
 \end{abstract}
 
 \begin{IEEEkeywords}
@@ -222,29 +222,31 @@ On Pi 4B, the result differs. Table~\ref{tab:pi4} shows that FSSQL-R has higher 
 \caption{Pi 4B 8GB online results (mean $\pm$ SD across five matched seeds per condition).}
 \label{tab:pi4}
 \centering\footnotesize
-\begin{tabular}{llcccccc}
+\begin{tabular}{llcccccccc}
 \toprule
-Load & Policy & F1 & Cum. reward & P99 E2E (ms) & Controller (ms) & Energy (J) & Viol. \\
+Load & Policy & F1 & FPR & TN & Cum. reward & P99 E2E (ms) & Controller (ms) & Energy (J) & Viol. \\
 \midrule
-B0 & FSSQL-R & $0.9235\pm0.0534$ & $333.8\pm52.2$ & $5.386\pm0.151$ & $3.909\pm0.164$ & $173.93\pm12.46$ & 0 \\
-B0 & Safe-Greedy & $0.8025\pm0.0117$ & $204.4\pm19.5$ & $5.063\pm0.279$ & $3.872\pm0.023$ & $174.40\pm9.42$ & 0 \\
-B0 & Static-Light & $0.9332\pm0.0120$ & $346.2\pm17.9$ & $5.727\pm0.936$ & $4.114\pm0.170$ & $175.47\pm19.98$ & 0 \\
-B0 & Threshold & $\mathbf{0.9491\pm0.0117}$ & $\mathbf{362.0\pm16.5}$ & $5.436\pm1.118$ & $3.834\pm0.189$ & $183.66\pm6.24$ & 0 \\
+B0 & FSSQL-R & $0.9235\pm0.0534$ & 0.2936 & 0 & $333.8\pm52.2$ & $5.386\pm0.151$ & $3.909\pm0.164$ & $173.93\pm12.46$ & 0 \\
+B0 & Safe-Greedy & $0.8025\pm0.0117$ & 1.0000 & 0 & $204.4\pm19.5$ & $5.063\pm0.279$ & $3.872\pm0.023$ & $174.40\pm9.42$ & 0 \\
+B0 & Static-Light & $0.9332\pm0.0120$ & 0.2278 & 0 & $346.2\pm17.9$ & $5.727\pm0.936$ & $4.114\pm0.170$ & $175.47\pm19.98$ & 0 \\
+B0 & Threshold & $\mathbf{0.9491\pm0.0117}$ & 0.0726 & 0 & $\mathbf{362.0\pm16.5}$ & $5.436\pm1.118$ & $3.834\pm0.189$ & $183.66\pm6.24$ & 0 \\
 \midrule
-B1 & FSSQL-R & $0.9271\pm0.0580$ & $341.6\pm58.3$ & $5.021\pm0.328$ & $3.897\pm0.156$ & $164.50\pm0.58$ & 0 \\
-B1 & Safe-Greedy & $0.8099\pm0.0117$ & $216.8\pm19.9$ & $5.150\pm0.542$ & $3.879\pm0.066$ & $167.93\pm3.85$ & 0 \\
-B1 & Static-Light & $0.9387\pm0.0065$ & $356.2\pm9.5$ & $5.481\pm0.223$ & $4.075\pm0.019$ & $168.80\pm5.08$ & 0 \\
-B1 & Threshold & $\mathbf{0.9533\pm0.0106}$ & $\mathbf{371.0\pm15.1}$ & $7.927\pm5.707$ & $4.258\pm1.067$ & $181.38\pm10.36$ & 1 \\
+B1 & FSSQL-R & $0.9271\pm0.0580$ & 0.3060 & 0 & $341.6\pm58.3$ & $5.021\pm0.328$ & $3.897\pm0.156$ & $164.50\pm0.58$ & 0 \\
+B1 & Safe-Greedy & $0.8099\pm0.0117$ & 1.0000 & 0 & $216.8\pm19.9$ & $5.150\pm0.542$ & $3.879\pm0.066$ & $167.93\pm3.85$ & 0 \\
+B1 & Static-Light & $0.9387\pm0.0065$ & 0.2252 & 0 & $356.2\pm9.5$ & $5.481\pm0.223$ & $4.075\pm0.019$ & $168.80\pm5.08$ & 0 \\
+B1 & Threshold & $\mathbf{0.9533\pm0.0106}$ & 0.0581 & 0 & $\mathbf{371.0\pm15.1}$ & $7.927\pm5.707$ & $4.258\pm1.067$ & $181.38\pm10.36$ & 1 \\
 \midrule
-B2 & FSSQL-R & $0.9222\pm0.0711$ & $336.0\pm83.5$ & $5.352\pm0.576$ & $3.951\pm0.119$ & $171.32\pm8.16$ & 0 \\
-B2 & Safe-Greedy & $0.8081\pm0.0199$ & $214.0\pm33.8$ & $5.318\pm0.573$ & $3.905\pm0.093$ & $172.53\pm8.11$ & 0 \\
-B2 & Static-Light & $0.9374\pm0.0071$ & $354.2\pm21.1$ & $8.919\pm7.298$ & $4.643\pm1.193$ & $175.17\pm21.45$ & 1 \\
-B2 & Threshold & $\mathbf{0.9627\pm0.0040}$ & $\mathbf{377.0\pm13.6}$ & $\mathbf{4.913\pm0.283}$ & $\mathbf{3.747\pm0.026}$ & $168.24\pm4.56$ & 0 \\
+B2 & FSSQL-R & $0.9222\pm0.0711$ & 0.3109 & 0 & $336.0\pm83.5$ & $5.352\pm0.576$ & $3.951\pm0.119$ & $171.32\pm8.16$ & 0 \\
+B2 & Safe-Greedy & $0.8081\pm0.0199$ & 1.0000 & 0 & $214.0\pm33.8$ & $5.318\pm0.573$ & $3.905\pm0.093$ & $172.53\pm8.11$ & 0 \\
+B2 & Static-Light & $0.9374\pm0.0071$ & 0.2166 & 0 & $354.2\pm21.1$ & $8.919\pm7.298$ & $4.643\pm1.193$ & $175.17\pm21.45$ & 1 \\
+B2 & Threshold & $\mathbf{0.9627\pm0.0040}$ & 0.0490 & 0 & $\mathbf{377.0\pm13.6}$ & $\mathbf{4.913\pm0.283}$ & $\mathbf{3.747\pm0.026}$ & $168.24\pm4.56$ & 0 \\
 \bottomrule
 \end{tabular}
 \end{table*}
 
 These results also answer the request for a simple controller. Threshold is the strongest detector-selection baseline by mean F1 in all three Pi 4B conditions, and Static-Light is also strong. FSSQL-R therefore should not be interpreted as an overall winner; its main comparison is the incremental effect of learning relative to Safe-Greedy under the same fixed model pool.
+
+For transparency, the five FSSQL-R B0 F1 values are 0.9436, 0.8285, 0.9421, 0.9565, and 0.9467. The single low seed drives much of the reported SD; its relationship to the higher switching count is retained as an observed diagnostic rather than treated as a post-hoc causal claim.
 
 \subsection{Learning stability and complexity}
 At 600 training windows, FSSQL-R has mean rolling reward 0.4837, utility 0.5759, and visits 29.7 states/96.3 state-action pairs. At 6000 windows, these become 0.5260, 0.6108, and 34.9/118.9. The greedy-policy change rate falls from 0.006875 to 0.000156. Unshielded-Q shows a similar reduction. Because state support remains sparse and the absolute TD error remains nonzero, this evidence supports late-budget behavioral stability over visited states, not mathematical convergence over the complete 1280-state space.
@@ -269,7 +271,7 @@ Physical power results are shown in Fig.~\ref{fig:energy}. The FSSQL-R minus Saf
 \end{figure*}
 
 \subsection{RQ4: Independent detector generalization}
-After model, preprocessing, threshold, and scheduling choices were fixed, the official UNSW-NB15 test was evaluated once on all 82,332 rows. Table~\ref{tab:test} reports independent detector generalization. TinyDL provides the best F1 (0.8686) and the best AUROC/PR-AUC. FISVDD is retained as an adverse result: at its frozen threshold it predicts all test rows positive, yielding recall 1.0 but FPR 1.0. These test results are not mixed with the Pi 4B scheduler-development online F1 values.
+After model, preprocessing, threshold, and scheduling choices were fixed, the official UNSW-NB15 test was evaluated once on all 82,332 rows. Table~\ref{tab:test} reports independent detector generalization. TinyDL provides the best F1 (0.8686) and the best AUROC/PR-AUC. FISVDD is retained as an adverse result: at its frozen threshold it predicts all test rows positive, yielding recall 1.0 but FPR 1.0; its AUROC (0.5351) is also close to random, indicating a ranking failure rather than threshold miscalibration alone. These test results are not mixed with the Pi 4B scheduler-development online F1 values.
 
 \begin{table}[t]
 \caption{Official UNSW-NB15 test with fixed thresholds (82,332 rows).}
