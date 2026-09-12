@@ -10,9 +10,9 @@
       "policy": "Static-Light",
       "condition": "n16/B0",
       "seed": 5101,
-      "pi_raw": "/Users/nuonanouyang/Documents/Codex/2026-09-09/TSUSC_2026_07_0200_MAJOR_REVISION_REBUILD/evidence/pi4b8_formal_matrix/pi4b8_formal_01_static_light_n16_B0_s5101/pi4b8_formal_01_static_light_n16_B0_s5101_raw/windows.csv",
-      "powerz": "/Users/nuonanouyang/Documents/Codex/2026-09-09/TSUSC_2026_07_0200_MAJOR_REVISION_REBUILD/evidence/pi4b8_formal_matrix/pi4b8_formal_01_static_light_n16_B0_s5101/POWERZ_raw.csv",
-      "handshake": "/Users/nuonanouyang/Documents/Codex/2026-09-09/TSUSC_2026_07_0200_MAJOR_REVISION_REBUILD/evidence/pi4b8_formal_matrix/pi4b8_formal_01_static_light_n16_B0_s5101/HANDSHAKE.json"
+      "pi_raw": "<frozen_source_root>/evidence/pi4b8_formal_matrix/pi4b8_formal_01_static_light_n16_B0_s5101/pi4b8_formal_01_static_light_n16_B0_s5101_raw/windows.csv",
+      "powerz": "<frozen_source_root>/evidence/pi4b8_formal_matrix/pi4b8_formal_01_static_light_n16_B0_s5101/POWERZ_raw.csv",
+      "handshake": "<frozen_source_root>/evidence/pi4b8_formal_matrix/pi4b8_formal_01_static_light_n16_B0_s5101/HANDSHAKE.json"
     },
     {
       "cell_run_id": "pi4b8_formal_02_static_light_n16_B2_s5101",
@@ -21,9 +21,9 @@
       "policy": "Static-Light",
       "condition": "n16/B2",
       "seed": 5101,
-      "pi_raw": "/Users/nuonanouyang/Documents/Codex/2026-09-09/TSUSC_2026_07_0200_MAJOR_REVISION_REBUILD/evidence/pi4b8_formal_matrix/pi4b8_formal_02_static_light_n16_B2_s5101/pi4b8_formal_02_static_light_n16_B2_s5101_raw/windows.csv",
-      "powerz": "/Users/nuonanouyang/Documents/Codex/2026-09-09/TSUSC_2026_07_0200_MAJOR_REVISION_REBUILD/evidence/pi4b8_formal_matrix/pi4b8_formal_02_static_light_n16_B2_s5101/POWERZ_raw.csv",
-      "handshake": "/Users/nuonanouyang/Documents/Codex/2026-09-09/TSUSC_2026_07_0200_MAJOR_REVISION_REBUILD/evidence/pi4b8_formal_matrix/pi4b8_formal_02_static_light_n16_B2_s5101/HANDSHAKE.json"
+      "pi_raw": "<frozen_source_root>/evidence/pi4b8_formal_matrix/pi4b8_formal_02_static_light_n16_B2_s5101/pi4b8_formal_02_static_light_n16_B2_s5101_raw/windows.csv",
+      "powerz": "<frozen_source_root>/evidence/pi4b8_formal_matrix/pi4b8_formal_02_static_light_n16_B2_s5101/POWERZ_raw.csv",
+      "handshake": "<frozen_source_root>/evidence/pi4b8_formal_matrix/pi4b8_formal_02_static_light_n16_B2_s5101/HANDSHAKE.json"
     },
     {
       "cell_run_id": "pi4b8_formal_03_threshold_n16_B1_s5101",
@@ -32,9 +32,9 @@
       "policy": "Threshold",
       "condition": "n16/B1",
       "seed": 5101,
-      "pi_raw": "/Users/nuonanouyang/Documents/Codex/2026-09-09/TSUSC_2026_07_0200_MAJOR_REVISION_REBUILD/evidence/pi4b8_formal_matrix/pi4b8_formal_03_threshold_n16_B1_s5101/pi4b8_formal_03_threshold_n16_B1_s5101_raw/windows.csv",
-      "powerz": "/Users/nuonanouyang/Documents/Codex/2026-09-09/TSUSC_2026_07_0200_MAJOR_REVISION_REBUILD/evidence/pi4b8_formal_matrix/pi4b8_formal_03_threshold_n16_B1_s5101/POWERZ_raw.csv",
-      "handshake": "/Users/nuonanouyang/Documents/Codex/2026-09-09/TSUSC_2026_07_0200_MAJOR_REVISION_REBUILD/evidence/pi4b8_formal_matrix/pi4b8_formal_03_threshold_n16_B1_s5101/HANDSHAKE.json"
+      "pi_raw": "<frozen_source_root>/evidence/pi4b8_formal_matrix/pi4b8_formal_03_threshold_n16_B1_s5101/pi4b8_formal_03_threshold_n16_B1_s5101_raw/windows.csv",
+      "powerz": "<frozen_source_root>/evidence/pi4b8_formal_matrix/pi4b8_formal_03_threshold_n16_B1_s5101/POWERZ_raw.csv",
+      "handshake": "<frozen_source_root>/evidence/pi4b8_formal_matrix/pi4b8_formal_03_threshold_n16_B1_s5101/HANDSHAKE.json"
     },
     {
       "cell_run_id": "pi4b8_formal_04_safe_greedy_n16_B1_s5101",
@@ -43,9 +43,9 @@
       "policy": "Safe-Greedy",
       "condition": "n16/B1",
       "seed": 5101,
-      "pi_raw": "/Users/nuonanouyang/Documents/Codex/2026-09-09/TSUSC_2026_07_0200_MAJOR_REVISION_REBUILD/evidence/pi4b8_formal_matrix/pi4b8_formal_04_safe_greedy_n16_B1_s5101/pi4b8_formal_04_safe_greedy_n16_B1_s5101_raw/windows.csv",
-      "powerz": "/Users/nuonanouyang/Documents/Codex/2026-09-09/TSUSC_2026_07_0200_MAJOR_REVISION_REBUILD/evidence/pi4b8_formal_matrix/pi4b8_formal_04_safe_greedy_n16_B1_s5101/POWERZ_raw.csv",
-      "handshake": "/Users/nuonanouyang/Documents/Codex/2026-09-09/TSUSC_2026_07_0200_MAJOR_REVISION_REBUILD/evidence/pi4b8_formal_matrix/pi4b8_formal_04_safe_greedy_n16_B1_s5101/HANDSHAKE.json"
+      "pi_raw": "<frozen_source_root>/evidence/pi4b8_formal_matrix/pi4b8_formal_04_safe_greedy_n16_B1_s5101/pi4b8_formal_04_safe_greedy_n16_B1_s5101_raw/windows.csv",
+      "powerz": "<frozen_source_root>/evidence/pi4b8_formal_matrix/pi4b8_formal_04_safe_greedy_n16_B1_s5101/POWERZ_raw.csv",
+      "handshake": "<frozen_source_root>/evidence/pi4b8_formal_matrix/pi4b8_formal_04_safe_greedy_n16_B1_s5101/HANDSHAKE.json"
     },
     {
       "cell_run_id": "pi4b8_formal_05_static_light_n16_B1_s5101",
@@ -54,9 +54,9 @@
       "policy": "Static-Light",
       "condition": "n16/B1",
       "seed": 5101,
-      "pi_raw": "/Users/nuonanouyang/Documents/Codex/2026-09-09/TSUSC_2026_07_0200_MAJOR_REVISION_REBUILD/evidence/pi4b8_formal_matrix/pi4b8_formal_05_static_light_n16_B1_s5101/pi4b8_formal_05_static_light_n16_B1_s5101_raw/windows.csv",
-      "powerz": "/Users/nuonanouyang/Documents/Codex/2026-09-09/TSUSC_2026_07_0200_MAJOR_REVISION_REBUILD/evidence/pi4b8_formal_matrix/pi4b8_formal_05_static_light_n16_B1_s5101/POWERZ_raw.csv",
-      "handshake": "/Users/nuonanouyang/Documents/Codex/2026-09-09/TSUSC_2026_07_0200_MAJOR_REVISION_REBUILD/evidence/pi4b8_formal_matrix/pi4b8_formal_05_static_light_n16_B1_s5101/HANDSHAKE.json"
+      "pi_raw": "<frozen_source_root>/evidence/pi4b8_formal_matrix/pi4b8_formal_05_static_light_n16_B1_s5101/pi4b8_formal_05_static_light_n16_B1_s5101_raw/windows.csv",
+      "powerz": "<frozen_source_root>/evidence/pi4b8_formal_matrix/pi4b8_formal_05_static_light_n16_B1_s5101/POWERZ_raw.csv",
+      "handshake": "<frozen_source_root>/evidence/pi4b8_formal_matrix/pi4b8_formal_05_static_light_n16_B1_s5101/HANDSHAKE.json"
     },
     {
       "cell_run_id": "pi4b8_formal_06_fssql_r_n16_B0_s5101",
@@ -65,9 +65,9 @@
       "policy": "FSSQL-R",
       "condition": "n16/B0",
       "seed": 5101,
-      "pi_raw": "/Users/nuonanouyang/Documents/Codex/2026-09-09/TSUSC_2026_07_0200_MAJOR_REVISION_REBUILD/evidence/pi4b8_formal_matrix/pi4b8_formal_06_fssql_r_n16_B0_s5101/pi4b8_formal_06_fssql_r_n16_B0_s5101_raw/windows.csv",
-      "powerz": "/Users/nuonanouyang/Documents/Codex/2026-09-09/TSUSC_2026_07_0200_MAJOR_REVISION_REBUILD/evidence/pi4b8_formal_matrix/pi4b8_formal_06_fssql_r_n16_B0_s5101/POWERZ_raw.csv",
-      "handshake": "/Users/nuonanouyang/Documents/Codex/2026-09-09/TSUSC_2026_07_0200_MAJOR_REVISION_REBUILD/evidence/pi4b8_formal_matrix/pi4b8_formal_06_fssql_r_n16_B0_s5101/HANDSHAKE.json"
+      "pi_raw": "<frozen_source_root>/evidence/pi4b8_formal_matrix/pi4b8_formal_06_fssql_r_n16_B0_s5101/pi4b8_formal_06_fssql_r_n16_B0_s5101_raw/windows.csv",
+      "powerz": "<frozen_source_root>/evidence/pi4b8_formal_matrix/pi4b8_formal_06_fssql_r_n16_B0_s5101/POWERZ_raw.csv",
+      "handshake": "<frozen_source_root>/evidence/pi4b8_formal_matrix/pi4b8_formal_06_fssql_r_n16_B0_s5101/HANDSHAKE.json"
     },
     {
       "cell_run_id": "pi4b8_formal_07_threshold_n16_B2_s5101",
@@ -76,9 +76,9 @@
       "policy": "Threshold",
       "condition": "n16/B2",
       "seed": 5101,
-      "pi_raw": "/Users/nuonanouyang/Documents/Codex/2026-09-09/TSUSC_2026_07_0200_MAJOR_REVISION_REBUILD/evidence/pi4b8_formal_matrix/pi4b8_formal_07_threshold_n16_B2_s5101/pi4b8_formal_07_threshold_n16_B2_s5101_raw/windows.csv",
-      "powerz": "/Users/nuonanouyang/Documents/Codex/2026-09-09/TSUSC_2026_07_0200_MAJOR_REVISION_REBUILD/evidence/pi4b8_formal_matrix/pi4b8_formal_07_threshold_n16_B2_s5101/POWERZ_raw.csv",
-      "handshake": "/Users/nuonanouyang/Documents/Codex/2026-09-09/TSUSC_2026_07_0200_MAJOR_REVISION_REBUILD/evidence/pi4b8_formal_matrix/pi4b8_formal_07_threshold_n16_B2_s5101/HANDSHAKE.json"
+      "pi_raw": "<frozen_source_root>/evidence/pi4b8_formal_matrix/pi4b8_formal_07_threshold_n16_B2_s5101/pi4b8_formal_07_threshold_n16_B2_s5101_raw/windows.csv",
+      "powerz": "<frozen_source_root>/evidence/pi4b8_formal_matrix/pi4b8_formal_07_threshold_n16_B2_s5101/POWERZ_raw.csv",
+      "handshake": "<frozen_source_root>/evidence/pi4b8_formal_matrix/pi4b8_formal_07_threshold_n16_B2_s5101/HANDSHAKE.json"
     },
     {
       "cell_run_id": "pi4b8_formal_08_safe_greedy_n16_B0_s5101",
@@ -87,9 +87,9 @@
       "policy": "Safe-Greedy",
       "condition": "n16/B0",
       "seed": 5101,
-      "pi_raw": "/Users/nuonanouyang/Documents/Codex/2026-09-09/TSUSC_2026_07_0200_MAJOR_REVISION_REBUILD/evidence/pi4b8_formal_matrix/pi4b8_formal_08_safe_greedy_n16_B0_s5101/pi4b8_formal_08_safe_greedy_n16_B0_s5101_raw/windows.csv",
-      "powerz": "/Users/nuonanouyang/Documents/Codex/2026-09-09/TSUSC_2026_07_0200_MAJOR_REVISION_REBUILD/evidence/pi4b8_formal_matrix/pi4b8_formal_08_safe_greedy_n16_B0_s5101/POWERZ_raw.csv",
-      "handshake": "/Users/nuonanouyang/Documents/Codex/2026-09-09/TSUSC_2026_07_0200_MAJOR_REVISION_REBUILD/evidence/pi4b8_formal_matrix/pi4b8_formal_08_safe_greedy_n16_B0_s5101/HANDSHAKE.json"
+      "pi_raw": "<frozen_source_root>/evidence/pi4b8_formal_matrix/pi4b8_formal_08_safe_greedy_n16_B0_s5101/pi4b8_formal_08_safe_greedy_n16_B0_s5101_raw/windows.csv",
+      "powerz": "<frozen_source_root>/evidence/pi4b8_formal_matrix/pi4b8_formal_08_safe_greedy_n16_B0_s5101/POWERZ_raw.csv",
+      "handshake": "<frozen_source_root>/evidence/pi4b8_formal_matrix/pi4b8_formal_08_safe_greedy_n16_B0_s5101/HANDSHAKE.json"
     },
     {
       "cell_run_id": "pi4b8_formal_09_threshold_n16_B0_s5101",
@@ -98,9 +98,9 @@
       "policy": "Threshold",
       "condition": "n16/B0",
       "seed": 5101,
-      "pi_raw": "/Users/nuonanouyang/Documents/Codex/2026-09-09/TSUSC_2026_07_0200_MAJOR_REVISION_REBUILD/evidence/pi4b8_formal_matrix/pi4b8_formal_09_threshold_n16_B0_s5101/pi4b8_formal_09_threshold_n16_B0_s5101_raw/windows.csv",
-      "powerz": "/Users/nuonanouyang/Documents/Codex/2026-09-09/TSUSC_2026_07_0200_MAJOR_REVISION_REBUILD/evidence/pi4b8_formal_matrix/pi4b8_formal_09_threshold_n16_B0_s5101/POWERZ_raw.csv",
-      "handshake": "/Users/nuonanouyang/Documents/Codex/2026-09-09/TSUSC_2026_07_0200_MAJOR_REVISION_REBUILD/evidence/pi4b8_formal_matrix/pi4b8_formal_09_threshold_n16_B0_s5101/HANDSHAKE.json"
+      "pi_raw": "<frozen_source_root>/evidence/pi4b8_formal_matrix/pi4b8_formal_09_threshold_n16_B0_s5101/pi4b8_formal_09_threshold_n16_B0_s5101_raw/windows.csv",
+      "powerz": "<frozen_source_root>/evidence/pi4b8_formal_matrix/pi4b8_formal_09_threshold_n16_B0_s5101/POWERZ_raw.csv",
+      "handshake": "<frozen_source_root>/evidence/pi4b8_formal_matrix/pi4b8_formal_09_threshold_n16_B0_s5101/HANDSHAKE.json"
     },
     {
       "cell_run_id": "pi4b8_formal_10_fssql_r_n16_B2_s5101",
@@ -109,9 +109,9 @@
       "policy": "FSSQL-R",
       "condition": "n16/B2",
       "seed": 5101,
-      "pi_raw": "/Users/nuonanouyang/Documents/Codex/2026-09-09/TSUSC_2026_07_0200_MAJOR_REVISION_REBUILD/evidence/pi4b8_formal_matrix/pi4b8_formal_10_fssql_r_n16_B2_s5101/pi4b8_formal_10_fssql_r_n16_B2_s5101_raw/windows.csv",
-      "powerz": "/Users/nuonanouyang/Documents/Codex/2026-09-09/TSUSC_2026_07_0200_MAJOR_REVISION_REBUILD/evidence/pi4b8_formal_matrix/pi4b8_formal_10_fssql_r_n16_B2_s5101/POWERZ_raw.csv",
-      "handshake": "/Users/nuonanouyang/Documents/Codex/2026-09-09/TSUSC_2026_07_0200_MAJOR_REVISION_REBUILD/evidence/pi4b8_formal_matrix/pi4b8_formal_10_fssql_r_n16_B2_s5101/HANDSHAKE.json"
+      "pi_raw": "<frozen_source_root>/evidence/pi4b8_formal_matrix/pi4b8_formal_10_fssql_r_n16_B2_s5101/pi4b8_formal_10_fssql_r_n16_B2_s5101_raw/windows.csv",
+      "powerz": "<frozen_source_root>/evidence/pi4b8_formal_matrix/pi4b8_formal_10_fssql_r_n16_B2_s5101/POWERZ_raw.csv",
+      "handshake": "<frozen_source_root>/evidence/pi4b8_formal_matrix/pi4b8_formal_10_fssql_r_n16_B2_s5101/HANDSHAKE.json"
     },
     {
       "cell_run_id": "pi4b8_formal_11_safe_greedy_n16_B2_s5101",
@@ -120,9 +120,9 @@
       "policy": "Safe-Greedy",
       "condition": "n16/B2",
       "seed": 5101,
-      "pi_raw": "/Users/nuonanouyang/Documents/Codex/2026-09-09/TSUSC_2026_07_0200_MAJOR_REVISION_REBUILD/evidence/pi4b8_formal_matrix/pi4b8_formal_11_safe_greedy_n16_B2_s5101/pi4b8_formal_11_safe_greedy_n16_B2_s5101_raw/windows.csv",
-      "powerz": "/Users/nuonanouyang/Documents/Codex/2026-09-09/TSUSC_2026_07_0200_MAJOR_REVISION_REBUILD/evidence/pi4b8_formal_matrix/pi4b8_formal_11_safe_greedy_n16_B2_s5101/POWERZ_raw.csv",
-      "handshake": "/Users/nuonanouyang/Documents/Codex/2026-09-09/TSUSC_2026_07_0200_MAJOR_REVISION_REBUILD/evidence/pi4b8_formal_matrix/pi4b8_formal_11_safe_greedy_n16_B2_s5101/HANDSHAKE.json"
+      "pi_raw": "<frozen_source_root>/evidence/pi4b8_formal_matrix/pi4b8_formal_11_safe_greedy_n16_B2_s5101/pi4b8_formal_11_safe_greedy_n16_B2_s5101_raw/windows.csv",
+      "powerz": "<frozen_source_root>/evidence/pi4b8_formal_matrix/pi4b8_formal_11_safe_greedy_n16_B2_s5101/POWERZ_raw.csv",
+      "handshake": "<frozen_source_root>/evidence/pi4b8_formal_matrix/pi4b8_formal_11_safe_greedy_n16_B2_s5101/HANDSHAKE.json"
     },
     {
       "cell_run_id": "pi4b8_formal_12_fssql_r_n16_B1_s5101",
@@ -131,9 +131,9 @@
       "policy": "FSSQL-R",
       "condition": "n16/B1",
       "seed": 5101,
-      "pi_raw": "/Users/nuonanouyang/Documents/Codex/2026-09-09/TSUSC_2026_07_0200_MAJOR_REVISION_REBUILD/evidence/pi4b8_formal_matrix/pi4b8_formal_12_fssql_r_n16_B1_s5101/pi4b8_formal_12_fssql_r_n16_B1_s5101_raw/windows.csv",
-      "powerz": "/Users/nuonanouyang/Documents/Codex/2026-09-09/TSUSC_2026_07_0200_MAJOR_REVISION_REBUILD/evidence/pi4b8_formal_matrix/pi4b8_formal_12_fssql_r_n16_B1_s5101/POWERZ_raw.csv",
-      "handshake": "/Users/nuonanouyang/Documents/Codex/2026-09-09/TSUSC_2026_07_0200_MAJOR_REVISION_REBUILD/evidence/pi4b8_formal_matrix/pi4b8_formal_12_fssql_r_n16_B1_s5101/HANDSHAKE.json"
+      "pi_raw": "<frozen_source_root>/evidence/pi4b8_formal_matrix/pi4b8_formal_12_fssql_r_n16_B1_s5101/pi4b8_formal_12_fssql_r_n16_B1_s5101_raw/windows.csv",
+      "powerz": "<frozen_source_root>/evidence/pi4b8_formal_matrix/pi4b8_formal_12_fssql_r_n16_B1_s5101/POWERZ_raw.csv",
+      "handshake": "<frozen_source_root>/evidence/pi4b8_formal_matrix/pi4b8_formal_12_fssql_r_n16_B1_s5101/HANDSHAKE.json"
     },
     {
       "cell_run_id": "pi4b8_formal_13_safe_greedy_n16_B1_s5102",
@@ -142,9 +142,9 @@
       "policy": "Safe-Greedy",
       "condition": "n16/B1",
       "seed": 5102,
-      "pi_raw": "/Users/nuonanouyang/Documents/Codex/2026-09-09/TSUSC_2026_07_0200_MAJOR_REVISION_REBUILD/evidence/pi4b8_formal_matrix/pi4b8_formal_13_safe_greedy_n16_B1_s5102/pi4b8_formal_13_safe_greedy_n16_B1_s5102_raw/windows.csv",
-      "powerz": "/Users/nuonanouyang/Documents/Codex/2026-09-09/TSUSC_2026_07_0200_MAJOR_REVISION_REBUILD/evidence/pi4b8_formal_matrix/pi4b8_formal_13_safe_greedy_n16_B1_s5102/POWERZ_raw.csv",
-      "handshake": "/Users/nuonanouyang/Documents/Codex/2026-09-09/TSUSC_2026_07_0200_MAJOR_REVISION_REBUILD/evidence/pi4b8_formal_matrix/pi4b8_formal_13_safe_greedy_n16_B1_s5102/HANDSHAKE.json"
+      "pi_raw": "<frozen_source_root>/evidence/pi4b8_formal_matrix/pi4b8_formal_13_safe_greedy_n16_B1_s5102/pi4b8_formal_13_safe_greedy_n16_B1_s5102_raw/windows.csv",
+      "powerz": "<frozen_source_root>/evidence/pi4b8_formal_matrix/pi4b8_formal_13_safe_greedy_n16_B1_s5102/POWERZ_raw.csv",
+      "handshake": "<frozen_source_root>/evidence/pi4b8_formal_matrix/pi4b8_formal_13_safe_greedy_n16_B1_s5102/HANDSHAKE.json"
     },
     {
       "cell_run_id": "pi4b8_formal_14_static_light_n16_B2_s5102",
@@ -153,9 +153,9 @@
       "policy": "Static-Light",
       "condition": "n16/B2",
       "seed": 5102,
-      "pi_raw": "/Users/nuonanouyang/Documents/Codex/2026-09-09/TSUSC_2026_07_0200_MAJOR_REVISION_REBUILD/evidence/pi4b8_formal_matrix/pi4b8_formal_14_static_light_n16_B2_s5102/pi4b8_formal_14_static_light_n16_B2_s5102_raw/windows.csv",
-      "powerz": "/Users/nuonanouyang/Documents/Codex/2026-09-09/TSUSC_2026_07_0200_MAJOR_REVISION_REBUILD/evidence/pi4b8_formal_matrix/pi4b8_formal_14_static_light_n16_B2_s5102/POWERZ_raw.csv",
-      "handshake": "/Users/nuonanouyang/Documents/Codex/2026-09-09/TSUSC_2026_07_0200_MAJOR_REVISION_REBUILD/evidence/pi4b8_formal_matrix/pi4b8_formal_14_static_light_n16_B2_s5102/HANDSHAKE.json"
+      "pi_raw": "<frozen_source_root>/evidence/pi4b8_formal_matrix/pi4b8_formal_14_static_light_n16_B2_s5102/pi4b8_formal_14_static_light_n16_B2_s5102_raw/windows.csv",
+      "powerz": "<frozen_source_root>/evidence/pi4b8_formal_matrix/pi4b8_formal_14_static_light_n16_B2_s5102/POWERZ_raw.csv",
+      "handshake": "<frozen_source_root>/evidence/pi4b8_formal_matrix/pi4b8_formal_14_static_light_n16_B2_s5102/HANDSHAKE.json"
     },
     {
       "cell_run_id": "pi4b8_formal_15_threshold_n16_B0_s5102",
@@ -164,9 +164,9 @@
       "policy": "Threshold",
       "condition": "n16/B0",
       "seed": 5102,
-      "pi_raw": "/Users/nuonanouyang/Documents/Codex/2026-09-09/TSUSC_2026_07_0200_MAJOR_REVISION_REBUILD/evidence/pi4b8_formal_matrix/pi4b8_formal_15_threshold_n16_B0_s5102/pi4b8_formal_15_threshold_n16_B0_s5102_raw/windows.csv",
-      "powerz": "/Users/nuonanouyang/Documents/Codex/2026-09-09/TSUSC_2026_07_0200_MAJOR_REVISION_REBUILD/evidence/pi4b8_formal_matrix/pi4b8_formal_15_threshold_n16_B0_s5102/POWERZ_raw.csv",
-      "handshake": "/Users/nuonanouyang/Documents/Codex/2026-09-09/TSUSC_2026_07_0200_MAJOR_REVISION_REBUILD/evidence/pi4b8_formal_matrix/pi4b8_formal_15_threshold_n16_B0_s5102/HANDSHAKE.json"
+      "pi_raw": "<frozen_source_root>/evidence/pi4b8_formal_matrix/pi4b8_formal_15_threshold_n16_B0_s5102/pi4b8_formal_15_threshold_n16_B0_s5102_raw/windows.csv",
+      "powerz": "<frozen_source_root>/evidence/pi4b8_formal_matrix/pi4b8_formal_15_threshold_n16_B0_s5102/POWERZ_raw.csv",
+      "handshake": "<frozen_source_root>/evidence/pi4b8_formal_matrix/pi4b8_formal_15_threshold_n16_B0_s5102/HANDSHAKE.json"
     },
     {
       "cell_run_id": "pi4b8_formal_16_static_light_n16_B0_s5102",
@@ -175,9 +175,9 @@
       "policy": "Static-Light",
       "condition": "n16/B0",
       "seed": 5102,
-      "pi_raw": "/Users/nuonanouyang/Documents/Codex/2026-09-09/TSUSC_2026_07_0200_MAJOR_REVISION_REBUILD/evidence/pi4b8_formal_matrix/pi4b8_formal_16_static_light_n16_B0_s5102/pi4b8_formal_16_static_light_n16_B0_s5102_raw/windows.csv",
-      "powerz": "/Users/nuonanouyang/Documents/Codex/2026-09-09/TSUSC_2026_07_0200_MAJOR_REVISION_REBUILD/evidence/pi4b8_formal_matrix/pi4b8_formal_16_static_light_n16_B0_s5102/POWERZ_raw.csv",
-      "handshake": "/Users/nuonanouyang/Documents/Codex/2026-09-09/TSUSC_2026_07_0200_MAJOR_REVISION_REBUILD/evidence/pi4b8_formal_matrix/pi4b8_formal_16_static_light_n16_B0_s5102/HANDSHAKE.json"
+      "pi_raw": "<frozen_source_root>/evidence/pi4b8_formal_matrix/pi4b8_formal_16_static_light_n16_B0_s5102/pi4b8_formal_16_static_light_n16_B0_s5102_raw/windows.csv",
+      "powerz": "<frozen_source_root>/evidence/pi4b8_formal_matrix/pi4b8_formal_16_static_light_n16_B0_s5102/POWERZ_raw.csv",
+      "handshake": "<frozen_source_root>/evidence/pi4b8_formal_matrix/pi4b8_formal_16_static_light_n16_B0_s5102/HANDSHAKE.json"
     },
     {
       "cell_run_id": "pi4b8_formal_17_static_light_n16_B1_s5102",
@@ -186,9 +186,9 @@
       "policy": "Static-Light",
       "condition": "n16/B1",
       "seed": 5102,
-      "pi_raw": "/Users/nuonanouyang/Documents/Codex/2026-09-09/TSUSC_2026_07_0200_MAJOR_REVISION_REBUILD/evidence/pi4b8_formal_matrix/pi4b8_formal_17_static_light_n16_B1_s5102/pi4b8_formal_17_static_light_n16_B1_s5102_raw/windows.csv",
-      "powerz": "/Users/nuonanouyang/Documents/Codex/2026-09-09/TSUSC_2026_07_0200_MAJOR_REVISION_REBUILD/evidence/pi4b8_formal_matrix/pi4b8_formal_17_static_light_n16_B1_s5102/POWERZ_raw.csv",
-      "handshake": "/Users/nuonanouyang/Documents/Codex/2026-09-09/TSUSC_2026_07_0200_MAJOR_REVISION_REBUILD/evidence/pi4b8_formal_matrix/pi4b8_formal_17_static_light_n16_B1_s5102/HANDSHAKE.json"
+      "pi_raw": "<frozen_source_root>/evidence/pi4b8_formal_matrix/pi4b8_formal_17_static_light_n16_B1_s5102/pi4b8_formal_17_static_light_n16_B1_s5102_raw/windows.csv",
+      "powerz": "<frozen_source_root>/evidence/pi4b8_formal_matrix/pi4b8_formal_17_static_light_n16_B1_s5102/POWERZ_raw.csv",
+      "handshake": "<frozen_source_root>/evidence/pi4b8_formal_matrix/pi4b8_formal_17_static_light_n16_B1_s5102/HANDSHAKE.json"
     },
     {
       "cell_run_id": "pi4b8_formal_18_fssql_r_n16_B0_s5102",
@@ -197,9 +197,9 @@
       "policy": "FSSQL-R",
       "condition": "n16/B0",
       "seed": 5102,
-      "pi_raw": "/Users/nuonanouyang/Documents/Codex/2026-09-09/TSUSC_2026_07_0200_MAJOR_REVISION_REBUILD/evidence/pi4b8_formal_matrix/pi4b8_formal_18_fssql_r_n16_B0_s5102/pi4b8_formal_18_fssql_r_n16_B0_s5102_raw/windows.csv",
-      "powerz": "/Users/nuonanouyang/Documents/Codex/2026-09-09/TSUSC_2026_07_0200_MAJOR_REVISION_REBUILD/evidence/pi4b8_formal_matrix/pi4b8_formal_18_fssql_r_n16_B0_s5102/POWERZ_raw.csv",
-      "handshake": "/Users/nuonanouyang/Documents/Codex/2026-09-09/TSUSC_2026_07_0200_MAJOR_REVISION_REBUILD/evidence/pi4b8_formal_matrix/pi4b8_formal_18_fssql_r_n16_B0_s5102/HANDSHAKE.json"
+      "pi_raw": "<frozen_source_root>/evidence/pi4b8_formal_matrix/pi4b8_formal_18_fssql_r_n16_B0_s5102/pi4b8_formal_18_fssql_r_n16_B0_s5102_raw/windows.csv",
+      "powerz": "<frozen_source_root>/evidence/pi4b8_formal_matrix/pi4b8_formal_18_fssql_r_n16_B0_s5102/POWERZ_raw.csv",
+      "handshake": "<frozen_source_root>/evidence/pi4b8_formal_matrix/pi4b8_formal_18_fssql_r_n16_B0_s5102/HANDSHAKE.json"
     },
     {
       "cell_run_id": "pi4b8_formal_19_threshold_n16_B1_s5102",
@@ -208,9 +208,9 @@
       "policy": "Threshold",
       "condition": "n16/B1",
       "seed": 5102,
-      "pi_raw": "/Users/nuonanouyang/Documents/Codex/2026-09-09/TSUSC_2026_07_0200_MAJOR_REVISION_REBUILD/evidence/pi4b8_formal_matrix/pi4b8_formal_19_threshold_n16_B1_s5102/pi4b8_formal_19_threshold_n16_B1_s5102_raw/windows.csv",
-      "powerz": "/Users/nuonanouyang/Documents/Codex/2026-09-09/TSUSC_2026_07_0200_MAJOR_REVISION_REBUILD/evidence/pi4b8_formal_matrix/pi4b8_formal_19_threshold_n16_B1_s5102/POWERZ_raw.csv",
-      "handshake": "/Users/nuonanouyang/Documents/Codex/2026-09-09/TSUSC_2026_07_0200_MAJOR_REVISION_REBUILD/evidence/pi4b8_formal_matrix/pi4b8_formal_19_threshold_n16_B1_s5102/HANDSHAKE.json"
+      "pi_raw": "<frozen_source_root>/evidence/pi4b8_formal_matrix/pi4b8_formal_19_threshold_n16_B1_s5102/pi4b8_formal_19_threshold_n16_B1_s5102_raw/windows.csv",
+      "powerz": "<frozen_source_root>/evidence/pi4b8_formal_matrix/pi4b8_formal_19_threshold_n16_B1_s5102/POWERZ_raw.csv",
+      "handshake": "<frozen_source_root>/evidence/pi4b8_formal_matrix/pi4b8_formal_19_threshold_n16_B1_s5102/HANDSHAKE.json"
     },
     {
       "cell_run_id": "pi4b8_formal_20_fssql_r_n16_B1_s5102",
@@ -219,9 +219,9 @@
       "policy": "FSSQL-R",
       "condition": "n16/B1",
       "seed": 5102,
-      "pi_raw": "/Users/nuonanouyang/Documents/Codex/2026-09-09/TSUSC_2026_07_0200_MAJOR_REVISION_REBUILD/evidence/pi4b8_formal_matrix/pi4b8_formal_20_fssql_r_n16_B1_s5102/pi4b8_formal_20_fssql_r_n16_B1_s5102_raw/windows.csv",
-      "powerz": "/Users/nuonanouyang/Documents/Codex/2026-09-09/TSUSC_2026_07_0200_MAJOR_REVISION_REBUILD/evidence/pi4b8_formal_matrix/pi4b8_formal_20_fssql_r_n16_B1_s5102/POWERZ_raw.csv",
-      "handshake": "/Users/nuonanouyang/Documents/Codex/2026-09-09/TSUSC_2026_07_0200_MAJOR_REVISION_REBUILD/evidence/pi4b8_formal_matrix/pi4b8_formal_20_fssql_r_n16_B1_s5102/HANDSHAKE.json"
+      "pi_raw": "<frozen_source_root>/evidence/pi4b8_formal_matrix/pi4b8_formal_20_fssql_r_n16_B1_s5102/pi4b8_formal_20_fssql_r_n16_B1_s5102_raw/windows.csv",
+      "powerz": "<frozen_source_root>/evidence/pi4b8_formal_matrix/pi4b8_formal_20_fssql_r_n16_B1_s5102/POWERZ_raw.csv",
+      "handshake": "<frozen_source_root>/evidence/pi4b8_formal_matrix/pi4b8_formal_20_fssql_r_n16_B1_s5102/HANDSHAKE.json"
     },
     {
       "cell_run_id": "pi4b8_formal_21_threshold_n16_B2_s5102",
@@ -230,9 +230,9 @@
       "policy": "Threshold",
       "condition": "n16/B2",
       "seed": 5102,
-      "pi_raw": "/Users/nuonanouyang/Documents/Codex/2026-09-09/TSUSC_2026_07_0200_MAJOR_REVISION_REBUILD/evidence/pi4b8_formal_matrix/pi4b8_formal_21_threshold_n16_B2_s5102/pi4b8_formal_21_threshold_n16_B2_s5102_raw/windows.csv",
-      "powerz": "/Users/nuonanouyang/Documents/Codex/2026-09-09/TSUSC_2026_07_0200_MAJOR_REVISION_REBUILD/evidence/pi4b8_formal_matrix/pi4b8_formal_21_threshold_n16_B2_s5102/POWERZ_raw.csv",
-      "handshake": "/Users/nuonanouyang/Documents/Codex/2026-09-09/TSUSC_2026_07_0200_MAJOR_REVISION_REBUILD/evidence/pi4b8_formal_matrix/pi4b8_formal_21_threshold_n16_B2_s5102/HANDSHAKE.json"
+      "pi_raw": "<frozen_source_root>/evidence/pi4b8_formal_matrix/pi4b8_formal_21_threshold_n16_B2_s5102/pi4b8_formal_21_threshold_n16_B2_s5102_raw/windows.csv",
+      "powerz": "<frozen_source_root>/evidence/pi4b8_formal_matrix/pi4b8_formal_21_threshold_n16_B2_s5102/POWERZ_raw.csv",
+      "handshake": "<frozen_source_root>/evidence/pi4b8_formal_matrix/pi4b8_formal_21_threshold_n16_B2_s5102/HANDSHAKE.json"
     },
     {
       "cell_run_id": "pi4b8_formal_22_fssql_r_n16_B2_s5102",
@@ -241,9 +241,9 @@
       "policy": "FSSQL-R",
       "condition": "n16/B2",
       "seed": 5102,
-      "pi_raw": "/Users/nuonanouyang/Documents/Codex/2026-09-09/TSUSC_2026_07_0200_MAJOR_REVISION_REBUILD/evidence/pi4b8_formal_matrix/pi4b8_formal_22_fssql_r_n16_B2_s5102/pi4b8_formal_22_fssql_r_n16_B2_s5102_raw/windows.csv",
-      "powerz": "/Users/nuonanouyang/Documents/Codex/2026-09-09/TSUSC_2026_07_0200_MAJOR_REVISION_REBUILD/evidence/pi4b8_formal_matrix/pi4b8_formal_22_fssql_r_n16_B2_s5102/POWERZ_raw.csv",
-      "handshake": "/Users/nuonanouyang/Documents/Codex/2026-09-09/TSUSC_2026_07_0200_MAJOR_REVISION_REBUILD/evidence/pi4b8_formal_matrix/pi4b8_formal_22_fssql_r_n16_B2_s5102/HANDSHAKE.json"
+      "pi_raw": "<frozen_source_root>/evidence/pi4b8_formal_matrix/pi4b8_formal_22_fssql_r_n16_B2_s5102/pi4b8_formal_22_fssql_r_n16_B2_s5102_raw/windows.csv",
+      "powerz": "<frozen_source_root>/evidence/pi4b8_formal_matrix/pi4b8_formal_22_fssql_r_n16_B2_s5102/POWERZ_raw.csv",
+      "handshake": "<frozen_source_root>/evidence/pi4b8_formal_matrix/pi4b8_formal_22_fssql_r_n16_B2_s5102/HANDSHAKE.json"
     },
     {
       "cell_run_id": "pi4b8_formal_23_safe_greedy_n16_B0_s5102",
@@ -252,9 +252,9 @@
       "policy": "Safe-Greedy",
       "condition": "n16/B0",
       "seed": 5102,
-      "pi_raw": "/Users/nuonanouyang/Documents/Codex/2026-09-09/TSUSC_2026_07_0200_MAJOR_REVISION_REBUILD/evidence/pi4b8_formal_matrix/pi4b8_formal_23_safe_greedy_n16_B0_s5102/pi4b8_formal_23_safe_greedy_n16_B0_s5102_raw/windows.csv",
-      "powerz": "/Users/nuonanouyang/Documents/Codex/2026-09-09/TSUSC_2026_07_0200_MAJOR_REVISION_REBUILD/evidence/pi4b8_formal_matrix/pi4b8_formal_23_safe_greedy_n16_B0_s5102/POWERZ_raw.csv",
-      "handshake": "/Users/nuonanouyang/Documents/Codex/2026-09-09/TSUSC_2026_07_0200_MAJOR_REVISION_REBUILD/evidence/pi4b8_formal_matrix/pi4b8_formal_23_safe_greedy_n16_B0_s5102/HANDSHAKE.json"
+      "pi_raw": "<frozen_source_root>/evidence/pi4b8_formal_matrix/pi4b8_formal_23_safe_greedy_n16_B0_s5102/pi4b8_formal_23_safe_greedy_n16_B0_s5102_raw/windows.csv",
+      "powerz": "<frozen_source_root>/evidence/pi4b8_formal_matrix/pi4b8_formal_23_safe_greedy_n16_B0_s5102/POWERZ_raw.csv",
+      "handshake": "<frozen_source_root>/evidence/pi4b8_formal_matrix/pi4b8_formal_23_safe_greedy_n16_B0_s5102/HANDSHAKE.json"
     },
     {
       "cell_run_id": "pi4b8_formal_24_safe_greedy_n16_B2_s5102",
@@ -263,9 +263,9 @@
       "policy": "Safe-Greedy",
       "condition": "n16/B2",
       "seed": 5102,
-      "pi_raw": "/Users/nuonanouyang/Documents/Codex/2026-09-09/TSUSC_2026_07_0200_MAJOR_REVISION_REBUILD/evidence/pi4b8_formal_matrix/pi4b8_formal_24_safe_greedy_n16_B2_s5102/pi4b8_formal_24_safe_greedy_n16_B2_s5102_raw/windows.csv",
-      "powerz": "/Users/nuonanouyang/Documents/Codex/2026-09-09/TSUSC_2026_07_0200_MAJOR_REVISION_REBUILD/evidence/pi4b8_formal_matrix/pi4b8_formal_24_safe_greedy_n16_B2_s5102/POWERZ_raw.csv",
-      "handshake": "/Users/nuonanouyang/Documents/Codex/2026-09-09/TSUSC_2026_07_0200_MAJOR_REVISION_REBUILD/evidence/pi4b8_formal_matrix/pi4b8_formal_24_safe_greedy_n16_B2_s5102/HANDSHAKE.json"
+      "pi_raw": "<frozen_source_root>/evidence/pi4b8_formal_matrix/pi4b8_formal_24_safe_greedy_n16_B2_s5102/pi4b8_formal_24_safe_greedy_n16_B2_s5102_raw/windows.csv",
+      "powerz": "<frozen_source_root>/evidence/pi4b8_formal_matrix/pi4b8_formal_24_safe_greedy_n16_B2_s5102/POWERZ_raw.csv",
+      "handshake": "<frozen_source_root>/evidence/pi4b8_formal_matrix/pi4b8_formal_24_safe_greedy_n16_B2_s5102/HANDSHAKE.json"
     },
     {
       "cell_run_id": "pi4b8_formal_25_static_light_n16_B2_s5103",
@@ -274,9 +274,9 @@
       "policy": "Static-Light",
       "condition": "n16/B2",
       "seed": 5103,
-      "pi_raw": "/Users/nuonanouyang/Documents/Codex/2026-09-09/TSUSC_2026_07_0200_MAJOR_REVISION_REBUILD/evidence/pi4b8_formal_matrix/pi4b8_formal_25_static_light_n16_B2_s5103/pi4b8_formal_25_static_light_n16_B2_s5103_raw/windows.csv",
-      "powerz": "/Users/nuonanouyang/Documents/Codex/2026-09-09/TSUSC_2026_07_0200_MAJOR_REVISION_REBUILD/evidence/pi4b8_formal_matrix/pi4b8_formal_25_static_light_n16_B2_s5103/POWERZ_raw.csv",
-      "handshake": "/Users/nuonanouyang/Documents/Codex/2026-09-09/TSUSC_2026_07_0200_MAJOR_REVISION_REBUILD/evidence/pi4b8_formal_matrix/pi4b8_formal_25_static_light_n16_B2_s5103/HANDSHAKE.json"
+      "pi_raw": "<frozen_source_root>/evidence/pi4b8_formal_matrix/pi4b8_formal_25_static_light_n16_B2_s5103/pi4b8_formal_25_static_light_n16_B2_s5103_raw/windows.csv",
+      "powerz": "<frozen_source_root>/evidence/pi4b8_formal_matrix/pi4b8_formal_25_static_light_n16_B2_s5103/POWERZ_raw.csv",
+      "handshake": "<frozen_source_root>/evidence/pi4b8_formal_matrix/pi4b8_formal_25_static_light_n16_B2_s5103/HANDSHAKE.json"
     },
     {
       "cell_run_id": "pi4b8_formal_26_fssql_r_n16_B1_s5103",
@@ -285,9 +285,9 @@
       "policy": "FSSQL-R",
       "condition": "n16/B1",
       "seed": 5103,
-      "pi_raw": "/Users/nuonanouyang/Documents/Codex/2026-09-09/TSUSC_2026_07_0200_MAJOR_REVISION_REBUILD/evidence/pi4b8_formal_matrix/pi4b8_formal_26_fssql_r_n16_B1_s5103/pi4b8_formal_26_fssql_r_n16_B1_s5103_raw/windows.csv",
-      "powerz": "/Users/nuonanouyang/Documents/Codex/2026-09-09/TSUSC_2026_07_0200_MAJOR_REVISION_REBUILD/evidence/pi4b8_formal_matrix/pi4b8_formal_26_fssql_r_n16_B1_s5103/POWERZ_raw.csv",
-      "handshake": "/Users/nuonanouyang/Documents/Codex/2026-09-09/TSUSC_2026_07_0200_MAJOR_REVISION_REBUILD/evidence/pi4b8_formal_matrix/pi4b8_formal_26_fssql_r_n16_B1_s5103/HANDSHAKE.json"
+      "pi_raw": "<frozen_source_root>/evidence/pi4b8_formal_matrix/pi4b8_formal_26_fssql_r_n16_B1_s5103/pi4b8_formal_26_fssql_r_n16_B1_s5103_raw/windows.csv",
+      "powerz": "<frozen_source_root>/evidence/pi4b8_formal_matrix/pi4b8_formal_26_fssql_r_n16_B1_s5103/POWERZ_raw.csv",
+      "handshake": "<frozen_source_root>/evidence/pi4b8_formal_matrix/pi4b8_formal_26_fssql_r_n16_B1_s5103/HANDSHAKE.json"
     },
     {
       "cell_run_id": "pi4b8_formal_27_safe_greedy_n16_B0_s5103",
@@ -296,9 +296,9 @@
       "policy": "Safe-Greedy",
       "condition": "n16/B0",
       "seed": 5103,
-      "pi_raw": "/Users/nuonanouyang/Documents/Codex/2026-09-09/TSUSC_2026_07_0200_MAJOR_REVISION_REBUILD/evidence/pi4b8_formal_matrix/pi4b8_formal_27_safe_greedy_n16_B0_s5103/pi4b8_formal_27_safe_greedy_n16_B0_s5103_raw/windows.csv",
-      "powerz": "/Users/nuonanouyang/Documents/Codex/2026-09-09/TSUSC_2026_07_0200_MAJOR_REVISION_REBUILD/evidence/pi4b8_formal_matrix/pi4b8_formal_27_safe_greedy_n16_B0_s5103/POWERZ_raw.csv",
-      "handshake": "/Users/nuonanouyang/Documents/Codex/2026-09-09/TSUSC_2026_07_0200_MAJOR_REVISION_REBUILD/evidence/pi4b8_formal_matrix/pi4b8_formal_27_safe_greedy_n16_B0_s5103/HANDSHAKE.json"
+      "pi_raw": "<frozen_source_root>/evidence/pi4b8_formal_matrix/pi4b8_formal_27_safe_greedy_n16_B0_s5103/pi4b8_formal_27_safe_greedy_n16_B0_s5103_raw/windows.csv",
+      "powerz": "<frozen_source_root>/evidence/pi4b8_formal_matrix/pi4b8_formal_27_safe_greedy_n16_B0_s5103/POWERZ_raw.csv",
+      "handshake": "<frozen_source_root>/evidence/pi4b8_formal_matrix/pi4b8_formal_27_safe_greedy_n16_B0_s5103/HANDSHAKE.json"
     },
     {
       "cell_run_id": "pi4b8_formal_28_threshold_n16_B2_s5103",
@@ -307,9 +307,9 @@
       "policy": "Threshold",
       "condition": "n16/B2",
       "seed": 5103,
-      "pi_raw": "/Users/nuonanouyang/Documents/Codex/2026-09-09/TSUSC_2026_07_0200_MAJOR_REVISION_REBUILD/evidence/pi4b8_formal_matrix/pi4b8_formal_28_threshold_n16_B2_s5103/pi4b8_formal_28_threshold_n16_B2_s5103_raw/windows.csv",
-      "powerz": "/Users/nuonanouyang/Documents/Codex/2026-09-09/TSUSC_2026_07_0200_MAJOR_REVISION_REBUILD/evidence/pi4b8_formal_matrix/pi4b8_formal_28_threshold_n16_B2_s5103/POWERZ_raw.csv",
-      "handshake": "/Users/nuonanouyang/Documents/Codex/2026-09-09/TSUSC_2026_07_0200_MAJOR_REVISION_REBUILD/evidence/pi4b8_formal_matrix/pi4b8_formal_28_threshold_n16_B2_s5103/HANDSHAKE.json"
+      "pi_raw": "<frozen_source_root>/evidence/pi4b8_formal_matrix/pi4b8_formal_28_threshold_n16_B2_s5103/pi4b8_formal_28_threshold_n16_B2_s5103_raw/windows.csv",
+      "powerz": "<frozen_source_root>/evidence/pi4b8_formal_matrix/pi4b8_formal_28_threshold_n16_B2_s5103/POWERZ_raw.csv",
+      "handshake": "<frozen_source_root>/evidence/pi4b8_formal_matrix/pi4b8_formal_28_threshold_n16_B2_s5103/HANDSHAKE.json"
     },
     {
       "cell_run_id": "pi4b8_formal_29_static_light_n16_B1_s5103",
@@ -318,9 +318,9 @@
       "policy": "Static-Light",
       "condition": "n16/B1",
       "seed": 5103,
-      "pi_raw": "/Users/nuonanouyang/Documents/Codex/2026-09-09/TSUSC_2026_07_0200_MAJOR_REVISION_REBUILD/evidence/pi4b8_formal_matrix/pi4b8_formal_29_static_light_n16_B1_s5103/pi4b8_formal_29_static_light_n16_B1_s5103_raw/windows.csv",
-      "powerz": "/Users/nuonanouyang/Documents/Codex/2026-09-09/TSUSC_2026_07_0200_MAJOR_REVISION_REBUILD/evidence/pi4b8_formal_matrix/pi4b8_formal_29_static_light_n16_B1_s5103/POWERZ_raw.csv",
-      "handshake": "/Users/nuonanouyang/Documents/Codex/2026-09-09/TSUSC_2026_07_0200_MAJOR_REVISION_REBUILD/evidence/pi4b8_formal_matrix/pi4b8_formal_29_static_light_n16_B1_s5103/HANDSHAKE.json"
+      "pi_raw": "<frozen_source_root>/evidence/pi4b8_formal_matrix/pi4b8_formal_29_static_light_n16_B1_s5103/pi4b8_formal_29_static_light_n16_B1_s5103_raw/windows.csv",
+      "powerz": "<frozen_source_root>/evidence/pi4b8_formal_matrix/pi4b8_formal_29_static_light_n16_B1_s5103/POWERZ_raw.csv",
+      "handshake": "<frozen_source_root>/evidence/pi4b8_formal_matrix/pi4b8_formal_29_static_light_n16_B1_s5103/HANDSHAKE.json"
     },
     {
       "cell_run_id": "pi4b8_formal_30_fssql_r_n16_B0_s5103",
@@ -329,9 +329,9 @@
       "policy": "FSSQL-R",
       "condition": "n16/B0",
       "seed": 5103,
-      "pi_raw": "/Users/nuonanouyang/Documents/Codex/2026-09-09/TSUSC_2026_07_0200_MAJOR_REVISION_REBUILD/evidence/pi4b8_formal_matrix/pi4b8_formal_30_fssql_r_n16_B0_s5103/pi4b8_formal_30_fssql_r_n16_B0_s5103_raw/windows.csv",
-      "powerz": "/Users/nuonanouyang/Documents/Codex/2026-09-09/TSUSC_2026_07_0200_MAJOR_REVISION_REBUILD/evidence/pi4b8_formal_matrix/pi4b8_formal_30_fssql_r_n16_B0_s5103/POWERZ_raw.csv",
-      "handshake": "/Users/nuonanouyang/Documents/Codex/2026-09-09/TSUSC_2026_07_0200_MAJOR_REVISION_REBUILD/evidence/pi4b8_formal_matrix/pi4b8_formal_30_fssql_r_n16_B0_s5103/HANDSHAKE.json"
+      "pi_raw": "<frozen_source_root>/evidence/pi4b8_formal_matrix/pi4b8_formal_30_fssql_r_n16_B0_s5103/pi4b8_formal_30_fssql_r_n16_B0_s5103_raw/windows.csv",
+      "powerz": "<frozen_source_root>/evidence/pi4b8_formal_matrix/pi4b8_formal_30_fssql_r_n16_B0_s5103/POWERZ_raw.csv",
+      "handshake": "<frozen_source_root>/evidence/pi4b8_formal_matrix/pi4b8_formal_30_fssql_r_n16_B0_s5103/HANDSHAKE.json"
     },
     {
       "cell_run_id": "pi4b8_formal_31_safe_greedy_n16_B2_s5103",
@@ -340,9 +340,9 @@
       "policy": "Safe-Greedy",
       "condition": "n16/B2",
       "seed": 5103,
-      "pi_raw": "/Users/nuonanouyang/Documents/Codex/2026-09-09/TSUSC_2026_07_0200_MAJOR_REVISION_REBUILD/evidence/pi4b8_formal_matrix/pi4b8_formal_31_safe_greedy_n16_B2_s5103/pi4b8_formal_31_safe_greedy_n16_B2_s5103_raw/windows.csv",
-      "powerz": "/Users/nuonanouyang/Documents/Codex/2026-09-09/TSUSC_2026_07_0200_MAJOR_REVISION_REBUILD/evidence/pi4b8_formal_matrix/pi4b8_formal_31_safe_greedy_n16_B2_s5103/POWERZ_raw.csv",
-      "handshake": "/Users/nuonanouyang/Documents/Codex/2026-09-09/TSUSC_2026_07_0200_MAJOR_REVISION_REBUILD/evidence/pi4b8_formal_matrix/pi4b8_formal_31_safe_greedy_n16_B2_s5103/HANDSHAKE.json"
+      "pi_raw": "<frozen_source_root>/evidence/pi4b8_formal_matrix/pi4b8_formal_31_safe_greedy_n16_B2_s5103/pi4b8_formal_31_safe_greedy_n16_B2_s5103_raw/windows.csv",
+      "powerz": "<frozen_source_root>/evidence/pi4b8_formal_matrix/pi4b8_formal_31_safe_greedy_n16_B2_s5103/POWERZ_raw.csv",
+      "handshake": "<frozen_source_root>/evidence/pi4b8_formal_matrix/pi4b8_formal_31_safe_greedy_n16_B2_s5103/HANDSHAKE.json"
     },
     {
       "cell_run_id": "pi4b8_formal_32_fssql_r_n16_B2_s5103",
@@ -351,9 +351,9 @@
       "policy": "FSSQL-R",
       "condition": "n16/B2",
       "seed": 5103,
-      "pi_raw": "/Users/nuonanouyang/Documents/Codex/2026-09-09/TSUSC_2026_07_0200_MAJOR_REVISION_REBUILD/evidence/pi4b8_formal_matrix/pi4b8_formal_32_fssql_r_n16_B2_s5103/pi4b8_formal_32_fssql_r_n16_B2_s5103_raw/windows.csv",
-      "powerz": "/Users/nuonanouyang/Documents/Codex/2026-09-09/TSUSC_2026_07_0200_MAJOR_REVISION_REBUILD/evidence/pi4b8_formal_matrix/pi4b8_formal_32_fssql_r_n16_B2_s5103/POWERZ_raw.csv",
-      "handshake": "/Users/nuonanouyang/Documents/Codex/2026-09-09/TSUSC_2026_07_0200_MAJOR_REVISION_REBUILD/evidence/pi4b8_formal_matrix/pi4b8_formal_32_fssql_r_n16_B2_s5103/HANDSHAKE.json"
+      "pi_raw": "<frozen_source_root>/evidence/pi4b8_formal_matrix/pi4b8_formal_32_fssql_r_n16_B2_s5103/pi4b8_formal_32_fssql_r_n16_B2_s5103_raw/windows.csv",
+      "powerz": "<frozen_source_root>/evidence/pi4b8_formal_matrix/pi4b8_formal_32_fssql_r_n16_B2_s5103/POWERZ_raw.csv",
+      "handshake": "<frozen_source_root>/evidence/pi4b8_formal_matrix/pi4b8_formal_32_fssql_r_n16_B2_s5103/HANDSHAKE.json"
     },
     {
       "cell_run_id": "pi4b8_formal_33_threshold_n16_B0_s5103",
@@ -362,9 +362,9 @@
       "policy": "Threshold",
       "condition": "n16/B0",
       "seed": 5103,
-      "pi_raw": "/Users/nuonanouyang/Documents/Codex/2026-09-09/TSUSC_2026_07_0200_MAJOR_REVISION_REBUILD/evidence/pi4b8_formal_matrix/pi4b8_formal_33_threshold_n16_B0_s5103/pi4b8_formal_33_threshold_n16_B0_s5103_raw/windows.csv",
-      "powerz": "/Users/nuonanouyang/Documents/Codex/2026-09-09/TSUSC_2026_07_0200_MAJOR_REVISION_REBUILD/evidence/pi4b8_formal_matrix/pi4b8_formal_33_threshold_n16_B0_s5103/POWERZ_raw.csv",
-      "handshake": "/Users/nuonanouyang/Documents/Codex/2026-09-09/TSUSC_2026_07_0200_MAJOR_REVISION_REBUILD/evidence/pi4b8_formal_matrix/pi4b8_formal_33_threshold_n16_B0_s5103/HANDSHAKE.json"
+      "pi_raw": "<frozen_source_root>/evidence/pi4b8_formal_matrix/pi4b8_formal_33_threshold_n16_B0_s5103/pi4b8_formal_33_threshold_n16_B0_s5103_raw/windows.csv",
+      "powerz": "<frozen_source_root>/evidence/pi4b8_formal_matrix/pi4b8_formal_33_threshold_n16_B0_s5103/POWERZ_raw.csv",
+      "handshake": "<frozen_source_root>/evidence/pi4b8_formal_matrix/pi4b8_formal_33_threshold_n16_B0_s5103/HANDSHAKE.json"
     },
     {
       "cell_run_id": "pi4b8_formal_34_safe_greedy_n16_B1_s5103",
@@ -373,9 +373,9 @@
       "policy": "Safe-Greedy",
       "condition": "n16/B1",
       "seed": 5103,
-      "pi_raw": "/Users/nuonanouyang/Documents/Codex/2026-09-09/TSUSC_2026_07_0200_MAJOR_REVISION_REBUILD/evidence/pi4b8_formal_matrix/pi4b8_formal_34_safe_greedy_n16_B1_s5103/pi4b8_formal_34_safe_greedy_n16_B1_s5103_raw/windows.csv",
-      "powerz": "/Users/nuonanouyang/Documents/Codex/2026-09-09/TSUSC_2026_07_0200_MAJOR_REVISION_REBUILD/evidence/pi4b8_formal_matrix/pi4b8_formal_34_safe_greedy_n16_B1_s5103/POWERZ_raw.csv",
-      "handshake": "/Users/nuonanouyang/Documents/Codex/2026-09-09/TSUSC_2026_07_0200_MAJOR_REVISION_REBUILD/evidence/pi4b8_formal_matrix/pi4b8_formal_34_safe_greedy_n16_B1_s5103/HANDSHAKE.json"
+      "pi_raw": "<frozen_source_root>/evidence/pi4b8_formal_matrix/pi4b8_formal_34_safe_greedy_n16_B1_s5103/pi4b8_formal_34_safe_greedy_n16_B1_s5103_raw/windows.csv",
+      "powerz": "<frozen_source_root>/evidence/pi4b8_formal_matrix/pi4b8_formal_34_safe_greedy_n16_B1_s5103/POWERZ_raw.csv",
+      "handshake": "<frozen_source_root>/evidence/pi4b8_formal_matrix/pi4b8_formal_34_safe_greedy_n16_B1_s5103/HANDSHAKE.json"
     },
     {
       "cell_run_id": "pi4b8_formal_35_threshold_n16_B1_s5103",
@@ -384,9 +384,9 @@
       "policy": "Threshold",
       "condition": "n16/B1",
       "seed": 5103,
-      "pi_raw": "/Users/nuonanouyang/Documents/Codex/2026-09-09/TSUSC_2026_07_0200_MAJOR_REVISION_REBUILD/evidence/pi4b8_formal_matrix/pi4b8_formal_35_threshold_n16_B1_s5103/pi4b8_formal_35_threshold_n16_B1_s5103_raw/windows.csv",
-      "powerz": "/Users/nuonanouyang/Documents/Codex/2026-09-09/TSUSC_2026_07_0200_MAJOR_REVISION_REBUILD/evidence/pi4b8_formal_matrix/pi4b8_formal_35_threshold_n16_B1_s5103/POWERZ_raw.csv",
-      "handshake": "/Users/nuonanouyang/Documents/Codex/2026-09-09/TSUSC_2026_07_0200_MAJOR_REVISION_REBUILD/evidence/pi4b8_formal_matrix/pi4b8_formal_35_threshold_n16_B1_s5103/HANDSHAKE.json"
+      "pi_raw": "<frozen_source_root>/evidence/pi4b8_formal_matrix/pi4b8_formal_35_threshold_n16_B1_s5103/pi4b8_formal_35_threshold_n16_B1_s5103_raw/windows.csv",
+      "powerz": "<frozen_source_root>/evidence/pi4b8_formal_matrix/pi4b8_formal_35_threshold_n16_B1_s5103/POWERZ_raw.csv",
+      "handshake": "<frozen_source_root>/evidence/pi4b8_formal_matrix/pi4b8_formal_35_threshold_n16_B1_s5103/HANDSHAKE.json"
     },
     {
       "cell_run_id": "pi4b8_formal_36_static_light_n16_B0_s5103",
@@ -395,9 +395,9 @@
       "policy": "Static-Light",
       "condition": "n16/B0",
       "seed": 5103,
-      "pi_raw": "/Users/nuonanouyang/Documents/Codex/2026-09-09/TSUSC_2026_07_0200_MAJOR_REVISION_REBUILD/evidence/pi4b8_formal_matrix/pi4b8_formal_36_static_light_n16_B0_s5103/pi4b8_formal_36_static_light_n16_B0_s5103_raw/windows.csv",
-      "powerz": "/Users/nuonanouyang/Documents/Codex/2026-09-09/TSUSC_2026_07_0200_MAJOR_REVISION_REBUILD/evidence/pi4b8_formal_matrix/pi4b8_formal_36_static_light_n16_B0_s5103/POWERZ_raw.csv",
-      "handshake": "/Users/nuonanouyang/Documents/Codex/2026-09-09/TSUSC_2026_07_0200_MAJOR_REVISION_REBUILD/evidence/pi4b8_formal_matrix/pi4b8_formal_36_static_light_n16_B0_s5103/HANDSHAKE.json"
+      "pi_raw": "<frozen_source_root>/evidence/pi4b8_formal_matrix/pi4b8_formal_36_static_light_n16_B0_s5103/pi4b8_formal_36_static_light_n16_B0_s5103_raw/windows.csv",
+      "powerz": "<frozen_source_root>/evidence/pi4b8_formal_matrix/pi4b8_formal_36_static_light_n16_B0_s5103/POWERZ_raw.csv",
+      "handshake": "<frozen_source_root>/evidence/pi4b8_formal_matrix/pi4b8_formal_36_static_light_n16_B0_s5103/HANDSHAKE.json"
     },
     {
       "cell_run_id": "pi4b8_formal_37_threshold_n16_B0_s5104",
@@ -406,9 +406,9 @@
       "policy": "Threshold",
       "condition": "n16/B0",
       "seed": 5104,
-      "pi_raw": "/Users/nuonanouyang/Documents/Codex/2026-09-09/TSUSC_2026_07_0200_MAJOR_REVISION_REBUILD/evidence/pi4b8_formal_matrix/pi4b8_formal_37_threshold_n16_B0_s5104/pi4b8_formal_37_threshold_n16_B0_s5104_raw/windows.csv",
-      "powerz": "/Users/nuonanouyang/Documents/Codex/2026-09-09/TSUSC_2026_07_0200_MAJOR_REVISION_REBUILD/evidence/pi4b8_formal_matrix/pi4b8_formal_37_threshold_n16_B0_s5104/POWERZ_raw.csv",
-      "handshake": "/Users/nuonanouyang/Documents/Codex/2026-09-09/TSUSC_2026_07_0200_MAJOR_REVISION_REBUILD/evidence/pi4b8_formal_matrix/pi4b8_formal_37_threshold_n16_B0_s5104/HANDSHAKE.json"
+      "pi_raw": "<frozen_source_root>/evidence/pi4b8_formal_matrix/pi4b8_formal_37_threshold_n16_B0_s5104/pi4b8_formal_37_threshold_n16_B0_s5104_raw/windows.csv",
+      "powerz": "<frozen_source_root>/evidence/pi4b8_formal_matrix/pi4b8_formal_37_threshold_n16_B0_s5104/POWERZ_raw.csv",
+      "handshake": "<frozen_source_root>/evidence/pi4b8_formal_matrix/pi4b8_formal_37_threshold_n16_B0_s5104/HANDSHAKE.json"
     },
     {
       "cell_run_id": "pi4b8_formal_38_safe_greedy_n16_B1_s5104",
@@ -417,9 +417,9 @@
       "policy": "Safe-Greedy",
       "condition": "n16/B1",
       "seed": 5104,
-      "pi_raw": "/Users/nuonanouyang/Documents/Codex/2026-09-09/TSUSC_2026_07_0200_MAJOR_REVISION_REBUILD/evidence/pi4b8_formal_matrix/pi4b8_formal_38_safe_greedy_n16_B1_s5104/pi4b8_formal_38_safe_greedy_n16_B1_s5104_raw/windows.csv",
-      "powerz": "/Users/nuonanouyang/Documents/Codex/2026-09-09/TSUSC_2026_07_0200_MAJOR_REVISION_REBUILD/evidence/pi4b8_formal_matrix/pi4b8_formal_38_safe_greedy_n16_B1_s5104/POWERZ_raw.csv",
-      "handshake": "/Users/nuonanouyang/Documents/Codex/2026-09-09/TSUSC_2026_07_0200_MAJOR_REVISION_REBUILD/evidence/pi4b8_formal_matrix/pi4b8_formal_38_safe_greedy_n16_B1_s5104/HANDSHAKE.json"
+      "pi_raw": "<frozen_source_root>/evidence/pi4b8_formal_matrix/pi4b8_formal_38_safe_greedy_n16_B1_s5104/pi4b8_formal_38_safe_greedy_n16_B1_s5104_raw/windows.csv",
+      "powerz": "<frozen_source_root>/evidence/pi4b8_formal_matrix/pi4b8_formal_38_safe_greedy_n16_B1_s5104/POWERZ_raw.csv",
+      "handshake": "<frozen_source_root>/evidence/pi4b8_formal_matrix/pi4b8_formal_38_safe_greedy_n16_B1_s5104/HANDSHAKE.json"
     },
     {
       "cell_run_id": "pi4b8_formal_39_static_light_n16_B1_s5104",
@@ -428,9 +428,9 @@
       "policy": "Static-Light",
       "condition": "n16/B1",
       "seed": 5104,
-      "pi_raw": "/Users/nuonanouyang/Documents/Codex/2026-09-09/TSUSC_2026_07_0200_MAJOR_REVISION_REBUILD/evidence/pi4b8_formal_matrix/pi4b8_formal_39_static_light_n16_B1_s5104/pi4b8_formal_39_static_light_n16_B1_s5104_raw/windows.csv",
-      "powerz": "/Users/nuonanouyang/Documents/Codex/2026-09-09/TSUSC_2026_07_0200_MAJOR_REVISION_REBUILD/evidence/pi4b8_formal_matrix/pi4b8_formal_39_static_light_n16_B1_s5104/POWERZ_raw.csv",
-      "handshake": "/Users/nuonanouyang/Documents/Codex/2026-09-09/TSUSC_2026_07_0200_MAJOR_REVISION_REBUILD/evidence/pi4b8_formal_matrix/pi4b8_formal_39_static_light_n16_B1_s5104/HANDSHAKE.json"
+      "pi_raw": "<frozen_source_root>/evidence/pi4b8_formal_matrix/pi4b8_formal_39_static_light_n16_B1_s5104/pi4b8_formal_39_static_light_n16_B1_s5104_raw/windows.csv",
+      "powerz": "<frozen_source_root>/evidence/pi4b8_formal_matrix/pi4b8_formal_39_static_light_n16_B1_s5104/POWERZ_raw.csv",
+      "handshake": "<frozen_source_root>/evidence/pi4b8_formal_matrix/pi4b8_formal_39_static_light_n16_B1_s5104/HANDSHAKE.json"
     },
     {
       "cell_run_id": "pi4b8_formal_40_safe_greedy_n16_B2_s5104",
@@ -439,9 +439,9 @@
       "policy": "Safe-Greedy",
       "condition": "n16/B2",
       "seed": 5104,
-      "pi_raw": "/Users/nuonanouyang/Documents/Codex/2026-09-09/TSUSC_2026_07_0200_MAJOR_REVISION_REBUILD/evidence/pi4b8_formal_matrix/pi4b8_formal_40_safe_greedy_n16_B2_s5104_attempt2/pi4b8_formal_40_safe_greedy_n16_B2_s5104_attempt2/windows.csv",
-      "powerz": "/Users/nuonanouyang/Documents/Codex/2026-09-09/TSUSC_2026_07_0200_MAJOR_REVISION_REBUILD/evidence/pi4b8_formal_matrix/pi4b8_formal_40_safe_greedy_n16_B2_s5104_attempt2/POWERZ_raw.csv",
-      "handshake": "/Users/nuonanouyang/Documents/Codex/2026-09-09/TSUSC_2026_07_0200_MAJOR_REVISION_REBUILD/evidence/pi4b8_formal_matrix/pi4b8_formal_40_safe_greedy_n16_B2_s5104_attempt2/HANDSHAKE.json"
+      "pi_raw": "<frozen_source_root>/evidence/pi4b8_formal_matrix/pi4b8_formal_40_safe_greedy_n16_B2_s5104_attempt2/pi4b8_formal_40_safe_greedy_n16_B2_s5104_attempt2/windows.csv",
+      "powerz": "<frozen_source_root>/evidence/pi4b8_formal_matrix/pi4b8_formal_40_safe_greedy_n16_B2_s5104_attempt2/POWERZ_raw.csv",
+      "handshake": "<frozen_source_root>/evidence/pi4b8_formal_matrix/pi4b8_formal_40_safe_greedy_n16_B2_s5104_attempt2/HANDSHAKE.json"
     },
     {
       "cell_run_id": "pi4b8_formal_41_static_light_n16_B0_s5104",
@@ -450,9 +450,9 @@
       "policy": "Static-Light",
       "condition": "n16/B0",
       "seed": 5104,
-      "pi_raw": "/Users/nuonanouyang/Documents/Codex/2026-09-09/TSUSC_2026_07_0200_MAJOR_REVISION_REBUILD/evidence/pi4b8_formal_matrix/pi4b8_formal_41_static_light_n16_B0_s5104/pi4b8_formal_41_static_light_n16_B0_s5104/windows.csv",
-      "powerz": "/Users/nuonanouyang/Documents/Codex/2026-09-09/TSUSC_2026_07_0200_MAJOR_REVISION_REBUILD/evidence/pi4b8_formal_matrix/pi4b8_formal_41_static_light_n16_B0_s5104/POWERZ_raw.csv",
-      "handshake": "/Users/nuonanouyang/Documents/Codex/2026-09-09/TSUSC_2026_07_0200_MAJOR_REVISION_REBUILD/evidence/pi4b8_formal_matrix/pi4b8_formal_41_static_light_n16_B0_s5104/HANDSHAKE.json"
+      "pi_raw": "<frozen_source_root>/evidence/pi4b8_formal_matrix/pi4b8_formal_41_static_light_n16_B0_s5104/pi4b8_formal_41_static_light_n16_B0_s5104/windows.csv",
+      "powerz": "<frozen_source_root>/evidence/pi4b8_formal_matrix/pi4b8_formal_41_static_light_n16_B0_s5104/POWERZ_raw.csv",
+      "handshake": "<frozen_source_root>/evidence/pi4b8_formal_matrix/pi4b8_formal_41_static_light_n16_B0_s5104/HANDSHAKE.json"
     },
     {
       "cell_run_id": "pi4b8_formal_42_fssql_r_n16_B1_s5104",
@@ -461,9 +461,9 @@
       "policy": "FSSQL-R",
       "condition": "n16/B1",
       "seed": 5104,
-      "pi_raw": "/Users/nuonanouyang/Documents/Codex/2026-09-09/TSUSC_2026_07_0200_MAJOR_REVISION_REBUILD/evidence/pi4b8_formal_matrix/pi4b8_formal_42_fssql_r_n16_B1_s5104/pi4b8_formal_42_fssql_r_n16_B1_s5104/windows.csv",
-      "powerz": "/Users/nuonanouyang/Documents/Codex/2026-09-09/TSUSC_2026_07_0200_MAJOR_REVISION_REBUILD/evidence/pi4b8_formal_matrix/pi4b8_formal_42_fssql_r_n16_B1_s5104/POWERZ_raw.csv",
-      "handshake": "/Users/nuonanouyang/Documents/Codex/2026-09-09/TSUSC_2026_07_0200_MAJOR_REVISION_REBUILD/evidence/pi4b8_formal_matrix/pi4b8_formal_42_fssql_r_n16_B1_s5104/HANDSHAKE.json"
+      "pi_raw": "<frozen_source_root>/evidence/pi4b8_formal_matrix/pi4b8_formal_42_fssql_r_n16_B1_s5104/pi4b8_formal_42_fssql_r_n16_B1_s5104/windows.csv",
+      "powerz": "<frozen_source_root>/evidence/pi4b8_formal_matrix/pi4b8_formal_42_fssql_r_n16_B1_s5104/POWERZ_raw.csv",
+      "handshake": "<frozen_source_root>/evidence/pi4b8_formal_matrix/pi4b8_formal_42_fssql_r_n16_B1_s5104/HANDSHAKE.json"
     },
     {
       "cell_run_id": "pi4b8_formal_43_fssql_r_n16_B2_s5104",
@@ -472,9 +472,9 @@
       "policy": "FSSQL-R",
       "condition": "n16/B2",
       "seed": 5104,
-      "pi_raw": "/Users/nuonanouyang/Documents/Codex/2026-09-09/TSUSC_2026_07_0200_MAJOR_REVISION_REBUILD/evidence/pi4b8_formal_matrix/pi4b8_formal_43_fssql_r_n16_B2_s5104/pi4b8_formal_43_fssql_r_n16_B2_s5104/windows.csv",
-      "powerz": "/Users/nuonanouyang/Documents/Codex/2026-09-09/TSUSC_2026_07_0200_MAJOR_REVISION_REBUILD/evidence/pi4b8_formal_matrix/pi4b8_formal_43_fssql_r_n16_B2_s5104/POWERZ_raw.csv",
-      "handshake": "/Users/nuonanouyang/Documents/Codex/2026-09-09/TSUSC_2026_07_0200_MAJOR_REVISION_REBUILD/evidence/pi4b8_formal_matrix/pi4b8_formal_43_fssql_r_n16_B2_s5104/HANDSHAKE.json"
+      "pi_raw": "<frozen_source_root>/evidence/pi4b8_formal_matrix/pi4b8_formal_43_fssql_r_n16_B2_s5104/pi4b8_formal_43_fssql_r_n16_B2_s5104/windows.csv",
+      "powerz": "<frozen_source_root>/evidence/pi4b8_formal_matrix/pi4b8_formal_43_fssql_r_n16_B2_s5104/POWERZ_raw.csv",
+      "handshake": "<frozen_source_root>/evidence/pi4b8_formal_matrix/pi4b8_formal_43_fssql_r_n16_B2_s5104/HANDSHAKE.json"
     },
     {
       "cell_run_id": "pi4b8_formal_44_threshold_n16_B1_s5104",
@@ -483,9 +483,9 @@
       "policy": "Threshold",
       "condition": "n16/B1",
       "seed": 5104,
-      "pi_raw": "/Users/nuonanouyang/Documents/Codex/2026-09-09/TSUSC_2026_07_0200_MAJOR_REVISION_REBUILD/evidence/pi4b8_formal_matrix/pi4b8_formal_44_threshold_n16_B1_s5104/pi4b8_formal_44_threshold_n16_B1_s5104/windows.csv",
-      "powerz": "/Users/nuonanouyang/Documents/Codex/2026-09-09/TSUSC_2026_07_0200_MAJOR_REVISION_REBUILD/evidence/pi4b8_formal_matrix/pi4b8_formal_44_threshold_n16_B1_s5104/POWERZ_raw.csv",
-      "handshake": "/Users/nuonanouyang/Documents/Codex/2026-09-09/TSUSC_2026_07_0200_MAJOR_REVISION_REBUILD/evidence/pi4b8_formal_matrix/pi4b8_formal_44_threshold_n16_B1_s5104/HANDSHAKE.json"
+      "pi_raw": "<frozen_source_root>/evidence/pi4b8_formal_matrix/pi4b8_formal_44_threshold_n16_B1_s5104/pi4b8_formal_44_threshold_n16_B1_s5104/windows.csv",
+      "powerz": "<frozen_source_root>/evidence/pi4b8_formal_matrix/pi4b8_formal_44_threshold_n16_B1_s5104/POWERZ_raw.csv",
+      "handshake": "<frozen_source_root>/evidence/pi4b8_formal_matrix/pi4b8_formal_44_threshold_n16_B1_s5104/HANDSHAKE.json"
     },
     {
       "cell_run_id": "pi4b8_formal_45_static_light_n16_B2_s5104",
@@ -494,9 +494,9 @@
       "policy": "Static-Light",
       "condition": "n16/B2",
       "seed": 5104,
-      "pi_raw": "/Users/nuonanouyang/Documents/Codex/2026-09-09/TSUSC_2026_07_0200_MAJOR_REVISION_REBUILD/evidence/pi4b8_formal_matrix/pi4b8_formal_45_static_light_n16_B2_s5104/pi4b8_formal_45_static_light_n16_B2_s5104/windows.csv",
-      "powerz": "/Users/nuonanouyang/Documents/Codex/2026-09-09/TSUSC_2026_07_0200_MAJOR_REVISION_REBUILD/evidence/pi4b8_formal_matrix/pi4b8_formal_45_static_light_n16_B2_s5104/POWERZ_raw.csv",
-      "handshake": "/Users/nuonanouyang/Documents/Codex/2026-09-09/TSUSC_2026_07_0200_MAJOR_REVISION_REBUILD/evidence/pi4b8_formal_matrix/pi4b8_formal_45_static_light_n16_B2_s5104/HANDSHAKE.json"
+      "pi_raw": "<frozen_source_root>/evidence/pi4b8_formal_matrix/pi4b8_formal_45_static_light_n16_B2_s5104/pi4b8_formal_45_static_light_n16_B2_s5104/windows.csv",
+      "powerz": "<frozen_source_root>/evidence/pi4b8_formal_matrix/pi4b8_formal_45_static_light_n16_B2_s5104/POWERZ_raw.csv",
+      "handshake": "<frozen_source_root>/evidence/pi4b8_formal_matrix/pi4b8_formal_45_static_light_n16_B2_s5104/HANDSHAKE.json"
     },
     {
       "cell_run_id": "pi4b8_formal_46_safe_greedy_n16_B0_s5104",
@@ -505,9 +505,9 @@
       "policy": "Safe-Greedy",
       "condition": "n16/B0",
       "seed": 5104,
-      "pi_raw": "/Users/nuonanouyang/Documents/Codex/2026-09-09/TSUSC_2026_07_0200_MAJOR_REVISION_REBUILD/evidence/pi4b8_formal_matrix/pi4b8_formal_46_safe_greedy_n16_B0_s5104/pi4b8_formal_46_safe_greedy_n16_B0_s5104/windows.csv",
-      "powerz": "/Users/nuonanouyang/Documents/Codex/2026-09-09/TSUSC_2026_07_0200_MAJOR_REVISION_REBUILD/evidence/pi4b8_formal_matrix/pi4b8_formal_46_safe_greedy_n16_B0_s5104/POWERZ_raw.csv",
-      "handshake": "/Users/nuonanouyang/Documents/Codex/2026-09-09/TSUSC_2026_07_0200_MAJOR_REVISION_REBUILD/evidence/pi4b8_formal_matrix/pi4b8_formal_46_safe_greedy_n16_B0_s5104/HANDSHAKE.json"
+      "pi_raw": "<frozen_source_root>/evidence/pi4b8_formal_matrix/pi4b8_formal_46_safe_greedy_n16_B0_s5104/pi4b8_formal_46_safe_greedy_n16_B0_s5104/windows.csv",
+      "powerz": "<frozen_source_root>/evidence/pi4b8_formal_matrix/pi4b8_formal_46_safe_greedy_n16_B0_s5104/POWERZ_raw.csv",
+      "handshake": "<frozen_source_root>/evidence/pi4b8_formal_matrix/pi4b8_formal_46_safe_greedy_n16_B0_s5104/HANDSHAKE.json"
     },
     {
       "cell_run_id": "pi4b8_formal_47_fssql_r_n16_B0_s5104",
@@ -516,9 +516,9 @@
       "policy": "FSSQL-R",
       "condition": "n16/B0",
       "seed": 5104,
-      "pi_raw": "/Users/nuonanouyang/Documents/Codex/2026-09-09/TSUSC_2026_07_0200_MAJOR_REVISION_REBUILD/evidence/pi4b8_formal_matrix/pi4b8_formal_47_fssql_r_n16_B0_s5104/pi4b8_formal_47_fssql_r_n16_B0_s5104/windows.csv",
-      "powerz": "/Users/nuonanouyang/Documents/Codex/2026-09-09/TSUSC_2026_07_0200_MAJOR_REVISION_REBUILD/evidence/pi4b8_formal_matrix/pi4b8_formal_47_fssql_r_n16_B0_s5104/POWERZ_raw.csv",
-      "handshake": "/Users/nuonanouyang/Documents/Codex/2026-09-09/TSUSC_2026_07_0200_MAJOR_REVISION_REBUILD/evidence/pi4b8_formal_matrix/pi4b8_formal_47_fssql_r_n16_B0_s5104/HANDSHAKE.json"
+      "pi_raw": "<frozen_source_root>/evidence/pi4b8_formal_matrix/pi4b8_formal_47_fssql_r_n16_B0_s5104/pi4b8_formal_47_fssql_r_n16_B0_s5104/windows.csv",
+      "powerz": "<frozen_source_root>/evidence/pi4b8_formal_matrix/pi4b8_formal_47_fssql_r_n16_B0_s5104/POWERZ_raw.csv",
+      "handshake": "<frozen_source_root>/evidence/pi4b8_formal_matrix/pi4b8_formal_47_fssql_r_n16_B0_s5104/HANDSHAKE.json"
     },
     {
       "cell_run_id": "pi4b8_formal_48_threshold_n16_B2_s5104",
@@ -527,9 +527,9 @@
       "policy": "Threshold",
       "condition": "n16/B2",
       "seed": 5104,
-      "pi_raw": "/Users/nuonanouyang/Documents/Codex/2026-09-09/TSUSC_2026_07_0200_MAJOR_REVISION_REBUILD/evidence/pi4b8_formal_matrix/pi4b8_formal_48_threshold_n16_B2_s5104/pi4b8_formal_48_threshold_n16_B2_s5104/windows.csv",
-      "powerz": "/Users/nuonanouyang/Documents/Codex/2026-09-09/TSUSC_2026_07_0200_MAJOR_REVISION_REBUILD/evidence/pi4b8_formal_matrix/pi4b8_formal_48_threshold_n16_B2_s5104/POWERZ_raw.csv",
-      "handshake": "/Users/nuonanouyang/Documents/Codex/2026-09-09/TSUSC_2026_07_0200_MAJOR_REVISION_REBUILD/evidence/pi4b8_formal_matrix/pi4b8_formal_48_threshold_n16_B2_s5104/HANDSHAKE.json"
+      "pi_raw": "<frozen_source_root>/evidence/pi4b8_formal_matrix/pi4b8_formal_48_threshold_n16_B2_s5104/pi4b8_formal_48_threshold_n16_B2_s5104/windows.csv",
+      "powerz": "<frozen_source_root>/evidence/pi4b8_formal_matrix/pi4b8_formal_48_threshold_n16_B2_s5104/POWERZ_raw.csv",
+      "handshake": "<frozen_source_root>/evidence/pi4b8_formal_matrix/pi4b8_formal_48_threshold_n16_B2_s5104/HANDSHAKE.json"
     },
     {
       "cell_run_id": "pi4b8_formal_49_static_light_n16_B1_s5105",
@@ -538,9 +538,9 @@
       "policy": "Static-Light",
       "condition": "n16/B1",
       "seed": 5105,
-      "pi_raw": "/Users/nuonanouyang/Documents/Codex/2026-09-09/TSUSC_2026_07_0200_MAJOR_REVISION_REBUILD/evidence/pi4b8_formal_matrix/pi4b8_formal_49_static_light_n16_B1_s5105/pi4b8_formal_49_static_light_n16_B1_s5105/windows.csv",
-      "powerz": "/Users/nuonanouyang/Documents/Codex/2026-09-09/TSUSC_2026_07_0200_MAJOR_REVISION_REBUILD/evidence/pi4b8_formal_matrix/pi4b8_formal_49_static_light_n16_B1_s5105/POWERZ_raw.csv",
-      "handshake": "/Users/nuonanouyang/Documents/Codex/2026-09-09/TSUSC_2026_07_0200_MAJOR_REVISION_REBUILD/evidence/pi4b8_formal_matrix/pi4b8_formal_49_static_light_n16_B1_s5105/HANDSHAKE.json"
+      "pi_raw": "<frozen_source_root>/evidence/pi4b8_formal_matrix/pi4b8_formal_49_static_light_n16_B1_s5105/pi4b8_formal_49_static_light_n16_B1_s5105/windows.csv",
+      "powerz": "<frozen_source_root>/evidence/pi4b8_formal_matrix/pi4b8_formal_49_static_light_n16_B1_s5105/POWERZ_raw.csv",
+      "handshake": "<frozen_source_root>/evidence/pi4b8_formal_matrix/pi4b8_formal_49_static_light_n16_B1_s5105/HANDSHAKE.json"
     },
     {
       "cell_run_id": "pi4b8_formal_50_threshold_n16_B2_s5105",
@@ -549,9 +549,9 @@
       "policy": "Threshold",
       "condition": "n16/B2",
       "seed": 5105,
-      "pi_raw": "/Users/nuonanouyang/Documents/Codex/2026-09-09/TSUSC_2026_07_0200_MAJOR_REVISION_REBUILD/evidence/pi4b8_formal_matrix/pi4b8_formal_50_threshold_n16_B2_s5105/pi4b8_formal_50_threshold_n16_B2_s5105/windows.csv",
-      "powerz": "/Users/nuonanouyang/Documents/Codex/2026-09-09/TSUSC_2026_07_0200_MAJOR_REVISION_REBUILD/evidence/pi4b8_formal_matrix/pi4b8_formal_50_threshold_n16_B2_s5105/POWERZ_raw.csv",
-      "handshake": "/Users/nuonanouyang/Documents/Codex/2026-09-09/TSUSC_2026_07_0200_MAJOR_REVISION_REBUILD/evidence/pi4b8_formal_matrix/pi4b8_formal_50_threshold_n16_B2_s5105/HANDSHAKE.json"
+      "pi_raw": "<frozen_source_root>/evidence/pi4b8_formal_matrix/pi4b8_formal_50_threshold_n16_B2_s5105/pi4b8_formal_50_threshold_n16_B2_s5105/windows.csv",
+      "powerz": "<frozen_source_root>/evidence/pi4b8_formal_matrix/pi4b8_formal_50_threshold_n16_B2_s5105/POWERZ_raw.csv",
+      "handshake": "<frozen_source_root>/evidence/pi4b8_formal_matrix/pi4b8_formal_50_threshold_n16_B2_s5105/HANDSHAKE.json"
     },
     {
       "cell_run_id": "pi4b8_formal_51_fssql_r_n16_B2_s5105",
@@ -560,9 +560,9 @@
       "policy": "FSSQL-R",
       "condition": "n16/B2",
       "seed": 5105,
-      "pi_raw": "/Users/nuonanouyang/Documents/Codex/2026-09-09/TSUSC_2026_07_0200_MAJOR_REVISION_REBUILD/evidence/pi4b8_formal_matrix/pi4b8_formal_51_fssql_r_n16_B2_s5105_attempt2/pi4b8_formal_51_fssql_r_n16_B2_s5105_attempt2/windows.csv",
-      "powerz": "/Users/nuonanouyang/Documents/Codex/2026-09-09/TSUSC_2026_07_0200_MAJOR_REVISION_REBUILD/evidence/pi4b8_formal_matrix/pi4b8_formal_51_fssql_r_n16_B2_s5105_attempt2/POWERZ_raw.csv",
-      "handshake": "/Users/nuonanouyang/Documents/Codex/2026-09-09/TSUSC_2026_07_0200_MAJOR_REVISION_REBUILD/evidence/pi4b8_formal_matrix/pi4b8_formal_51_fssql_r_n16_B2_s5105_attempt2/HANDSHAKE.json"
+      "pi_raw": "<frozen_source_root>/evidence/pi4b8_formal_matrix/pi4b8_formal_51_fssql_r_n16_B2_s5105_attempt2/pi4b8_formal_51_fssql_r_n16_B2_s5105_attempt2/windows.csv",
+      "powerz": "<frozen_source_root>/evidence/pi4b8_formal_matrix/pi4b8_formal_51_fssql_r_n16_B2_s5105_attempt2/POWERZ_raw.csv",
+      "handshake": "<frozen_source_root>/evidence/pi4b8_formal_matrix/pi4b8_formal_51_fssql_r_n16_B2_s5105_attempt2/HANDSHAKE.json"
     },
     {
       "cell_run_id": "pi4b8_formal_52_safe_greedy_n16_B1_s5105",
@@ -571,9 +571,9 @@
       "policy": "Safe-Greedy",
       "condition": "n16/B1",
       "seed": 5105,
-      "pi_raw": "/Users/nuonanouyang/Documents/Codex/2026-09-09/TSUSC_2026_07_0200_MAJOR_REVISION_REBUILD/evidence/pi4b8_formal_matrix/pi4b8_formal_52_safe_greedy_n16_B1_s5105/pi4b8_formal_52_safe_greedy_n16_B1_s5105/windows.csv",
-      "powerz": "/Users/nuonanouyang/Documents/Codex/2026-09-09/TSUSC_2026_07_0200_MAJOR_REVISION_REBUILD/evidence/pi4b8_formal_matrix/pi4b8_formal_52_safe_greedy_n16_B1_s5105/POWERZ_raw.csv",
-      "handshake": "/Users/nuonanouyang/Documents/Codex/2026-09-09/TSUSC_2026_07_0200_MAJOR_REVISION_REBUILD/evidence/pi4b8_formal_matrix/pi4b8_formal_52_safe_greedy_n16_B1_s5105/HANDSHAKE.json"
+      "pi_raw": "<frozen_source_root>/evidence/pi4b8_formal_matrix/pi4b8_formal_52_safe_greedy_n16_B1_s5105/pi4b8_formal_52_safe_greedy_n16_B1_s5105/windows.csv",
+      "powerz": "<frozen_source_root>/evidence/pi4b8_formal_matrix/pi4b8_formal_52_safe_greedy_n16_B1_s5105/POWERZ_raw.csv",
+      "handshake": "<frozen_source_root>/evidence/pi4b8_formal_matrix/pi4b8_formal_52_safe_greedy_n16_B1_s5105/HANDSHAKE.json"
     },
     {
       "cell_run_id": "pi4b8_formal_53_static_light_n16_B0_s5105",
@@ -582,9 +582,9 @@
       "policy": "Static-Light",
       "condition": "n16/B0",
       "seed": 5105,
-      "pi_raw": "/Users/nuonanouyang/Documents/Codex/2026-09-09/TSUSC_2026_07_0200_MAJOR_REVISION_REBUILD/evidence/pi4b8_formal_matrix/pi4b8_formal_53_static_light_n16_B0_s5105/pi4b8_formal_53_static_light_n16_B0_s5105/windows.csv",
-      "powerz": "/Users/nuonanouyang/Documents/Codex/2026-09-09/TSUSC_2026_07_0200_MAJOR_REVISION_REBUILD/evidence/pi4b8_formal_matrix/pi4b8_formal_53_static_light_n16_B0_s5105/POWERZ_raw.csv",
-      "handshake": "/Users/nuonanouyang/Documents/Codex/2026-09-09/TSUSC_2026_07_0200_MAJOR_REVISION_REBUILD/evidence/pi4b8_formal_matrix/pi4b8_formal_53_static_light_n16_B0_s5105/HANDSHAKE.json"
+      "pi_raw": "<frozen_source_root>/evidence/pi4b8_formal_matrix/pi4b8_formal_53_static_light_n16_B0_s5105/pi4b8_formal_53_static_light_n16_B0_s5105/windows.csv",
+      "powerz": "<frozen_source_root>/evidence/pi4b8_formal_matrix/pi4b8_formal_53_static_light_n16_B0_s5105/POWERZ_raw.csv",
+      "handshake": "<frozen_source_root>/evidence/pi4b8_formal_matrix/pi4b8_formal_53_static_light_n16_B0_s5105/HANDSHAKE.json"
     },
     {
       "cell_run_id": "pi4b8_formal_54_fssql_r_n16_B0_s5105",
@@ -593,9 +593,9 @@
       "policy": "FSSQL-R",
       "condition": "n16/B0",
       "seed": 5105,
-      "pi_raw": "/Users/nuonanouyang/Documents/Codex/2026-09-09/TSUSC_2026_07_0200_MAJOR_REVISION_REBUILD/evidence/pi4b8_formal_matrix/pi4b8_formal_54_fssql_r_n16_B0_s5105/pi4b8_formal_54_fssql_r_n16_B0_s5105/windows.csv",
-      "powerz": "/Users/nuonanouyang/Documents/Codex/2026-09-09/TSUSC_2026_07_0200_MAJOR_REVISION_REBUILD/evidence/pi4b8_formal_matrix/pi4b8_formal_54_fssql_r_n16_B0_s5105/POWERZ_raw.csv",
-      "handshake": "/Users/nuonanouyang/Documents/Codex/2026-09-09/TSUSC_2026_07_0200_MAJOR_REVISION_REBUILD/evidence/pi4b8_formal_matrix/pi4b8_formal_54_fssql_r_n16_B0_s5105/HANDSHAKE.json"
+      "pi_raw": "<frozen_source_root>/evidence/pi4b8_formal_matrix/pi4b8_formal_54_fssql_r_n16_B0_s5105/pi4b8_formal_54_fssql_r_n16_B0_s5105/windows.csv",
+      "powerz": "<frozen_source_root>/evidence/pi4b8_formal_matrix/pi4b8_formal_54_fssql_r_n16_B0_s5105/POWERZ_raw.csv",
+      "handshake": "<frozen_source_root>/evidence/pi4b8_formal_matrix/pi4b8_formal_54_fssql_r_n16_B0_s5105/HANDSHAKE.json"
     },
     {
       "cell_run_id": "pi4b8_formal_55_safe_greedy_n16_B0_s5105",
@@ -604,9 +604,9 @@
       "policy": "Safe-Greedy",
       "condition": "n16/B0",
       "seed": 5105,
-      "pi_raw": "/Users/nuonanouyang/Documents/Codex/2026-09-09/TSUSC_2026_07_0200_MAJOR_REVISION_REBUILD/evidence/pi4b8_formal_matrix/pi4b8_formal_55_safe_greedy_n16_B0_s5105/pi4b8_formal_55_safe_greedy_n16_B0_s5105/windows.csv",
-      "powerz": "/Users/nuonanouyang/Documents/Codex/2026-09-09/TSUSC_2026_07_0200_MAJOR_REVISION_REBUILD/evidence/pi4b8_formal_matrix/pi4b8_formal_55_safe_greedy_n16_B0_s5105/POWERZ_raw.csv",
-      "handshake": "/Users/nuonanouyang/Documents/Codex/2026-09-09/TSUSC_2026_07_0200_MAJOR_REVISION_REBUILD/evidence/pi4b8_formal_matrix/pi4b8_formal_55_safe_greedy_n16_B0_s5105/HANDSHAKE.json"
+      "pi_raw": "<frozen_source_root>/evidence/pi4b8_formal_matrix/pi4b8_formal_55_safe_greedy_n16_B0_s5105/pi4b8_formal_55_safe_greedy_n16_B0_s5105/windows.csv",
+      "powerz": "<frozen_source_root>/evidence/pi4b8_formal_matrix/pi4b8_formal_55_safe_greedy_n16_B0_s5105/POWERZ_raw.csv",
+      "handshake": "<frozen_source_root>/evidence/pi4b8_formal_matrix/pi4b8_formal_55_safe_greedy_n16_B0_s5105/HANDSHAKE.json"
     },
     {
       "cell_run_id": "pi4b8_formal_56_threshold_n16_B0_s5105",
@@ -615,9 +615,9 @@
       "policy": "Threshold",
       "condition": "n16/B0",
       "seed": 5105,
-      "pi_raw": "/Users/nuonanouyang/Documents/Codex/2026-09-09/TSUSC_2026_07_0200_MAJOR_REVISION_REBUILD/evidence/pi4b8_formal_matrix/pi4b8_formal_56_threshold_n16_B0_s5105/pi4b8_formal_56_threshold_n16_B0_s5105/windows.csv",
-      "powerz": "/Users/nuonanouyang/Documents/Codex/2026-09-09/TSUSC_2026_07_0200_MAJOR_REVISION_REBUILD/evidence/pi4b8_formal_matrix/pi4b8_formal_56_threshold_n16_B0_s5105/POWERZ_raw.csv",
-      "handshake": "/Users/nuonanouyang/Documents/Codex/2026-09-09/TSUSC_2026_07_0200_MAJOR_REVISION_REBUILD/evidence/pi4b8_formal_matrix/pi4b8_formal_56_threshold_n16_B0_s5105/HANDSHAKE.json"
+      "pi_raw": "<frozen_source_root>/evidence/pi4b8_formal_matrix/pi4b8_formal_56_threshold_n16_B0_s5105/pi4b8_formal_56_threshold_n16_B0_s5105/windows.csv",
+      "powerz": "<frozen_source_root>/evidence/pi4b8_formal_matrix/pi4b8_formal_56_threshold_n16_B0_s5105/POWERZ_raw.csv",
+      "handshake": "<frozen_source_root>/evidence/pi4b8_formal_matrix/pi4b8_formal_56_threshold_n16_B0_s5105/HANDSHAKE.json"
     },
     {
       "cell_run_id": "pi4b8_formal_57_static_light_n16_B2_s5105",
@@ -626,9 +626,9 @@
       "policy": "Static-Light",
       "condition": "n16/B2",
       "seed": 5105,
-      "pi_raw": "/Users/nuonanouyang/Documents/Codex/2026-09-09/TSUSC_2026_07_0200_MAJOR_REVISION_REBUILD/evidence/pi4b8_formal_matrix/pi4b8_formal_57_static_light_n16_B2_s5105/pi4b8_formal_57_static_light_n16_B2_s5105/windows.csv",
-      "powerz": "/Users/nuonanouyang/Documents/Codex/2026-09-09/TSUSC_2026_07_0200_MAJOR_REVISION_REBUILD/evidence/pi4b8_formal_matrix/pi4b8_formal_57_static_light_n16_B2_s5105/POWERZ_raw.csv",
-      "handshake": "/Users/nuonanouyang/Documents/Codex/2026-09-09/TSUSC_2026_07_0200_MAJOR_REVISION_REBUILD/evidence/pi4b8_formal_matrix/pi4b8_formal_57_static_light_n16_B2_s5105/HANDSHAKE.json"
+      "pi_raw": "<frozen_source_root>/evidence/pi4b8_formal_matrix/pi4b8_formal_57_static_light_n16_B2_s5105/pi4b8_formal_57_static_light_n16_B2_s5105/windows.csv",
+      "powerz": "<frozen_source_root>/evidence/pi4b8_formal_matrix/pi4b8_formal_57_static_light_n16_B2_s5105/POWERZ_raw.csv",
+      "handshake": "<frozen_source_root>/evidence/pi4b8_formal_matrix/pi4b8_formal_57_static_light_n16_B2_s5105/HANDSHAKE.json"
     },
     {
       "cell_run_id": "pi4b8_formal_58_threshold_n16_B1_s5105",
@@ -637,9 +637,9 @@
       "policy": "Threshold",
       "condition": "n16/B1",
       "seed": 5105,
-      "pi_raw": "/Users/nuonanouyang/Documents/Codex/2026-09-09/TSUSC_2026_07_0200_MAJOR_REVISION_REBUILD/evidence/pi4b8_formal_matrix/pi4b8_formal_58_threshold_n16_B1_s5105/pi4b8_formal_58_threshold_n16_B1_s5105/windows.csv",
-      "powerz": "/Users/nuonanouyang/Documents/Codex/2026-09-09/TSUSC_2026_07_0200_MAJOR_REVISION_REBUILD/evidence/pi4b8_formal_matrix/pi4b8_formal_58_threshold_n16_B1_s5105/POWERZ_raw.csv",
-      "handshake": "/Users/nuonanouyang/Documents/Codex/2026-09-09/TSUSC_2026_07_0200_MAJOR_REVISION_REBUILD/evidence/pi4b8_formal_matrix/pi4b8_formal_58_threshold_n16_B1_s5105/HANDSHAKE.json"
+      "pi_raw": "<frozen_source_root>/evidence/pi4b8_formal_matrix/pi4b8_formal_58_threshold_n16_B1_s5105/pi4b8_formal_58_threshold_n16_B1_s5105/windows.csv",
+      "powerz": "<frozen_source_root>/evidence/pi4b8_formal_matrix/pi4b8_formal_58_threshold_n16_B1_s5105/POWERZ_raw.csv",
+      "handshake": "<frozen_source_root>/evidence/pi4b8_formal_matrix/pi4b8_formal_58_threshold_n16_B1_s5105/HANDSHAKE.json"
     },
     {
       "cell_run_id": "pi4b8_formal_59_safe_greedy_n16_B2_s5105",
@@ -648,9 +648,9 @@
       "policy": "Safe-Greedy",
       "condition": "n16/B2",
       "seed": 5105,
-      "pi_raw": "/Users/nuonanouyang/Documents/Codex/2026-09-09/TSUSC_2026_07_0200_MAJOR_REVISION_REBUILD/evidence/pi4b8_formal_matrix/pi4b8_formal_59_safe_greedy_n16_B2_s5105/pi4b8_formal_59_safe_greedy_n16_B2_s5105/windows.csv",
-      "powerz": "/Users/nuonanouyang/Documents/Codex/2026-09-09/TSUSC_2026_07_0200_MAJOR_REVISION_REBUILD/evidence/pi4b8_formal_matrix/pi4b8_formal_59_safe_greedy_n16_B2_s5105/POWERZ_raw.csv",
-      "handshake": "/Users/nuonanouyang/Documents/Codex/2026-09-09/TSUSC_2026_07_0200_MAJOR_REVISION_REBUILD/evidence/pi4b8_formal_matrix/pi4b8_formal_59_safe_greedy_n16_B2_s5105/HANDSHAKE.json"
+      "pi_raw": "<frozen_source_root>/evidence/pi4b8_formal_matrix/pi4b8_formal_59_safe_greedy_n16_B2_s5105/pi4b8_formal_59_safe_greedy_n16_B2_s5105/windows.csv",
+      "powerz": "<frozen_source_root>/evidence/pi4b8_formal_matrix/pi4b8_formal_59_safe_greedy_n16_B2_s5105/POWERZ_raw.csv",
+      "handshake": "<frozen_source_root>/evidence/pi4b8_formal_matrix/pi4b8_formal_59_safe_greedy_n16_B2_s5105/HANDSHAKE.json"
     },
     {
       "cell_run_id": "pi4b8_formal_60_fssql_r_n16_B1_s5105",
@@ -659,9 +659,9 @@
       "policy": "FSSQL-R",
       "condition": "n16/B1",
       "seed": 5105,
-      "pi_raw": "/Users/nuonanouyang/Documents/Codex/2026-09-09/TSUSC_2026_07_0200_MAJOR_REVISION_REBUILD/evidence/pi4b8_formal_matrix/pi4b8_formal_60_fssql_r_n16_B1_s5105/pi4b8_formal_60_fssql_r_n16_B1_s5105/windows.csv",
-      "powerz": "/Users/nuonanouyang/Documents/Codex/2026-09-09/TSUSC_2026_07_0200_MAJOR_REVISION_REBUILD/evidence/pi4b8_formal_matrix/pi4b8_formal_60_fssql_r_n16_B1_s5105/POWERZ_raw.csv",
-      "handshake": "/Users/nuonanouyang/Documents/Codex/2026-09-09/TSUSC_2026_07_0200_MAJOR_REVISION_REBUILD/evidence/pi4b8_formal_matrix/pi4b8_formal_60_fssql_r_n16_B1_s5105/HANDSHAKE.json"
+      "pi_raw": "<frozen_source_root>/evidence/pi4b8_formal_matrix/pi4b8_formal_60_fssql_r_n16_B1_s5105/pi4b8_formal_60_fssql_r_n16_B1_s5105/windows.csv",
+      "powerz": "<frozen_source_root>/evidence/pi4b8_formal_matrix/pi4b8_formal_60_fssql_r_n16_B1_s5105/POWERZ_raw.csv",
+      "handshake": "<frozen_source_root>/evidence/pi4b8_formal_matrix/pi4b8_formal_60_fssql_r_n16_B1_s5105/HANDSHAKE.json"
     }
   ]
 }
