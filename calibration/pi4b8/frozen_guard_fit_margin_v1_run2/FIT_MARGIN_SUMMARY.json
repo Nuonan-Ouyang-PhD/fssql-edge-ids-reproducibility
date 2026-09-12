@@ -1,0 +1,23 @@
+{
+  "status": "FIT_AND_MARGIN_FROZEN_BEFORE_COVERAGE",
+  "device_id": "pi4b8g",
+  "protocol_version": 2,
+  "calibration_round": 1,
+  "fit_run_id": "pi4b8_fit_20260910_v3",
+  "margin_run_id": "pi4b8_margin_20260910",
+  "fit_raw_sha256": "2bdd3499aa9fd6e9702e01c1101f73f493614d37f1d49a3a5fc11ddac1350079",
+  "margin_raw_sha256": "6351744de7f5d0d83f480be6d13b76d032845b0e9131464c15e63c4b0cc81820",
+  "collection_config_sha256": "ace822fc3b0c0d2dafa791b929adf6ce8923bee645ef3d1edf37548fe3e8b227",
+  "predictor_config_sha256": "c68c0fb7b914ae194e9e258aca6a2b322fa0887f035567cd55954267f50cc90a",
+  "fit_n": 2880,
+  "margin_n": 2880,
+  "latency_cells": 72,
+  "thermal_design_columns": 8,
+  "coverage_access": "not used",
+  "artifact_sha256": {
+    "latency_predictor.csv": "47f9126b40d49e2b085bab34ea595e3a1c339cb97f5d61b644863f8d78cf273c",
+    "thermal_predictor.json": "ba65dfec91c76ee86ad18ebc6f6b99e9c4881c7b46e20cd9cebf086b37d2a6e5",
+    "guard_margins.json": "bedc7b4ce2be5efce82dea220a9d311052aeea9a80d1022680c38c65c16c523a",
+    "guard_residuals_fit_margin.csv": "96974918731c336ca50c65294984831c630c7d1311202b4f409f7a2d6e5ab208"
+  }
+}

@@ -1,0 +1,203 @@
+{
+  "status": "PREREGISTERED_BEFORE_STRESS_EXTENSION_V3_POLICY_EXECUTION",
+  "extension_version": 3,
+  "device_id": "pi3bplus",
+  "relationship_to_formal_matrix_v1": "separate binding-resource extension; not a retry, replacement, or relabelling",
+  "formal_matrix_v1_commit": "6923d20e578497d88a399da243e30dc2db892348",
+  "binding_selection_commit": "aeccfe7ea1ae49265720568518b242d249c5dd43",
+  "policies": [
+    "Static-Light",
+    "Round-Robin",
+    "Safe-Greedy",
+    "Threshold",
+    "Unshielded-Q",
+    "FSSQL-R"
+  ],
+  "regimes": ["binding_resource"],
+  "evaluation_seeds": [4101, 4102, 4103, 4104, 4105, 4106, 4107, 4108, 4109, 4110],
+  "windows_per_run": 600,
+  "decision_window_ms": 100.0,
+  "constraints": {
+    "latency_cap_ms": 40.0,
+    "thermal_cap_c": 82.0,
+    "emergency_stop_c": 58.0
+  },
+  "workloads": {
+    "binding_resource": {
+      "n_records": 16,
+      "background": "B0",
+      "background_duty": 0.0,
+      "source": "first qualifying candidate selected by the committed outcome-blind Protocol V3 sweep",
+      "batch_trace_rule": "For decision window w, use the 16 matched-trace entries at positions (16*w+j) mod 600 for j=0..15 in the frozen per-seed trace order.",
+      "trace_multiplicity": "Each of the 600 frozen matched-trace entries is evaluated exactly 16 times per run.",
+      "risk_aggregation": "arithmetic mean of the 16 per-record frozen risk-proxy scores before policy selection",
+      "label_boundary": "labels remain separate and are accessed only after action selection and detector inference",
+      "outcome_aggregation": "tp, fp, tn, and fn are integer counts across the 16 records in the decision window",
+      "records_per_run": 9600
+    }
+  },
+  "action_order": [
+    "fisvdd_revision",
+    "lucid_revision",
+    "tinydl_revision",
+    "oi_svdd_as_elm_revision"
+  ],
+  "action_roles": {
+    "light": "fisvdd_revision",
+    "heavy": "tinydl_revision"
+  },
+  "policy_logic": {
+    "Static-Light": "Always select fisvdd_revision.",
+    "Round-Robin": "Select action_order[window_id mod 4].",
+    "Safe-Greedy": "Using the exact V2 guard shared with FSSQL-R, maximize the unchanged frozen immediate reward over A_safe; use the frozen FISVDD fallback only if empty.",
+    "Threshold": "Apply the unchanged frozen conventional threshold hysteresis without A_safe.",
+    "Unshielded-Q": "Greedy argmax from the mapped frozen Unshielded-Q table over all actions; epsilon=0 and no update.",
+    "FSSQL-R": "Greedy argmax from the mapped frozen FSSQL-R table over the exact same V2 A_safe used by Safe-Greedy; epsilon=0 and no update; frozen FISVDD fallback only if empty."
+  },
+  "guard_lock": {
+    "workload_specific_inputs": "V2 n16/B0 latency and thermal predictions",
+    "unchanged_components": "40 ms and 82 C caps, V2 predictors, per-action residual margins, shared thermal margin, and fixed 10 ms/0.6 C buffers",
+    "expected_development_safe_set": [
+      "fisvdd_revision",
+      "tinydl_revision",
+      "oi_svdd_as_elm_revision"
+    ],
+    "expected_excluded_action": "lucid_revision"
+  },
+  "threshold_controller": {
+    "uses_shield": false,
+    "T_hi_C": 80.99816539732174,
+    "T_lo_C": 78.99816539732174,
+    "q_hi_records": 256,
+    "q_lo_records": 64,
+    "p_hi": 0.7,
+    "heavy_action": "tinydl_revision",
+    "light_action": "fisvdd_revision",
+    "source": "unchanged Formal Matrix V1 preregistration"
+  },
+  "q_learning": {
+    "config": "configs/q_learning_protocol.json",
+    "config_sha256": "82894b5435ffc923c0704e39ba0786256ae6329c491d4b0476c0c6365fa1f182",
+    "manifest": "q_training/Q_TABLE_MANIFEST.json",
+    "manifest_sha256": "f0a45e60c00260ffcc38dd56a7472bdf0f9978a645574edcf2e9c2e61d01fca9",
+    "evaluation_seed_to_training_seed": {
+      "4101": 3101,
+      "4102": 3102,
+      "4103": 3103,
+      "4104": 3104,
+      "4105": 3105,
+      "4106": 3106,
+      "4107": 3107,
+      "4108": 3108,
+      "4109": 3109,
+      "4110": 3110
+    },
+    "evaluation_epsilon": 0.0,
+    "evaluation_updates": false,
+    "evaluation_replay_updates": false,
+    "state_and_reward_lock": "Use the frozen Q config without retraining. Energy-proxy state transitions and reward costs retain the frozen n1/B0 Q-training definition; n16/B0 changes the V2 guard and measured execution workload, not the learned objective."
+  },
+  "execution_order": {
+    "rule": "Within each matched seed block, apply numpy.random.default_rng(base_seed + evaluation_seed).permutation to the six policies; execute seed blocks in ascending seed order.",
+    "base_seed": 20260909,
+    "matrix_generator": "scripts/build_stress_extension_v3_matrix.py",
+    "matrix_generator_sha256": "c89f254a1bf744ac12e60ff662f08f890562748d16915c948347c62b68dce25d",
+    "matrix_path": "configs/pi3b_stress_extension_v3_matrix.csv",
+    "expected_matrix_sha256": "9a841e4b0fd5bb9fed9ebe571cfa2c5fe49437a59cb5695c8c937a5ee902bf5f"
+  },
+  "runtime": {
+    "collector": "online/pi3b/collect_policy_run.py",
+    "collector_sha256": "ab6dafce99c6d7dd8dcd935d9812637532bbc2ca9645a194a2bbb3f7da13323b",
+    "campaign_runner": "online/pi3b/run_stress_extension_v3_campaign.py",
+    "campaign_runner_sha256": "6f6852cfde7e0ad187a6bbf03ab7c3bca38aea16c32fd57fb5f31cde675ad29a"
+  },
+  "start_and_cooldown": {
+    "idle_samples": 30,
+    "idle_interval_seconds": 1.0,
+    "start_limit": "temperature <= idle median + 2.0 C",
+    "required_governor": "performance",
+    "minimum_frequency_mhz": 1350.0,
+    "required_current_throttled_low_nibble": 0,
+    "cooling": "heatsink, continuously running fan, case top open",
+    "power": "corrected/replaced adapter and cable on stable wall-outlet path"
+  },
+  "invalid_if": [
+    "any current undervoltage or throttle low-nibble bit",
+    "any per-window CPU frequency below 1350 MHz",
+    "temperature at or above 58 C",
+    "cooling or power attestation changes",
+    "input/model/config/Q-table/runtime hash mismatch",
+    "missing, non-finite, incomplete, or semantically inconsistent required log fields",
+    "unrelated background job or unexpected process/I/O failure"
+  ],
+  "invalid_attempt_rule": "Retain the entire partial attempt and lineage. Stop the campaign; never stitch runs and never retry silently.",
+  "required_window_fields": [
+    "run_id", "device_id", "policy", "regime", "seed", "window_id", "wall_timestamp",
+    "mono_start_ns", "mono_end_ns", "p_risk", "T_start_C", "T_end_C", "backlog_start",
+    "backlog_end", "energy_proxy_start", "prev_action", "selected_action", "safe_set_size",
+    "safe_set_mask", "predicted_latency_by_action_ms", "latency_guard_headroom_by_action_ms",
+    "predicted_temperature_by_action_C", "thermal_headroom_by_action_C", "tau_hat_ms",
+    "tau_upper_ms", "temp_hat_next_C", "temp_upper_C", "latency_slack_ms", "thermal_slack_C",
+    "fallback", "telemetry_ms", "state_build_ms", "guard_ms", "selection_ms", "switch_ms",
+    "feature_ms", "inference_ms", "q_update_ms", "replay_update_ms", "logging_ms",
+    "total_controller_ms", "end_to_end_ms", "throttled", "undervoltage", "cpu_frequency_min_mhz",
+    "n_records", "background", "batch_array_indices", "tp", "fp", "tn", "fn", "reward_security",
+    "reward_energy", "reward_backlog", "reward_switch", "reward_total", "latency_violation",
+    "thermal_violation", "any_violation", "valid"
+  ],
+  "official_test": {
+    "status_at_preregistration": "already irrevocably opened for Formal Matrix V1",
+    "input_manifest": ".formal_inputs/pi3b_official_test_v1/OFFICIAL_TEST_INPUT_MANIFEST.json",
+    "accepted_input_manifest_sha256": "59400cf4d5eaff7af89d1802032547035115e1aa7ff01d9e492f29ce5695de20",
+    "formal_matrix_v1_config_sha256": "2d475647136b387af38b8e2d68f4b24bac8c9226abd340540b04bcd6f18976d4",
+    "scheduler_forbidden_fields": ["label", "attack_cat", "id"],
+    "label_access_boundary": "labels are separate and used only after selected-action inference",
+    "post_open_rule": "No model, guard, workload, threshold, reward, state-bin, Q-learning, policy, seed, order, or trace change based on Formal Matrix V1 or Stress Extension V3 outcomes."
+  },
+  "frozen_inputs": {
+    "binding_selection_validation": {
+      "path": "online/pi3b/binding_stress_v3/accepted_attempt_binding_stress_v3_attempt2_20260909T224600Z/INDEPENDENT_VALIDATION.json",
+      "sha256": "9aa7ac33d0204eccab12d0d548a6effad57da16c2a88a199bc25c25c442f66fb"
+    },
+    "binding_decision": {
+      "path": "audit/BINDING_STRESS_V3_DECISION.md",
+      "sha256": "c283ca301d515212499699976c8a0fba742a334586c174bf9b4a3ef397842aab"
+    },
+    "model_manifest": {
+      "path": "models/MODEL_SHA256.json",
+      "sha256": "1c9c21560fcfaf174b20c61ce3f9edfcdc64bb356839bb00128b0c9aaa268847"
+    },
+    "preprocessor": {
+      "path": "preprocessing/preprocessor_portable.npz",
+      "sha256": "77d7ed29880adf3e3e1bcbbb59d5d705653b7c07fdcd88690041a45534b897be"
+    },
+    "risk_proxy": {
+      "path": "risk_proxy/risk_proxy.npz",
+      "sha256": "eff41b7f4bd7b6303ba32d39b19be6e896d9b8c2de8d3a32f850000ea3c712c2"
+    },
+    "scheduler_raw": {
+      "path": "device_calibration/inputs/scheduler_train_6000_raw_features.csv",
+      "sha256": "1f764959e7c01ad67a235f01adecfe74f1c8df4af48a4b96e03d3eea96d7b399"
+    },
+    "scheduler_features": {
+      "path": "device_calibration/inputs/scheduler_train_6000_features.npy",
+      "sha256": "4cbb6849d269129a01038693aa6a981017b55d8949da81074aece2e1100e823d"
+    },
+    "scheduler_risk_features": {
+      "path": "device_calibration/inputs/scheduler_train_6000_risk_features.npy",
+      "sha256": "fee72cdd9445e8ebd4ecb12e888848b52269bd0fe81ef259ecf25525bf711dcd"
+    },
+    "latency_predictor": {
+      "path": "calibration/pi3b/protocol_v2/frozen_guard_fit_margin_v1/latency_predictor.csv",
+      "sha256": "9ec98d3cbce16657622905a12dc238aa10beb526a5304316a86c2841b2545edb"
+    },
+    "thermal_predictor": {
+      "path": "calibration/pi3b/protocol_v2/frozen_guard_fit_margin_v1/thermal_predictor.json",
+      "sha256": "71ca6317ead2e59af43ad034634f6e5d115b437b81578aee55b5fcc1b64cc072"
+    },
+    "guard_margins": {
+      "path": "calibration/pi3b/protocol_v2/frozen_guard_fit_margin_v1/guard_margins.json",
+      "sha256": "1a55ec7f33333b67456d0dddfafd08d46ea8b255f40ea5f56834f9029328e051"
+    }
+  }
+}

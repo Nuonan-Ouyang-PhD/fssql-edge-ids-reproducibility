@@ -1,0 +1,477 @@
+{
+  "entries": [
+    {
+      "bytes": 5541,
+      "path": "pi4b8_online_worker.py",
+      "role": "online worker",
+      "sha256": "1e1f2c9254a513b43d20ba7938ae45baa6526c696885ecdec72c3130e385088a",
+      "source_path": "/Users/nuonanouyang/Documents/Codex/2026-09-09/TSUSC_2026_07_0200_MAJOR_REVISION_REBUILD/online/pi4b8/pi4b8_online_worker.py"
+    },
+    {
+      "bytes": 4489,
+      "path": "runtime/action_pool_numpy.py",
+      "role": "runtime helper",
+      "sha256": "2d8d01e8dd22d14835bb0213210fed62520948ef4a04192c001d491e52a1c95e",
+      "source_path": "/Users/nuonanouyang/Documents/Codex/2026-09-09/TSUSC_2026_07_0200_MAJOR_REVISION_REBUILD/runtime/action_pool_numpy.py"
+    },
+    {
+      "bytes": 2017,
+      "path": "runtime/preprocessor_numpy.py",
+      "role": "runtime helper",
+      "sha256": "07bd20e0291c92bb9909d78c0ffb7f5b6ad32b1b0e90cc4dc7bd615f660d7019",
+      "source_path": "/Users/nuonanouyang/Documents/Codex/2026-09-09/TSUSC_2026_07_0200_MAJOR_REVISION_REBUILD/runtime/preprocessor_numpy.py"
+    },
+    {
+      "bytes": 1133,
+      "path": "runtime/risk_proxy_numpy.py",
+      "role": "runtime helper",
+      "sha256": "261cef0c2e9b359a5075615b09300bad4fc2b747688b11fbb581da691c0599c2",
+      "source_path": "/Users/nuonanouyang/Documents/Codex/2026-09-09/TSUSC_2026_07_0200_MAJOR_REVISION_REBUILD/runtime/risk_proxy_numpy.py"
+    },
+    {
+      "bytes": 3564,
+      "path": "preprocessing/preprocessor_portable.npz",
+      "role": "preprocessor",
+      "sha256": "77d7ed29880adf3e3e1bcbbb59d5d705653b7c07fdcd88690041a45534b897be",
+      "source_path": "/Users/nuonanouyang/Documents/Codex/2026-09-09/TSUSC_2026_07_0200_MAJOR_REVISION_REBUILD/preprocessing/preprocessor_portable.npz"
+    },
+    {
+      "bytes": 1744,
+      "path": "risk_proxy/risk_proxy.npz",
+      "role": "risk proxy",
+      "sha256": "eff41b7f4bd7b6303ba32d39b19be6e896d9b8c2de8d3a32f850000ea3c712c2",
+      "source_path": "/Users/nuonanouyang/Documents/Codex/2026-09-09/TSUSC_2026_07_0200_MAJOR_REVISION_REBUILD/risk_proxy/risk_proxy.npz"
+    },
+    {
+      "bytes": 6037,
+      "path": "models/fisvdd_revision.npz",
+      "role": "frozen detector model",
+      "sha256": "0dd092d97498fdf45713e4d14ac6cbdef1b1ca01da04133e7f4b891880c9dc0a",
+      "source_path": "/Users/nuonanouyang/Documents/Codex/2026-09-09/TSUSC_2026_07_0200_MAJOR_REVISION_REBUILD/models/artifacts/fisvdd_revision.npz"
+    },
+    {
+      "bytes": 1520,
+      "path": "models/lucid_revision.npz",
+      "role": "frozen detector model",
+      "sha256": "9d81b5cbd284bd25528bc6ecd8a88f80933f95c4ef5cbc06b9c15ffaa9e78eb9",
+      "source_path": "/Users/nuonanouyang/Documents/Codex/2026-09-09/TSUSC_2026_07_0200_MAJOR_REVISION_REBUILD/models/artifacts/lucid_revision.npz"
+    },
+    {
+      "bytes": 28039,
+      "path": "models/tinydl_revision.npz",
+      "role": "frozen detector model",
+      "sha256": "b97413e60db93333ee9b9bb88fe4257a3cf8d5d6a556a8f2f7372c36ddb2e047",
+      "source_path": "/Users/nuonanouyang/Documents/Codex/2026-09-09/TSUSC_2026_07_0200_MAJOR_REVISION_REBUILD/models/artifacts/tinydl_revision.npz"
+    },
+    {
+      "bytes": 98319,
+      "path": "models/oi_svdd_as_elm_revision.npz",
+      "role": "frozen detector model",
+      "sha256": "8d8530e2ed82a0644b0e8fef577e5fdff2379d12f831aa32df4b8eeb5a253896",
+      "source_path": "/Users/nuonanouyang/Documents/Codex/2026-09-09/TSUSC_2026_07_0200_MAJOR_REVISION_REBUILD/models/artifacts/oi_svdd_as_elm_revision.npz"
+    },
+    {
+      "bytes": 2991,
+      "path": "guard/latency_predictor.csv",
+      "role": "Pi4B8 latency_predictor",
+      "sha256": "47f9126b40d49e2b085bab34ea595e3a1c339cb97f5d61b644863f8d78cf273c",
+      "source_path": "/Users/nuonanouyang/Documents/Codex/2026-09-09/TSUSC_2026_07_0200_MAJOR_REVISION_REBUILD/calibration/pi4b8/frozen_guard_fit_margin_v1_run2/latency_predictor.csv"
+    },
+    {
+      "bytes": 1057,
+      "path": "guard/thermal_predictor.json",
+      "role": "Pi4B8 thermal_predictor",
+      "sha256": "ba65dfec91c76ee86ad18ebc6f6b99e9c4881c7b46e20cd9cebf086b37d2a6e5",
+      "source_path": "/Users/nuonanouyang/Documents/Codex/2026-09-09/TSUSC_2026_07_0200_MAJOR_REVISION_REBUILD/calibration/pi4b8/frozen_guard_fit_margin_v1_run2/thermal_predictor.json"
+    },
+    {
+      "bytes": 568,
+      "path": "guard/guard_margins.json",
+      "role": "Pi4B8 margins",
+      "sha256": "bedc7b4ce2be5efce82dea220a9d311052aeea9a80d1022680c38c65c16c523a",
+      "source_path": "/Users/nuonanouyang/Documents/Codex/2026-09-09/TSUSC_2026_07_0200_MAJOR_REVISION_REBUILD/calibration/pi4b8/frozen_guard_fit_margin_v1_run2/guard_margins.json"
+    },
+    {
+      "bytes": 2595,
+      "path": "q_tables/fssql_r_seed_5101.npz",
+      "role": "Pi4B8 FSSQL-R Q table",
+      "sha256": "ec2f7a99faaf9845379e9e9bfb3411b1d32f5d2f271b10a46b97948486536604",
+      "source_path": "/Users/nuonanouyang/Documents/Codex/2026-09-09/TSUSC_2026_07_0200_MAJOR_REVISION_REBUILD/q_training/pi4b8_q_v1/tables/fssql_r_seed_5101.npz"
+    },
+    {
+      "bytes": 2787,
+      "path": "q_tables/fssql_r_seed_5102.npz",
+      "role": "Pi4B8 FSSQL-R Q table",
+      "sha256": "ebcb3336f12a81d7d0f23f506ec36a85ec46f7b15c40dd8bb94c855d26ebdd2d",
+      "source_path": "/Users/nuonanouyang/Documents/Codex/2026-09-09/TSUSC_2026_07_0200_MAJOR_REVISION_REBUILD/q_training/pi4b8_q_v1/tables/fssql_r_seed_5102.npz"
+    },
+    {
+      "bytes": 2697,
+      "path": "q_tables/fssql_r_seed_5103.npz",
+      "role": "Pi4B8 FSSQL-R Q table",
+      "sha256": "1cd53b713cfe1596788c76ba343347db65dc9c31db02be6d5c9fc0c2b0f11ffb",
+      "source_path": "/Users/nuonanouyang/Documents/Codex/2026-09-09/TSUSC_2026_07_0200_MAJOR_REVISION_REBUILD/q_training/pi4b8_q_v1/tables/fssql_r_seed_5103.npz"
+    },
+    {
+      "bytes": 2655,
+      "path": "q_tables/fssql_r_seed_5104.npz",
+      "role": "Pi4B8 FSSQL-R Q table",
+      "sha256": "a71f87f4f1481819a73801a835fca0a0c243e54d082e0f7dacdc5b4e5b401262",
+      "source_path": "/Users/nuonanouyang/Documents/Codex/2026-09-09/TSUSC_2026_07_0200_MAJOR_REVISION_REBUILD/q_training/pi4b8_q_v1/tables/fssql_r_seed_5104.npz"
+    },
+    {
+      "bytes": 2617,
+      "path": "q_tables/fssql_r_seed_5105.npz",
+      "role": "Pi4B8 FSSQL-R Q table",
+      "sha256": "71785e25d9ca61a872e3b4a251bbfdd5d780fe1fcc0f34252a4325571504dbee",
+      "source_path": "/Users/nuonanouyang/Documents/Codex/2026-09-09/TSUSC_2026_07_0200_MAJOR_REVISION_REBUILD/q_training/pi4b8_q_v1/tables/fssql_r_seed_5105.npz"
+    },
+    {
+      "bytes": 2846,
+      "path": "config/pi4b8_online_experiment_v1.json",
+      "role": "formal configuration",
+      "sha256": "b6c7fd6e7aafc6fd4e75cfe653d7bbcb55cfb481acad0983a2cc9d21fdf44da2",
+      "source_path": "/Users/nuonanouyang/Documents/Codex/2026-09-09/TSUSC_2026_07_0200_MAJOR_REVISION_REBUILD/configs/pi4b8_online_experiment_v1.json"
+    },
+    {
+      "bytes": 2489,
+      "path": "config/POWER_Z_HID_ACQUISITION_V1.md",
+      "role": "POWER-Z protocol",
+      "sha256": "b909dd951a60ffa03550696d2ed93ca1dfd22f7fee6b14b2e9cfd62e375ec683",
+      "source_path": "/Users/nuonanouyang/Documents/Codex/2026-09-09/TSUSC_2026_07_0200_MAJOR_REVISION_REBUILD/configs/POWER_Z_HID_ACQUISITION_V1.md"
+    },
+    {
+      "bytes": 1578,
+      "path": "powerz_hid_capture.py",
+      "role": "POWER-Z acquisition",
+      "sha256": "b4e7a5c00803171d867009780ddfe2bfb5bc441d5a80930e2789e184e9e30721",
+      "source_path": "/Users/nuonanouyang/Documents/Codex/2026-09-09/TSUSC_2026_07_0200_MAJOR_REVISION_REBUILD/online/pi4b8/powerz_hid_capture.py"
+    },
+    {
+      "bytes": 273173,
+      "path": "scoring/scheduler_train_6000_label_lineage.csv",
+      "role": "audit-only label lineage",
+      "sha256": "8465d5a24079b41caca796e7402b24ec0a318f9b7fec4ddc1de8ca3574a7418c",
+      "source_path": "/Users/nuonanouyang/Documents/Codex/2026-09-09/TSUSC_2026_07_0200_MAJOR_REVISION_REBUILD/device_calibration/inputs/scheduler_train_6000_label_lineage.csv"
+    },
+    {
+      "bytes": 458528,
+      "path": "inputs/natural/5101/features.npy",
+      "role": "runtime features",
+      "sha256": "f2bc72a63bcf0fc4b018c581851cbc75f6223228648d1221abb1742626f8256a",
+      "source_path": "/Users/nuonanouyang/Documents/Codex/2026-09-09/TSUSC_2026_07_0200_MAJOR_REVISION_REBUILD/.formal_inputs/pi4b8_scheduler_train_v1/natural_s5101_features.npy"
+    },
+    {
+      "bytes": 38528,
+      "path": "inputs/natural/5101/risk_features.npy",
+      "role": "runtime risk features",
+      "sha256": "07f57625c619fa85458393f3096c8ed554f88c517b63e2e4bfa3531d666e7b4b",
+      "source_path": "/Users/nuonanouyang/Documents/Codex/2026-09-09/TSUSC_2026_07_0200_MAJOR_REVISION_REBUILD/.formal_inputs/pi4b8_scheduler_train_v1/natural_s5101_risk_features.npy"
+    },
+    {
+      "bytes": 728,
+      "path": "scoring/natural/5101/labels.npy",
+      "role": "scoring-only labels",
+      "sha256": "011b66dabb3e638673d57e47cd9257d8126df53d0997ad720af5d3b860d8ac81",
+      "source_path": "/Users/nuonanouyang/Documents/Codex/2026-09-09/TSUSC_2026_07_0200_MAJOR_REVISION_REBUILD/.formal_inputs/pi4b8_scheduler_train_v1/natural_s5101_labels.npy"
+    },
+    {
+      "bytes": 458528,
+      "path": "inputs/natural/5102/features.npy",
+      "role": "runtime features",
+      "sha256": "93c8f6abe9417720c725e8d71b8ed8b6767548083c254b0152c2c07e7205689e",
+      "source_path": "/Users/nuonanouyang/Documents/Codex/2026-09-09/TSUSC_2026_07_0200_MAJOR_REVISION_REBUILD/.formal_inputs/pi4b8_scheduler_train_v1/natural_s5102_features.npy"
+    },
+    {
+      "bytes": 38528,
+      "path": "inputs/natural/5102/risk_features.npy",
+      "role": "runtime risk features",
+      "sha256": "3fbf0edf9b06d72cacfa53d612612b9e4e8856632ab50ca1b1314ee70f7c635a",
+      "source_path": "/Users/nuonanouyang/Documents/Codex/2026-09-09/TSUSC_2026_07_0200_MAJOR_REVISION_REBUILD/.formal_inputs/pi4b8_scheduler_train_v1/natural_s5102_risk_features.npy"
+    },
+    {
+      "bytes": 728,
+      "path": "scoring/natural/5102/labels.npy",
+      "role": "scoring-only labels",
+      "sha256": "d6c266160f6d659abd56aeff2de35e85e4d1a8d0fa0aab38c656e6d527f56f66",
+      "source_path": "/Users/nuonanouyang/Documents/Codex/2026-09-09/TSUSC_2026_07_0200_MAJOR_REVISION_REBUILD/.formal_inputs/pi4b8_scheduler_train_v1/natural_s5102_labels.npy"
+    },
+    {
+      "bytes": 458528,
+      "path": "inputs/natural/5103/features.npy",
+      "role": "runtime features",
+      "sha256": "f016b7164968dd497e100ffc696596015221f18fce549e3942bc46b82fbbb6ad",
+      "source_path": "/Users/nuonanouyang/Documents/Codex/2026-09-09/TSUSC_2026_07_0200_MAJOR_REVISION_REBUILD/.formal_inputs/pi4b8_scheduler_train_v1/natural_s5103_features.npy"
+    },
+    {
+      "bytes": 38528,
+      "path": "inputs/natural/5103/risk_features.npy",
+      "role": "runtime risk features",
+      "sha256": "e8adb799181140a6cc5e00b59e249a9232080443a7d1e068e48ec25159a037de",
+      "source_path": "/Users/nuonanouyang/Documents/Codex/2026-09-09/TSUSC_2026_07_0200_MAJOR_REVISION_REBUILD/.formal_inputs/pi4b8_scheduler_train_v1/natural_s5103_risk_features.npy"
+    },
+    {
+      "bytes": 728,
+      "path": "scoring/natural/5103/labels.npy",
+      "role": "scoring-only labels",
+      "sha256": "8603af63a9c84a18f541f234c11350333afab5196b01c3c065234400ac1637bc",
+      "source_path": "/Users/nuonanouyang/Documents/Codex/2026-09-09/TSUSC_2026_07_0200_MAJOR_REVISION_REBUILD/.formal_inputs/pi4b8_scheduler_train_v1/natural_s5103_labels.npy"
+    },
+    {
+      "bytes": 458528,
+      "path": "inputs/natural/5104/features.npy",
+      "role": "runtime features",
+      "sha256": "f24167e100bfe01b4347c54e6a8d85d4fa87d0be8acd4dcc2bac85e6b6a4d162",
+      "source_path": "/Users/nuonanouyang/Documents/Codex/2026-09-09/TSUSC_2026_07_0200_MAJOR_REVISION_REBUILD/.formal_inputs/pi4b8_scheduler_train_v1/natural_s5104_features.npy"
+    },
+    {
+      "bytes": 38528,
+      "path": "inputs/natural/5104/risk_features.npy",
+      "role": "runtime risk features",
+      "sha256": "f80c0f1256264ff20ac7c17ebda3d5b581fc7422d00bfd446dbcecebe22f3d60",
+      "source_path": "/Users/nuonanouyang/Documents/Codex/2026-09-09/TSUSC_2026_07_0200_MAJOR_REVISION_REBUILD/.formal_inputs/pi4b8_scheduler_train_v1/natural_s5104_risk_features.npy"
+    },
+    {
+      "bytes": 728,
+      "path": "scoring/natural/5104/labels.npy",
+      "role": "scoring-only labels",
+      "sha256": "4bd0bc7baecd8fa1973003d2278c83b9dad73e9349f51bb58ae966d08ede2ed2",
+      "source_path": "/Users/nuonanouyang/Documents/Codex/2026-09-09/TSUSC_2026_07_0200_MAJOR_REVISION_REBUILD/.formal_inputs/pi4b8_scheduler_train_v1/natural_s5104_labels.npy"
+    },
+    {
+      "bytes": 458528,
+      "path": "inputs/natural/5105/features.npy",
+      "role": "runtime features",
+      "sha256": "54633cd55ba87ed3d87c8a6c0c9f6df836320004f31b2c4b37048ab7df54ba87",
+      "source_path": "/Users/nuonanouyang/Documents/Codex/2026-09-09/TSUSC_2026_07_0200_MAJOR_REVISION_REBUILD/.formal_inputs/pi4b8_scheduler_train_v1/natural_s5105_features.npy"
+    },
+    {
+      "bytes": 38528,
+      "path": "inputs/natural/5105/risk_features.npy",
+      "role": "runtime risk features",
+      "sha256": "d7b5ffd96bf20cb7232119cfd829d68e7b5cd0e5ff5368431ea785efbf1a2f0f",
+      "source_path": "/Users/nuonanouyang/Documents/Codex/2026-09-09/TSUSC_2026_07_0200_MAJOR_REVISION_REBUILD/.formal_inputs/pi4b8_scheduler_train_v1/natural_s5105_risk_features.npy"
+    },
+    {
+      "bytes": 728,
+      "path": "scoring/natural/5105/labels.npy",
+      "role": "scoring-only labels",
+      "sha256": "277e12fcc188e3ce5dc417f225a9f22ee0ff53c517f6bbde317d79c96a005c8a",
+      "source_path": "/Users/nuonanouyang/Documents/Codex/2026-09-09/TSUSC_2026_07_0200_MAJOR_REVISION_REBUILD/.formal_inputs/pi4b8_scheduler_train_v1/natural_s5105_labels.npy"
+    },
+    {
+      "bytes": 458528,
+      "path": "inputs/robustness_B1/5101/features.npy",
+      "role": "runtime features",
+      "sha256": "9ef5372c36fa97bb5a49cdf432ab68159378e30916fbe054ccb9d5a9aeae6b4f",
+      "source_path": "/Users/nuonanouyang/Documents/Codex/2026-09-09/TSUSC_2026_07_0200_MAJOR_REVISION_REBUILD/.formal_inputs/pi4b8_scheduler_train_v1/robustness_B1_s5101_features.npy"
+    },
+    {
+      "bytes": 38528,
+      "path": "inputs/robustness_B1/5101/risk_features.npy",
+      "role": "runtime risk features",
+      "sha256": "3f20ffab5557787760b67d4b5e3dc5c6ed8b8e6efb97f0d9ba264e82bcf80c4f",
+      "source_path": "/Users/nuonanouyang/Documents/Codex/2026-09-09/TSUSC_2026_07_0200_MAJOR_REVISION_REBUILD/.formal_inputs/pi4b8_scheduler_train_v1/robustness_B1_s5101_risk_features.npy"
+    },
+    {
+      "bytes": 728,
+      "path": "scoring/robustness_B1/5101/labels.npy",
+      "role": "scoring-only labels",
+      "sha256": "99ace02788f197f99178b3b8d896a240b79e7a1aaf9c80b34e8bdcce3ed6e681",
+      "source_path": "/Users/nuonanouyang/Documents/Codex/2026-09-09/TSUSC_2026_07_0200_MAJOR_REVISION_REBUILD/.formal_inputs/pi4b8_scheduler_train_v1/robustness_B1_s5101_labels.npy"
+    },
+    {
+      "bytes": 458528,
+      "path": "inputs/robustness_B1/5102/features.npy",
+      "role": "runtime features",
+      "sha256": "ffd9a32c64ce887e7c80127c22eb9ecbaad11f69af9fd6528d6e49fbf6c47960",
+      "source_path": "/Users/nuonanouyang/Documents/Codex/2026-09-09/TSUSC_2026_07_0200_MAJOR_REVISION_REBUILD/.formal_inputs/pi4b8_scheduler_train_v1/robustness_B1_s5102_features.npy"
+    },
+    {
+      "bytes": 38528,
+      "path": "inputs/robustness_B1/5102/risk_features.npy",
+      "role": "runtime risk features",
+      "sha256": "b7f6e77dbaff65300383ae82748907371ea1c51315b8113ec2a4f3e14fd7d43c",
+      "source_path": "/Users/nuonanouyang/Documents/Codex/2026-09-09/TSUSC_2026_07_0200_MAJOR_REVISION_REBUILD/.formal_inputs/pi4b8_scheduler_train_v1/robustness_B1_s5102_risk_features.npy"
+    },
+    {
+      "bytes": 728,
+      "path": "scoring/robustness_B1/5102/labels.npy",
+      "role": "scoring-only labels",
+      "sha256": "a9b36ef1a88188bddaa7607703e7e87034abf3b0b659cde427ddc0b97dfea92c",
+      "source_path": "/Users/nuonanouyang/Documents/Codex/2026-09-09/TSUSC_2026_07_0200_MAJOR_REVISION_REBUILD/.formal_inputs/pi4b8_scheduler_train_v1/robustness_B1_s5102_labels.npy"
+    },
+    {
+      "bytes": 458528,
+      "path": "inputs/robustness_B1/5103/features.npy",
+      "role": "runtime features",
+      "sha256": "eec2c4484417b8a9c52c51577d937ac823b088f7c957e1622c1843ddc8a72ba5",
+      "source_path": "/Users/nuonanouyang/Documents/Codex/2026-09-09/TSUSC_2026_07_0200_MAJOR_REVISION_REBUILD/.formal_inputs/pi4b8_scheduler_train_v1/robustness_B1_s5103_features.npy"
+    },
+    {
+      "bytes": 38528,
+      "path": "inputs/robustness_B1/5103/risk_features.npy",
+      "role": "runtime risk features",
+      "sha256": "4d3d4cf95ca496148e7c133be0d569d15fd1a4ff67760f648220cb3f162ba879",
+      "source_path": "/Users/nuonanouyang/Documents/Codex/2026-09-09/TSUSC_2026_07_0200_MAJOR_REVISION_REBUILD/.formal_inputs/pi4b8_scheduler_train_v1/robustness_B1_s5103_risk_features.npy"
+    },
+    {
+      "bytes": 728,
+      "path": "scoring/robustness_B1/5103/labels.npy",
+      "role": "scoring-only labels",
+      "sha256": "6fccd23367fc6e4d7dd054b9cad7137bd4fafff4e25b667e8c5e4c39311ecf7a",
+      "source_path": "/Users/nuonanouyang/Documents/Codex/2026-09-09/TSUSC_2026_07_0200_MAJOR_REVISION_REBUILD/.formal_inputs/pi4b8_scheduler_train_v1/robustness_B1_s5103_labels.npy"
+    },
+    {
+      "bytes": 458528,
+      "path": "inputs/robustness_B1/5104/features.npy",
+      "role": "runtime features",
+      "sha256": "4d93c79b8a81f24507ed0fc65d4954fad9d5d7001e34da9de813c1dba440cbc0",
+      "source_path": "/Users/nuonanouyang/Documents/Codex/2026-09-09/TSUSC_2026_07_0200_MAJOR_REVISION_REBUILD/.formal_inputs/pi4b8_scheduler_train_v1/robustness_B1_s5104_features.npy"
+    },
+    {
+      "bytes": 38528,
+      "path": "inputs/robustness_B1/5104/risk_features.npy",
+      "role": "runtime risk features",
+      "sha256": "75279a95fbb77d2afe31dfb59bc54aef7c4f8d87fd6f7c8dd44d3ef1d7d8869f",
+      "source_path": "/Users/nuonanouyang/Documents/Codex/2026-09-09/TSUSC_2026_07_0200_MAJOR_REVISION_REBUILD/.formal_inputs/pi4b8_scheduler_train_v1/robustness_B1_s5104_risk_features.npy"
+    },
+    {
+      "bytes": 728,
+      "path": "scoring/robustness_B1/5104/labels.npy",
+      "role": "scoring-only labels",
+      "sha256": "9b9a85568b1b4525f6835b68e110949ef693f49588affde5bdaa28da4085025d",
+      "source_path": "/Users/nuonanouyang/Documents/Codex/2026-09-09/TSUSC_2026_07_0200_MAJOR_REVISION_REBUILD/.formal_inputs/pi4b8_scheduler_train_v1/robustness_B1_s5104_labels.npy"
+    },
+    {
+      "bytes": 458528,
+      "path": "inputs/robustness_B1/5105/features.npy",
+      "role": "runtime features",
+      "sha256": "fd884332d7f7b7f94214e431486790f243d8dba32e9205c151b741cd404c9359",
+      "source_path": "/Users/nuonanouyang/Documents/Codex/2026-09-09/TSUSC_2026_07_0200_MAJOR_REVISION_REBUILD/.formal_inputs/pi4b8_scheduler_train_v1/robustness_B1_s5105_features.npy"
+    },
+    {
+      "bytes": 38528,
+      "path": "inputs/robustness_B1/5105/risk_features.npy",
+      "role": "runtime risk features",
+      "sha256": "3740deadc86b496254c2b6684c9daacc02a2d48551c84b4b6c497db2970c7934",
+      "source_path": "/Users/nuonanouyang/Documents/Codex/2026-09-09/TSUSC_2026_07_0200_MAJOR_REVISION_REBUILD/.formal_inputs/pi4b8_scheduler_train_v1/robustness_B1_s5105_risk_features.npy"
+    },
+    {
+      "bytes": 728,
+      "path": "scoring/robustness_B1/5105/labels.npy",
+      "role": "scoring-only labels",
+      "sha256": "dd86e075d01206dca397f4388f8081d87cdda1adad203f248370f512ee98db49",
+      "source_path": "/Users/nuonanouyang/Documents/Codex/2026-09-09/TSUSC_2026_07_0200_MAJOR_REVISION_REBUILD/.formal_inputs/pi4b8_scheduler_train_v1/robustness_B1_s5105_labels.npy"
+    },
+    {
+      "bytes": 458528,
+      "path": "inputs/robustness_B2/5101/features.npy",
+      "role": "runtime features",
+      "sha256": "6e522175bba86529c0c1e9bab7afbd8b360bf007fd52109da8452bd1abbdc770",
+      "source_path": "/Users/nuonanouyang/Documents/Codex/2026-09-09/TSUSC_2026_07_0200_MAJOR_REVISION_REBUILD/.formal_inputs/pi4b8_scheduler_train_v1/robustness_B2_s5101_features.npy"
+    },
+    {
+      "bytes": 38528,
+      "path": "inputs/robustness_B2/5101/risk_features.npy",
+      "role": "runtime risk features",
+      "sha256": "85a964e29e812ca00f0998ce4b01bb78b87caf340696a933548a25ffb45cac3b",
+      "source_path": "/Users/nuonanouyang/Documents/Codex/2026-09-09/TSUSC_2026_07_0200_MAJOR_REVISION_REBUILD/.formal_inputs/pi4b8_scheduler_train_v1/robustness_B2_s5101_risk_features.npy"
+    },
+    {
+      "bytes": 728,
+      "path": "scoring/robustness_B2/5101/labels.npy",
+      "role": "scoring-only labels",
+      "sha256": "a89ae000ae3c118ca5dd13b8fed313d37c93e64cb95f827191d55f63fdd0f5b1",
+      "source_path": "/Users/nuonanouyang/Documents/Codex/2026-09-09/TSUSC_2026_07_0200_MAJOR_REVISION_REBUILD/.formal_inputs/pi4b8_scheduler_train_v1/robustness_B2_s5101_labels.npy"
+    },
+    {
+      "bytes": 458528,
+      "path": "inputs/robustness_B2/5102/features.npy",
+      "role": "runtime features",
+      "sha256": "9b52629889f2539fe178859836e50efe783f2b6d57d9c1489962ea616485fc34",
+      "source_path": "/Users/nuonanouyang/Documents/Codex/2026-09-09/TSUSC_2026_07_0200_MAJOR_REVISION_REBUILD/.formal_inputs/pi4b8_scheduler_train_v1/robustness_B2_s5102_features.npy"
+    },
+    {
+      "bytes": 38528,
+      "path": "inputs/robustness_B2/5102/risk_features.npy",
+      "role": "runtime risk features",
+      "sha256": "a7ef6d1498d3a4eb6fb0dbf60e0d6ee965c77f30a1ab6a33e304ddbf4f868488",
+      "source_path": "/Users/nuonanouyang/Documents/Codex/2026-09-09/TSUSC_2026_07_0200_MAJOR_REVISION_REBUILD/.formal_inputs/pi4b8_scheduler_train_v1/robustness_B2_s5102_risk_features.npy"
+    },
+    {
+      "bytes": 728,
+      "path": "scoring/robustness_B2/5102/labels.npy",
+      "role": "scoring-only labels",
+      "sha256": "e5f000ba5f17c5ed28f1f855af5f422e0d2e6cd78bb7d1ea866d83d41ece8cb9",
+      "source_path": "/Users/nuonanouyang/Documents/Codex/2026-09-09/TSUSC_2026_07_0200_MAJOR_REVISION_REBUILD/.formal_inputs/pi4b8_scheduler_train_v1/robustness_B2_s5102_labels.npy"
+    },
+    {
+      "bytes": 458528,
+      "path": "inputs/robustness_B2/5103/features.npy",
+      "role": "runtime features",
+      "sha256": "78bc7334a9c21745184930ebaaa039be3128557bab02882ac5fa3c82798e9885",
+      "source_path": "/Users/nuonanouyang/Documents/Codex/2026-09-09/TSUSC_2026_07_0200_MAJOR_REVISION_REBUILD/.formal_inputs/pi4b8_scheduler_train_v1/robustness_B2_s5103_features.npy"
+    },
+    {
+      "bytes": 38528,
+      "path": "inputs/robustness_B2/5103/risk_features.npy",
+      "role": "runtime risk features",
+      "sha256": "75910492a8a4c7bc2b7414089aa90f83c2d4411fdd6a7f56c9d37f07811dec22",
+      "source_path": "/Users/nuonanouyang/Documents/Codex/2026-09-09/TSUSC_2026_07_0200_MAJOR_REVISION_REBUILD/.formal_inputs/pi4b8_scheduler_train_v1/robustness_B2_s5103_risk_features.npy"
+    },
+    {
+      "bytes": 728,
+      "path": "scoring/robustness_B2/5103/labels.npy",
+      "role": "scoring-only labels",
+      "sha256": "31acba44bac889b63ac036a606273a1a2ce97e2be397d77daa437a776053a1e5",
+      "source_path": "/Users/nuonanouyang/Documents/Codex/2026-09-09/TSUSC_2026_07_0200_MAJOR_REVISION_REBUILD/.formal_inputs/pi4b8_scheduler_train_v1/robustness_B2_s5103_labels.npy"
+    },
+    {
+      "bytes": 458528,
+      "path": "inputs/robustness_B2/5104/features.npy",
+      "role": "runtime features",
+      "sha256": "a9f7480b3afd6c01c2b15d6c553fb3e04a5ed2fcb379c216e4a8df047125ed6b",
+      "source_path": "/Users/nuonanouyang/Documents/Codex/2026-09-09/TSUSC_2026_07_0200_MAJOR_REVISION_REBUILD/.formal_inputs/pi4b8_scheduler_train_v1/robustness_B2_s5104_features.npy"
+    },
+    {
+      "bytes": 38528,
+      "path": "inputs/robustness_B2/5104/risk_features.npy",
+      "role": "runtime risk features",
+      "sha256": "e7ca0e79223912c36ed4116fa0fb9f90d55d1e2f6d68f21990f1fc02fc26c02e",
+      "source_path": "/Users/nuonanouyang/Documents/Codex/2026-09-09/TSUSC_2026_07_0200_MAJOR_REVISION_REBUILD/.formal_inputs/pi4b8_scheduler_train_v1/robustness_B2_s5104_risk_features.npy"
+    },
+    {
+      "bytes": 728,
+      "path": "scoring/robustness_B2/5104/labels.npy",
+      "role": "scoring-only labels",
+      "sha256": "413f4cf12bb1d1b52fa83d533b92b36bd6e61e9642d24567173b8f91b37dbbdb",
+      "source_path": "/Users/nuonanouyang/Documents/Codex/2026-09-09/TSUSC_2026_07_0200_MAJOR_REVISION_REBUILD/.formal_inputs/pi4b8_scheduler_train_v1/robustness_B2_s5104_labels.npy"
+    },
+    {
+      "bytes": 458528,
+      "path": "inputs/robustness_B2/5105/features.npy",
+      "role": "runtime features",
+      "sha256": "1f98f432e001da73e536b5074eb209767724718c16837aa4ca0b73341bbca9cb",
+      "source_path": "/Users/nuonanouyang/Documents/Codex/2026-09-09/TSUSC_2026_07_0200_MAJOR_REVISION_REBUILD/.formal_inputs/pi4b8_scheduler_train_v1/robustness_B2_s5105_features.npy"
+    },
+    {
+      "bytes": 38528,
+      "path": "inputs/robustness_B2/5105/risk_features.npy",
+      "role": "runtime risk features",
+      "sha256": "0e1b27de7cb16631705d8c7c2af255bd5895b086a70e01d3d18aee82a642bf50",
+      "source_path": "/Users/nuonanouyang/Documents/Codex/2026-09-09/TSUSC_2026_07_0200_MAJOR_REVISION_REBUILD/.formal_inputs/pi4b8_scheduler_train_v1/robustness_B2_s5105_risk_features.npy"
+    },
+    {
+      "bytes": 728,
+      "path": "scoring/robustness_B2/5105/labels.npy",
+      "role": "scoring-only labels",
+      "sha256": "a61a92cf705970150f3cdc0c3a735bcdab8d02745ee058a9c09a59daf462c098",
+      "source_path": "/Users/nuonanouyang/Documents/Codex/2026-09-09/TSUSC_2026_07_0200_MAJOR_REVISION_REBUILD/.formal_inputs/pi4b8_scheduler_train_v1/robustness_B2_s5105_labels.npy"
+    }
+  ],
+  "entry_count": 67,
+  "official_test": "sealed_not_read",
+  "source_git_commit": "ffd409eb542d52dd942fe046841183eace99db1d",
+  "status": "PI4B8_RUNTIME_V4_MATERIALIZED"
+}

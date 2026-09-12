@@ -1,0 +1,23 @@
+{
+  "status": "FIT_AND_MARGIN_FROZEN_BEFORE_COVERAGE",
+  "device_id": "pi3bplus",
+  "protocol_version": 2,
+  "calibration_round": 1,
+  "fit_run_id": "pi3bplus_v2_fit_20260909T124920Z",
+  "margin_run_id": "pi3bplus_v2_margin_20260909T125804Z",
+  "fit_raw_sha256": "8feb1571ebb5067e6fdb691fe96400d3818d7787ff782a1f0955ae4d624db150",
+  "margin_raw_sha256": "b9d6c33a3375d98bb187c1e4310522461eed9e846b116ee6b22a073747d5c91d",
+  "collection_config_sha256": "6f47fd05c03f7999fbed6fba0507bc4393195f3b1a66ce9ae4985c7401a09a9a",
+  "predictor_config_sha256": "d8306dd78aa33a53bd78bc8ce0a2e5a1563e56b2e86f26c148cdeff6755372b2",
+  "fit_n": 2880,
+  "margin_n": 2880,
+  "latency_cells": 72,
+  "thermal_design_columns": 8,
+  "coverage_access": "not used",
+  "artifact_sha256": {
+    "latency_predictor.csv": "9ec98d3cbce16657622905a12dc238aa10beb526a5304316a86c2841b2545edb",
+    "thermal_predictor.json": "71ca6317ead2e59af43ad034634f6e5d115b437b81578aee55b5fcc1b64cc072",
+    "guard_margins.json": "1a55ec7f33333b67456d0dddfafd08d46ea8b255f40ea5f56834f9029328e051",
+    "guard_residuals_fit_margin.csv": "b26aff23b920a651f8cee4f838c1ff99b8965ac82e1b2cb5892f72524a978e17"
+  }
+}

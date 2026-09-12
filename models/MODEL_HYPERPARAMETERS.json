@@ -1,0 +1,60 @@
+{
+  "status": "FROZEN_AFTER_VALIDATION",
+  "seed": 20260909,
+  "input_features": 191,
+  "training_rows": 105943,
+  "validation_rows": 34506,
+  "official_test_access": "not read or transformed",
+  "actions": {
+    "FISVDD": {
+      "normal_only_unique_training_rows": 2048,
+      "sigma_rule": "median pairwise distance of seeded 512-row subset",
+      "sigma": 5.8241317702707995,
+      "support_vectors": 48,
+      "score_calibration": "balanced logistic regression on seeded 20000 model_train rows",
+      "decision_threshold_selected_on_validation": 0.05,
+      "training_seconds_mac": 0.4861509159999997
+    },
+    "LUCID": {
+      "kernels": 32,
+      "kernel_size": 3,
+      "dropout": 0.2,
+      "optimizer": "Adam",
+      "learning_rate": 0.001,
+      "batch_size": 1024,
+      "maximum_epochs": 20,
+      "early_stopping_patience": 4,
+      "epochs_completed": 20,
+      "weighted_binary_cross_entropy": true,
+      "decision_threshold_selected_on_validation": 0.05,
+      "training_seconds_mac": 195.20941845800002
+    },
+    "TinyDL": {
+      "hidden_layers": [
+        32,
+        32
+      ],
+      "dropout": 0.1,
+      "optimizer": "Adam",
+      "learning_rate": 0.001,
+      "batch_size": 1024,
+      "maximum_epochs": 20,
+      "early_stopping_patience": 4,
+      "epochs_completed": 20,
+      "weighted_binary_cross_entropy": true,
+      "decision_threshold_selected_on_validation": 0.31499999999999995,
+      "training_seconds_mac": 6.103599958000018
+    },
+    "OI-SVDD+AS-ELM": {
+      "svdd_stage": "same frozen FISVDD boundary",
+      "elm_hidden_units": 128,
+      "elm_activation": "tanh",
+      "elm_ridge": 0.01,
+      "elm_fit": "seeded random hidden layer; chunk-wise sufficient-statistic accumulation",
+      "fusion": "balanced logistic head over SVDD and ELM scores on seeded 20000 model_train rows",
+      "online_evaluation_updates": "disabled to prevent label leakage",
+      "decision_threshold_selected_on_validation": 0.065,
+      "training_seconds_mac": 0.5396706249999852
+    }
+  }
+}

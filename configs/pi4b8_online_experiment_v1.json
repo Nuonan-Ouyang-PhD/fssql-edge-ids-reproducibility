@@ -1,0 +1,41 @@
+{
+  "status": "FROZEN_BEFORE_PI4B8_ONLINE_COMPARISON",
+  "device_id": "pi4b8g",
+  "source_calibration": "calibration/pi4b8/frozen_guard_fit_margin_v1_run2",
+  "guard": {
+    "latency_cap_ms": 40.0,
+    "thermal_cap_C": 82.0,
+    "decision_window_ms": 100.0,
+    "latency_predictor": "calibration/pi4b8/frozen_guard_fit_margin_v1_run2/latency_predictor.csv",
+    "thermal_predictor": "calibration/pi4b8/frozen_guard_fit_margin_v1_run2/thermal_predictor.json",
+    "margins": "calibration/pi4b8/frozen_guard_fit_margin_v1_run2/guard_margins.json",
+    "coverage_summary": "calibration/pi4b8/coverage_evaluation_v1/guard_coverage_summary.json",
+    "hashes": {
+      "latency_predictor_sha256": "47f9126b40d49e2b085bab34ea595e3a1c339cb97f5d61b644863f8d78cf273c",
+      "thermal_predictor_sha256": "ba65dfec91c76ee86ad18ebc6f6b99e9c4881c7b46e20cd9cebf086b37d2a6e5",
+      "margins_sha256": "bedc7b4ce2be5efce82dea220a9d311052aeea9a80d1022680c38c65c16c523a"
+    }
+  },
+  "policies": ["FSSQL-R", "Safe-Greedy", "Threshold", "Static-Light"],
+  "regimes": ["natural", "background_robustness"],
+  "workload": {
+    "natural": {"n_records": 16, "background": "B0"},
+    "background_robustness": [{"n_records": 16, "background": "B1"}, {"n_records": 16, "background": "B2"}]
+  },
+  "matched_seeds": [5101, 5102, 5103, 5104, 5105],
+  "windows_per_run": 600,
+  "run_order": "Within each seed, deterministic counterbalanced permutation from numpy.default_rng(20260910 + seed); seed blocks ascending.",
+  "cooldown": {"idle_samples": 30, "idle_interval_s": 1.0, "start_limit": "temperature <= idle median + 2 C", "governor": "performance", "min_frequency_mhz": 1350.0},
+  "invalid_if": ["throttled low nibble nonzero", "undervoltage", "soft temperature limit", "frequency below 1350 MHz", "missing/nonfinite timing", "input parity failure", "unexpected process/I/O failure"],
+  "timing_accounting": "Every window records preprocessing/feature, state construction, telemetry, guard and admissible-set construction, selection, Q/replay update, detector inference, switching, total controller and complete end-to-end elapsed time.",
+  "power_alignment": "POWER-Z timestamped recording starts 5 s before the run, continues through all windows, and ends 5 s after; exported CSV is retained and aligned by UTC run start/end and run_id. No CPU/temperature proxy is accepted as physical energy.",
+  "hardware_snapshot": "calibration/pi4b8/PI4B8_PREFLIGHT_SNAPSHOT_20260910.json",
+  "hardware_snapshot_sha256": "1f759176a80af1261516e517804a54ddd298de4488682d00dfeb5a058c0c7494",
+  "official_test": "sealed",
+  "policy_outcome_selection": "forbidden",
+  "runner": {
+    "path": "online/pi4b8/pi4b8_online_gate.py",
+    "sha256": "e6c659d64e2edaafaf25a609ff4c1e742ad1d541f042b31e24b8f55b700f32c2",
+    "status": "development_gate_only; formal_runner_not_yet_frozen"
+  }
+}

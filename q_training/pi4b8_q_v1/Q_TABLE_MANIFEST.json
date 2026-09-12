@@ -1,0 +1,172 @@
+{
+  "status": "Q_TRAINING_AND_STABILITY_DIAGNOSTIC_PASS",
+  "config_sha256": "87a05f8b3e81f0461cddb6b31ff7c24315bf8e86f45c77b2a5b506028f729f50",
+  "trainer_sha256": "7e058d7efd034ecac6cbcb1e54b7443c0b45bd56febbf6a864e32d6f3b53bd8e",
+  "official_test_access": "not used",
+  "policies": [
+    "Unshielded-Q",
+    "FSSQL-R"
+  ],
+  "seeds": [
+    5101,
+    5102,
+    5103,
+    5104,
+    5105
+  ],
+  "windows_per_policy_seed": 6000,
+  "total_training_windows": 60000,
+  "states": 1280,
+  "state_action_pairs": 5120,
+  "validation_positive_prevalence": 0.6724917405668579,
+  "validation_action_quality": {
+    "fisvdd_revision": {
+      "tpr": 1.0,
+      "fpr": 1.0,
+      "f1": 0.8041794458595415
+    },
+    "lucid_revision": {
+      "tpr": 0.9946132299073476,
+      "fpr": 0.24059817715246457,
+      "f1": 0.9419639213125459
+    },
+    "tinydl_revision": {
+      "tpr": 0.9790993320405085,
+      "fpr": 0.14140341562693526,
+      "f1": 0.9561685920501651
+    },
+    "oi_svdd_as_elm_revision": {
+      "tpr": 0.9953889248006895,
+      "fpr": 0.2017520573400583,
+      "f1": 0.950867587427701
+    }
+  },
+  "initial_temperature_C": 36.511,
+  "n1_B0_latency_hat_ms": {
+    "fisvdd_revision": 2.466047,
+    "lucid_revision": 2.713653,
+    "tinydl_revision": 1.821281,
+    "oi_svdd_as_elm_revision": 2.0085
+  },
+  "n1_B0_latency_upper_ms": {
+    "fisvdd_revision": 12.608501,
+    "lucid_revision": 28.033173000000012,
+    "tinydl_revision": 12.167235999999999,
+    "oi_svdd_as_elm_revision": 12.0085
+  },
+  "runs": [
+    {
+      "policy": "Unshielded-Q",
+      "seed": 5101,
+      "visited_states": 33,
+      "visited_state_actions": 118,
+      "q_min": 0.0,
+      "q_max": 10.612010424836514,
+      "table": "tables/unshielded_q_seed_5101.npz",
+      "table_sha256": "d3a49921942d86c635afcf982f24bac5b890bf7d950041e5444935f7114712a4"
+    },
+    {
+      "policy": "Unshielded-Q",
+      "seed": 5102,
+      "visited_states": 38,
+      "visited_state_actions": 125,
+      "q_min": -0.7440806604239195,
+      "q_max": 11.141230528080307,
+      "table": "tables/unshielded_q_seed_5102.npz",
+      "table_sha256": "809e0d9b197ff38cb5484d1e23e50351280763cc24a57cfe4876c6de9fc239c8"
+    },
+    {
+      "policy": "Unshielded-Q",
+      "seed": 5103,
+      "visited_states": 37,
+      "visited_state_actions": 123,
+      "q_min": 0.0,
+      "q_max": 10.853809082537396,
+      "table": "tables/unshielded_q_seed_5103.npz",
+      "table_sha256": "856e29bbbb146cf5e7a6af0856399b3436d8b4d338bb37f58e898a263136c4c9"
+    },
+    {
+      "policy": "Unshielded-Q",
+      "seed": 5104,
+      "visited_states": 46,
+      "visited_state_actions": 130,
+      "q_min": -0.6213862138105328,
+      "q_max": 10.621568306813627,
+      "table": "tables/unshielded_q_seed_5104.npz",
+      "table_sha256": "b34fe0ad3c370b4cc36ae521ceb7b87dcd189231d32b64d19a789d46576276e2"
+    },
+    {
+      "policy": "Unshielded-Q",
+      "seed": 5105,
+      "visited_states": 35,
+      "visited_state_actions": 120,
+      "q_min": 0.0,
+      "q_max": 10.928505074280455,
+      "table": "tables/unshielded_q_seed_5105.npz",
+      "table_sha256": "8482bd374b66d76d62857015480b34b1732269572a403eba040421331704f032"
+    },
+    {
+      "policy": "FSSQL-R",
+      "seed": 5101,
+      "visited_states": 35,
+      "visited_state_actions": 118,
+      "q_min": 0.0,
+      "q_max": 11.044626768866026,
+      "table": "tables/fssql_r_seed_5101.npz",
+      "table_sha256": "ec2f7a99faaf9845379e9e9bfb3411b1d32f5d2f271b10a46b97948486536604"
+    },
+    {
+      "policy": "FSSQL-R",
+      "seed": 5102,
+      "visited_states": 42,
+      "visited_state_actions": 136,
+      "q_min": -0.39778895248628354,
+      "q_max": 10.038988483429168,
+      "table": "tables/fssql_r_seed_5102.npz",
+      "table_sha256": "ebcb3336f12a81d7d0f23f506ec36a85ec46f7b15c40dd8bb94c855d26ebdd2d"
+    },
+    {
+      "policy": "FSSQL-R",
+      "seed": 5103,
+      "visited_states": 41,
+      "visited_state_actions": 128,
+      "q_min": 0.0,
+      "q_max": 10.558934789382706,
+      "table": "tables/fssql_r_seed_5103.npz",
+      "table_sha256": "1cd53b713cfe1596788c76ba343347db65dc9c31db02be6d5c9fc0c2b0f11ffb"
+    },
+    {
+      "policy": "FSSQL-R",
+      "seed": 5104,
+      "visited_states": 38,
+      "visited_state_actions": 124,
+      "q_min": 0.0,
+      "q_max": 10.653402694290907,
+      "table": "tables/fssql_r_seed_5104.npz",
+      "table_sha256": "a71f87f4f1481819a73801a835fca0a0c243e54d082e0f7dacdc5b4e5b401262"
+    },
+    {
+      "policy": "FSSQL-R",
+      "seed": 5105,
+      "visited_states": 35,
+      "visited_state_actions": 121,
+      "q_min": 0.0,
+      "q_max": 11.375431708694661,
+      "table": "tables/fssql_r_seed_5105.npz",
+      "table_sha256": "71785e25d9ca61a872e3b4a251bbfdd5d780fe1fcc0f34252a4325571504dbee"
+    }
+  ],
+  "artifact_sha256": {
+    "tables/unshielded_q_seed_5101.npz": "d3a49921942d86c635afcf982f24bac5b890bf7d950041e5444935f7114712a4",
+    "tables/unshielded_q_seed_5102.npz": "809e0d9b197ff38cb5484d1e23e50351280763cc24a57cfe4876c6de9fc239c8",
+    "tables/unshielded_q_seed_5103.npz": "856e29bbbb146cf5e7a6af0856399b3436d8b4d338bb37f58e898a263136c4c9",
+    "tables/unshielded_q_seed_5104.npz": "b34fe0ad3c370b4cc36ae521ceb7b87dcd189231d32b64d19a789d46576276e2",
+    "tables/unshielded_q_seed_5105.npz": "8482bd374b66d76d62857015480b34b1732269572a403eba040421331704f032",
+    "tables/fssql_r_seed_5101.npz": "ec2f7a99faaf9845379e9e9bfb3411b1d32f5d2f271b10a46b97948486536604",
+    "tables/fssql_r_seed_5102.npz": "ebcb3336f12a81d7d0f23f506ec36a85ec46f7b15c40dd8bb94c855d26ebdd2d",
+    "tables/fssql_r_seed_5103.npz": "1cd53b713cfe1596788c76ba343347db65dc9c31db02be6d5c9fc0c2b0f11ffb",
+    "tables/fssql_r_seed_5104.npz": "a71f87f4f1481819a73801a835fca0a0c243e54d082e0f7dacdc5b4e5b401262",
+    "tables/fssql_r_seed_5105.npz": "71785e25d9ca61a872e3b4a251bbfdd5d780fe1fcc0f34252a4325571504dbee",
+    "checkpoints.csv": "370a09ce3c5642ad14122375fac6cfd4e7481f1abbb9b30d35847128a78442bc"
+  }
+}

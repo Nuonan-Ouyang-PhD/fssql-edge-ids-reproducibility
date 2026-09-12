@@ -1,0 +1,4 @@
+device_id,split,action,workload_bin,background,obs_id,tau_measured_ms,tau_hat_ms,tau_residual_ms,tau_upper_ms,latency_covered,T_next_measured_C,T_next_hat_C,T_residual_C,T_upper_C,thermal_covered,joint_covered
+pi4b8g,coverage,lucid_revision,n512,B0,1333,134.391793,144.695924,-10.304130999999984,170.015444,True,42.355,39.831084265031066,2.5239157349689307,42.2816292301498,False,False
+pi4b8g,coverage,lucid_revision,n1024,B1,1434,315.417441,320.641715,-5.22427399999998,345.961235,True,43.329,40.74847831082331,2.580521689176692,43.19902327594204,False,False
+pi4b8g,coverage,oi_svdd_as_elm_revision,n64,B2,1655,7.659808,7.865966,-0.20615800000000029,17.865966,True,41.868,39.31560491445083,2.552395085549172,41.76614987956956,False,False

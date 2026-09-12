@@ -1,0 +1,13 @@
+__pycache__/
+*.py[cod]
+.DS_Store
+.venv/
+data/raw/
+evidence/
+*.log
+*.aux
+*.bbl
+*.blg
+*.out
+*.fls
+*.fdb_latexmk

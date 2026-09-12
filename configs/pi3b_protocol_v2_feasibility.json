@@ -1,0 +1,44 @@
+{
+  "status": "FROZEN_BEFORE_FEASIBILITY_EVALUATION",
+  "protocol_version": 2,
+  "device_id": "pi3bplus",
+  "inputs": {
+    "fit_raw": "calibration/pi3b/protocol_v2/fit/pi3bplus_v2_fit_20260909T124920Z/raw_windows.csv",
+    "fit_raw_sha256": "8feb1571ebb5067e6fdb691fe96400d3818d7787ff782a1f0955ae4d624db150",
+    "latency_predictor": "calibration/pi3b/protocol_v2/frozen_guard_fit_margin_v1/latency_predictor.csv",
+    "latency_predictor_sha256": "9ec98d3cbce16657622905a12dc238aa10beb526a5304316a86c2841b2545edb",
+    "thermal_predictor": "calibration/pi3b/protocol_v2/frozen_guard_fit_margin_v1/thermal_predictor.json",
+    "thermal_predictor_sha256": "71ca6317ead2e59af43ad034634f6e5d115b437b81578aee55b5fcc1b64cc072",
+    "guard_margins": "calibration/pi3b/protocol_v2/frozen_guard_fit_margin_v1/guard_margins.json",
+    "guard_margins_sha256": "1a55ec7f33333b67456d0dddfafd08d46ea8b255f40ea5f56834f9029328e051",
+    "validation_metrics": "models/VALIDATION_METRICS.csv",
+    "validation_metrics_sha256": "7b2db09489ebc2c2e02c7604b0a7749a3a218d8d0b6abf547123f963affa1755"
+  },
+  "action_name_map": {
+    "fisvdd_revision": "FISVDD",
+    "lucid_revision": "LUCID",
+    "tinydl_revision": "TinyDL",
+    "oi_svdd_as_elm_revision": "OI-SVDD+AS-ELM"
+  },
+  "light_action": "fisvdd_revision",
+  "light_action_rule": "lowest median fit-cell Q0.99 latency among the four V2 actions",
+  "high_utility_actions": [
+    "lucid_revision",
+    "tinydl_revision",
+    "oi_svdd_as_elm_revision"
+  ],
+  "high_utility_rule": "actions whose frozen validation F1 exceeds the selected light action F1",
+  "ordered_candidate_grid": {
+    "workload_records_per_window": [1, 16, 64, 256, 512, 1024],
+    "backgrounds": ["B0", "B1", "B2"],
+    "iteration_order": "workload outer ascending, background inner listed order"
+  },
+  "selection_criterion": {
+    "high_utility_latency_upper_ms_inclusive": [36.0, 44.0],
+    "light_action_latency_upper_ms_strictly_below": 32.0,
+    "thermal_upper_c_at_or_below": 82.0,
+    "choose": "first candidate in ordered grid satisfying all criteria"
+  },
+  "coverage_access": "forbidden",
+  "policy_outcomes_access": "forbidden"
+}

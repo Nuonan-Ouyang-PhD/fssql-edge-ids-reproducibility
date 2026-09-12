@@ -1,6 +1,10 @@
 # Shielded Q-Learning for Thermally-Safe, Energy-Aware Multi-Model IDS Scheduling
 
-Reproducibility package for the TSUSC-2026-07-0200 Major Revision. This public repository contains the frozen manuscript, supplementary material, response letter, cover letter, figures, and bibliography. It does not redistribute raw datasets, private device logs, or credentials.
+Technical reproduction package for the device-calibrated shield, scheduling policies, Raspberry Pi runners, POWER-Z acquisition, statistical analysis, and frozen result summaries used in TSUSC-2026-07-0200. The paper is supporting documentation under `paper/`; the repository's primary purpose is executable and auditable experiment reproduction.
+
+The repository includes the actual Python implementations, portable detector/preprocessor artifacts, risk proxy, Pi3B+/Pi4B guard artifacts, seed-specific Q tables, protocol/configuration freezes, calibration evidence, run-level Pi4B metrics, paired-seed results, and official-test summaries. It does not redistribute the licensed UNSW-NB15 CSV files, private credentials, or the large machine-specific raw run archive.
+
+For the complete command sequence and expected outputs, start with [REPRODUCE.md](REPRODUCE.md).
 
 ## Study at a glance
 
@@ -81,13 +85,36 @@ All 82,332 official UNSW-NB15 test rows were evaluated exactly once with frozen 
 
 FISVDD predicts every test row positive under its frozen threshold, and its AUROC of 0.5351 is close to random. This is a ranking failure, not merely a threshold-calibration issue.
 
-## Reproduction
+## Quick reproduction
 
-### Document build
+Create the frozen Python environment:
+
+```bash
+python3 -m venv .venv
+source .venv/bin/activate
+python -m pip install --upgrade pip
+python -m pip install -r requirements-lock.txt
+```
+
+Place the official UNSW-NB15 training and testing CSVs under `data/raw/` using the exact filenames documented in [REPRODUCE.md](REPRODUCE.md), then verify the source hashes in `data/DATASET_SHA256.json`. The development pipeline is:
+
+```bash
+python scripts/split_development_data.py
+python scripts/fit_preprocessor.py
+python scripts/train_action_pool.py
+python scripts/train_risk_proxy.py
+python scripts/export_portable_preprocessor.py
+python scripts/verify_portable_inference.py
+```
+
+The checked-in artifacts are frozen outputs of this pipeline. These scripts fail rather than overwrite existing frozen outputs, so reproduce in a clean checkout or an isolated output copy.
+
+### Paper build
 
 Install a LaTeX distribution with `IEEEtran`, `booktabs`, `amsmath`, `hyperref`, `siunitx`, and `graphicx`, then run:
 
 ```bash
+cd paper
 pdflatex main.tex
 bibtex main
 pdflatex main.tex
@@ -107,18 +134,24 @@ The manuscript and supplement are the authoritative protocol-facing description.
 4. For Pi 4B physical-energy runs, connect KM003C serial `075356`, capture at least 5 s before and after each run, retain raw timestamped CSV, and integrate only between the Mac start/end ACK boundaries with trapezoidal integration.
 5. Preserve every per-window record, run manifest, hash, invalid attempt, and replacement lineage. Analyze matched seeds at run level; do not substitute pooled-window significance for paired inference.
 
-The package contains frozen manuscript-side figures and summaries, not the full raw hardware/evidence archive. Do not infer physical W/J from CPU utilisation, temperature, or a normalized proxy.
+The public package contains code, frozen runtime artifacts, calibration evidence, run-level/paired result tables, figures, and integrity records. The large raw hardware archive is not duplicated here. Do not infer physical W/J from CPU utilisation, temperature, or a normalized proxy.
 
 ## Repository contents
 
-- `main.tex` / `TSUSC-2026-07-0200-main.pdf`: manuscript.
-- `supplement.tex` / `TSUSC-2026-07-0200-supp.pdf`: supplementary details and tables.
-- `response_to_reviewers.tex` / `TSUSC-2026-07-0200-response.pdf`: point-by-point response.
-- `cover_letter.tex` / `TSUSC-2026-07-0200-cover-letter.pdf`: cover letter.
-- `figures/`: frozen robustness and POWER-Z figures.
-- `references.bib`: bibliography.
+- `runtime/`: NumPy-only portable preprocessing, detector, and risk-proxy inference.
+- `scripts/`: split, training, Q-learning, calibration preparation, validation, and statistics tools.
+- `online/pi3b/`: Pi 3B+ binding-sweep and policy campaign runners.
+- `online/pi4b8/`: Pi 4B worker, commissioning/formal orchestration, label-leakage gate, replacement runner, and direct KM003C HID capture.
+- `device_calibration/`: fit/margin/coverage collection and guard fitting/evaluation code.
+- `models/`, `preprocessing/`, `risk_proxy/`, `q_training/`: frozen portable runtime artifacts and lineage records.
+- `configs/` and `protocols/`: scientific parameters, run matrices, preregistration, commissioning, POWER-Z, and final validation records.
+- `calibration/`: accepted Pi3B+ and Pi4B device-specific calibration evidence.
+- `results/pi3b/`: V3 campaign completion, aggregate results, validation, and violation forensic record.
+- `results/pi4b8/`: 60-cell run-level metrics, paired-seed statistics, tables, figures, and accepted-cell integrity records.
+- `results/official_test/`: one-shot official-test metrics, validation, decision, and hashes; no raw dataset rows.
+- `data/`: dataset hashes, split method/manifest, leakage audit, and preprocessing provenance; `data/raw/` is intentionally user-supplied.
+- `paper/`: revised manuscript, supplement, response letter, cover letter, PDFs, bibliography, and figures.
 
 ## Claim boundaries
 
 The shield provides empirical, device/configuration-specific feasible-set enforcement, not an unconditional complete-pipeline 40-ms guarantee. Q-learning benefit is device- and regime-dependent: it is unfavorable to FSSQL-R on the stationary Pi 3B+ binding regime but positive relative to the degenerate Safe-Greedy control on Pi 4B, where Threshold remains strongest by mean F1. POWER-Z results quantify a measured DC-input operating trade-off and do not demonstrate a universal FSSQL-R energy saving. Pi 4B online F1 is a frozen scheduler-development deployment result; only the one-shot official UNSW-NB15 evaluation is independent detector-generalization evidence.
-

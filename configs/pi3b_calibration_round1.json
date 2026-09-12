@@ -1,0 +1,81 @@
+{
+  "status": "FROZEN_BEFORE_FORMAL_CALIBRATION",
+  "device_id": "pi3bplus",
+  "calibration_round": 1,
+  "evidence_source": "scheduler_train only",
+  "official_test_access": "forbidden",
+  "decision_window_ms": 100.0,
+  "latency_cap_ms": 40.0,
+  "thermal_cap_c": 82.0,
+  "emergency_stop_c": 80.0,
+  "expected_governor": "ondemand",
+  "numpy_thread_count": 1,
+  "idle_baseline": {
+    "samples": 30,
+    "interval_seconds": 1.0,
+    "statistic": "median",
+    "start_limit_c_above_baseline": 2.0
+  },
+  "actions": [
+    "fisvdd_revision",
+    "lucid_revision",
+    "tinydl_revision",
+    "oi_svdd_as_elm_revision"
+  ],
+  "batch_semantics": "All n_records for a decision window are transformed together and passed to the resident portable NumPy action as one batch. Model load/switch cost is excluded here and measured separately.",
+  "workload_records_per_window": [1, 16, 64, 256, 512, 1024],
+  "background_conditions": [
+    {
+      "id": "B0",
+      "description": "none",
+      "busy_cpu_count": 0,
+      "duty_cycle": 0.0
+    },
+    {
+      "id": "B1",
+      "description": "one logical CPU at 50 percent duty",
+      "busy_cpu_count": 1,
+      "duty_cycle": 0.5,
+      "pinned_cpu": 3,
+      "period_ms": 100.0
+    },
+    {
+      "id": "B2",
+      "description": "one logical CPU at 100 percent duty",
+      "busy_cpu_count": 1,
+      "duty_cycle": 1.0,
+      "pinned_cpu": 3,
+      "period_ms": 100.0
+    }
+  ],
+  "observations_per_action_workload_background_cell": 40,
+  "block_stabilization_seconds": 0.5,
+  "split_seeds": {
+    "fit": 7201,
+    "margin": 7202,
+    "coverage": 7203
+  },
+  "split_order_rule": "Run fit, then margin, fit predictors and freeze margins, then run coverage. Never inspect coverage to tune predictors or margins.",
+  "condition_order": "Seeded random permutation independently within each split",
+  "row_schedule": "Seeded permutation of the 6000 frozen scheduler_train rows, cycling only after exhaustion",
+  "latency_predictor": "Per-action, per-workload, per-background empirical fit-split Q0.99 lookup",
+  "thermal_predictor": "Ordinary least squares on fit split using T_start, action indicators, log2(n_records), background duty, end-to-end latency, and declared interactions",
+  "margin_rule": {
+    "quantile": 0.99,
+    "method": "higher",
+    "residual": "measured minus predicted",
+    "one_sided_positive": true,
+    "fixed_latency_buffer_ms": 0.0,
+    "fixed_thermal_buffer_c": 0.0
+  },
+  "coverage_rule": "Report marginal, joint, and by-action empirical coverage only; do not tune on coverage",
+  "power_monitor_interval_seconds": 1.0,
+  "invalid_if": [
+    "any current undervoltage or throttle low-nibble bit is observed",
+    "temperature reaches emergency_stop_c",
+    "input/preprocessor parity fails",
+    "missing or non-finite timing/probability/temperature",
+    "unexpected process or I/O failure"
+  ],
+  "automatic_retry": false
+}

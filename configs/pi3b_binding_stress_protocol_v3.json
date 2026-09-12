@@ -1,0 +1,107 @@
+{
+  "status": "FROZEN_BEFORE_BINDING_STRESS_SWEEP",
+  "protocol_version": 3,
+  "extension_type": "post-Formal-Matrix-V1 outcome-blind development stress extension; not a retry or replacement",
+  "device_id": "pi3bplus",
+  "formal_matrix_v1_commit": "6923d20e578497d88a399da243e30dc2db892348",
+  "evidence_source": "scheduler_train/development only",
+  "official_test_status": "already irrevocably opened for Formal Matrix V1; no official-test artifact or policy outcome is accessed by this sweep",
+  "decision_window_ms": 100.0,
+  "windows_per_seed": 600,
+  "diagnostic_seeds": [7801, 7802, 7803],
+  "actions": [
+    "fisvdd_revision",
+    "lucid_revision",
+    "tinydl_revision",
+    "oi_svdd_as_elm_revision"
+  ],
+  "probe_action_schedule": "action_order[window_id mod 4], reset for each seed; fixed independently of safe set, risk, label, reward, or policy outcome",
+  "candidate_order": "n_records outer ascending in the existing native V2 order; background inner B0, B1, B2; stop at the first qualifying candidate",
+  "candidate_grid": [
+    {"candidate_index": 1, "n_records": 1, "background": "B0"},
+    {"candidate_index": 2, "n_records": 1, "background": "B1"},
+    {"candidate_index": 3, "n_records": 1, "background": "B2"},
+    {"candidate_index": 4, "n_records": 16, "background": "B0"},
+    {"candidate_index": 5, "n_records": 16, "background": "B1"},
+    {"candidate_index": 6, "n_records": 16, "background": "B2"},
+    {"candidate_index": 7, "n_records": 64, "background": "B0"},
+    {"candidate_index": 8, "n_records": 64, "background": "B1"},
+    {"candidate_index": 9, "n_records": 64, "background": "B2"},
+    {"candidate_index": 10, "n_records": 256, "background": "B0"},
+    {"candidate_index": 11, "n_records": 256, "background": "B1"},
+    {"candidate_index": 12, "n_records": 256, "background": "B2"},
+    {"candidate_index": 13, "n_records": 512, "background": "B0"},
+    {"candidate_index": 14, "n_records": 512, "background": "B1"},
+    {"candidate_index": 15, "n_records": 512, "background": "B2"},
+    {"candidate_index": 16, "n_records": 1024, "background": "B0"},
+    {"candidate_index": 17, "n_records": 1024, "background": "B1"},
+    {"candidate_index": 18, "n_records": 1024, "background": "B2"}
+  ],
+  "background_conditions": [
+    {"id": "B0", "description": "none", "busy_cpu_count": 0, "duty_cycle": 0.0},
+    {"id": "B1", "description": "one logical CPU at 50 percent duty", "busy_cpu_count": 1, "duty_cycle": 0.5, "pinned_cpu": 3, "period_ms": 100.0},
+    {"id": "B2", "description": "one logical CPU at 100 percent duty", "busy_cpu_count": 1, "duty_cycle": 1.0, "pinned_cpu": 3, "period_ms": 100.0}
+  ],
+  "qualification": {
+    "minimum_binding_fraction": 0.10,
+    "minimum_at_least_two_safe_fraction": 0.05,
+    "minimum_distinct_admissible_actions": 2,
+    "maximum_fallback_rate": 0.01,
+    "hardware_health_required": true,
+    "choose": "first candidate in frozen order satisfying every rule across all 1800 diagnostic windows"
+  },
+  "qualification_inputs_only": [
+    "n_records",
+    "background condition",
+    "frozen V2 guard admissibility",
+    "safe-set cardinality and mask",
+    "empty-safe-set fallback requirement",
+    "current throttle/soft-temperature-limit/undervoltage bits",
+    "temperature",
+    "CPU frequency"
+  ],
+  "forbidden_selection_inputs": [
+    "official-test data",
+    "labels",
+    "model prediction quality",
+    "confusion counts",
+    "reward",
+    "F1",
+    "policy ranking",
+    "Formal Matrix V1 policy outcomes",
+    "realised diagnostic execution latency"
+  ],
+  "constraints": {
+    "latency_cap_ms": 40.0,
+    "thermal_cap_c": 82.0,
+    "emergency_stop_c": 58.0
+  },
+  "required_governor": "performance",
+  "minimum_cpu_frequency_mhz": 1350.0,
+  "idle_baseline": {
+    "samples": 30,
+    "interval_seconds": 1.0,
+    "start_limit_c_above_baseline": 2.0
+  },
+  "background_stabilization_seconds": 0.5,
+  "fault_monitor_interval_seconds": 1.0,
+  "invalid_attempt_rule": "retain the complete partial attempt and stop; never stitch or retry silently",
+  "no_candidate_rule": "report that the frozen V2 guard remained non-binding across the tested development workload envelope and stop without changing the guard",
+  "inputs": {
+    "collector": {"path": "online/pi3b/collect_binding_stress_sweep.py", "sha256": "bb0d3525e3b37c5c93a288404ae56e7b03476e3654734c72c36a4e11b7f0e7b9"},
+    "protocol_v2": {"path": "configs/pi3b_calibration_protocol_v2.json", "sha256": "6f47fd05c03f7999fbed6fba0507bc4393195f3b1a66ce9ae4985c7401a09a9a"},
+    "latency_predictor": {"path": "calibration/pi3b/protocol_v2/frozen_guard_fit_margin_v1/latency_predictor.csv", "sha256": "9ec98d3cbce16657622905a12dc238aa10beb526a5304316a86c2841b2545edb"},
+    "thermal_predictor": {"path": "calibration/pi3b/protocol_v2/frozen_guard_fit_margin_v1/thermal_predictor.json", "sha256": "71ca6317ead2e59af43ad034634f6e5d115b437b81578aee55b5fcc1b64cc072"},
+    "guard_margins": {"path": "calibration/pi3b/protocol_v2/frozen_guard_fit_margin_v1/guard_margins.json", "sha256": "1a55ec7f33333b67456d0dddfafd08d46ea8b255f40ea5f56834f9029328e051"},
+    "scheduler_raw": {"path": "device_calibration/inputs/scheduler_train_6000_raw_features.csv", "sha256": "1f764959e7c01ad67a235f01adecfe74f1c8df4af48a4b96e03d3eea96d7b399"},
+    "scheduler_features": {"path": "device_calibration/inputs/scheduler_train_6000_features.npy", "sha256": "4cbb6849d269129a01038693aa6a981017b55d8949da81074aece2e1100e823d"},
+    "preprocessor": {"path": "preprocessing/preprocessor_portable.npz", "sha256": "77d7ed29880adf3e3e1bcbbb59d5d705653b7c07fdcd88690041a45534b897be"},
+    "model_manifest": {"path": "models/MODEL_SHA256.json", "sha256": "1c9c21560fcfaf174b20c61ce3f9edfcdc64bb356839bb00128b0c9aaa268847"},
+    "model_fisvdd_revision": {"path": "models/artifacts/fisvdd_revision.npz", "sha256": "0dd092d97498fdf45713e4d14ac6cbdef1b1ca01da04133e7f4b891880c9dc0a"},
+    "model_lucid_revision": {"path": "models/artifacts/lucid_revision.npz", "sha256": "9d81b5cbd284bd25528bc6ecd8a88f80933f95c4ef5cbc06b9c15ffaa9e78eb9"},
+    "model_tinydl_revision": {"path": "models/artifacts/tinydl_revision.npz", "sha256": "b97413e60db93333ee9b9bb88fe4257a3cf8d5d6a556a8f2f7372c36ddb2e047"},
+    "model_oi_svdd_as_elm_revision": {"path": "models/artifacts/oi_svdd_as_elm_revision.npz", "sha256": "8d8530e2ed82a0644b0e8fef577e5fdff2379d12f831aa32df4b8eeb5a253896"},
+    "physical_attestation": {"path": "provenance/PI3B_PROTOCOL_V2_PHYSICAL_CONDITION_ATTESTATION.md", "sha256": "b8b9f965f166d5566d10501335844826a43ae16e81281f8b43e4764589b71688"},
+    "power_attestation": {"path": "provenance/PI3B_PROTOCOL_V2_POWER_CORRECTION_ATTESTATION.md", "sha256": "c2f4f3a7c896a3ebfb1b55544080faa2194bca3a22a084e86c682a5640d0f2ed"}
+  }
+}

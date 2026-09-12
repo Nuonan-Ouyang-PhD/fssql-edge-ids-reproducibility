@@ -1,0 +1,31 @@
+{
+  "status": "CALIBRATION_ONLY_FEASIBILITY_REPORTED",
+  "protocol_version": 2,
+  "config_sha256": "4384dd89e684d199ebebe4223b62c514a6200961aef8e0beca74ae28f22163f5",
+  "input_sha256": {
+    "fit_raw": "8feb1571ebb5067e6fdb691fe96400d3818d7787ff782a1f0955ae4d624db150",
+    "latency_predictor": "9ec98d3cbce16657622905a12dc238aa10beb526a5304316a86c2841b2545edb",
+    "thermal_predictor": "71ca6317ead2e59af43ad034634f6e5d115b437b81578aee55b5fcc1b64cc072",
+    "guard_margins": "1a55ec7f33333b67456d0dddfafd08d46ea8b255f40ea5f56834f9029328e051",
+    "validation_metrics": "7b2db09489ebc2c2e02c7604b0a7749a3a218d8d0b6abf547123f963affa1755"
+  },
+  "light_action": "fisvdd_revision",
+  "high_utility_actions": [
+    "lucid_revision",
+    "tinydl_revision",
+    "oi_svdd_as_elm_revision"
+  ],
+  "candidates_evaluated": 18,
+  "selected_candidate": {
+    "workload_records_per_window": 1,
+    "background": "B0",
+    "qualifying_high_utility_actions": [
+      "lucid_revision"
+    ]
+  },
+  "coverage_access": "not used",
+  "policy_outcomes_access": "not used",
+  "artifact_sha256": {
+    "feasibility_cells.csv": "008fc72100d41f66ebcaa85a6041e8f33fbc7a6b872aac525e5de76a747234ec"
+  }
+}

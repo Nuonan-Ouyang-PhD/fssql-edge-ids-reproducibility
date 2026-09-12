@@ -1,0 +1,155 @@
+[
+  {
+    "actions": {
+      "fisvdd_revision": 506,
+      "oi_svdd_as_elm_revision": 2358,
+      "tinydl_revision": 3136
+    },
+    "any_violations": 0,
+    "fallbacks": 0,
+    "fn": 628,
+    "fp": 17883,
+    "latency_violations": 0,
+    "max_end_to_end_ms": 28.813671,
+    "max_temperature_C": 31.096,
+    "min_cpu_frequency_mhz": 1400.0,
+    "policy": "FSSQL-R",
+    "records": 96000,
+    "regime": "binding_resource",
+    "runs": 10,
+    "safe_set_sizes": {
+      "3": 6000
+    },
+    "thermal_violations": 0,
+    "tn": 24053,
+    "tp": 53436,
+    "windows": 6000
+  },
+  {
+    "actions": {
+      "fisvdd_revision": 1500,
+      "lucid_revision": 1500,
+      "oi_svdd_as_elm_revision": 1500,
+      "tinydl_revision": 1500
+    },
+    "any_violations": 0,
+    "fallbacks": 0,
+    "fn": 348,
+    "fp": 24036,
+    "latency_violations": 0,
+    "max_end_to_end_ms": 37.059146,
+    "max_temperature_C": 30.558,
+    "min_cpu_frequency_mhz": 1400.0,
+    "policy": "Round-Robin",
+    "records": 96000,
+    "regime": "binding_resource",
+    "runs": 10,
+    "safe_set_sizes": {
+      "3": 6000
+    },
+    "thermal_violations": 0,
+    "tn": 17900,
+    "tp": 53716,
+    "windows": 6000
+  },
+  {
+    "actions": {
+      "tinydl_revision": 6000
+    },
+    "any_violations": 0,
+    "fallbacks": 0,
+    "fn": 1088,
+    "fp": 14624,
+    "latency_violations": 0,
+    "max_end_to_end_ms": 27.718776,
+    "max_temperature_C": 30.558,
+    "min_cpu_frequency_mhz": 1400.0,
+    "policy": "Safe-Greedy",
+    "records": 96000,
+    "regime": "binding_resource",
+    "runs": 10,
+    "safe_set_sizes": {
+      "3": 6000
+    },
+    "thermal_violations": 0,
+    "tn": 27312,
+    "tp": 52976,
+    "windows": 6000
+  },
+  {
+    "actions": {
+      "fisvdd_revision": 6000
+    },
+    "any_violations": 0,
+    "fallbacks": 0,
+    "fn": 0,
+    "fp": 41936,
+    "latency_violations": 0,
+    "max_end_to_end_ms": 27.781624,
+    "max_temperature_C": 30.558,
+    "min_cpu_frequency_mhz": 1400.0,
+    "policy": "Static-Light",
+    "records": 96000,
+    "regime": "binding_resource",
+    "runs": 10,
+    "safe_set_sizes": {
+      "3": 6000
+    },
+    "thermal_violations": 0,
+    "tn": 0,
+    "tp": 54064,
+    "windows": 6000
+  },
+  {
+    "actions": {
+      "fisvdd_revision": 9,
+      "tinydl_revision": 5991
+    },
+    "any_violations": 1,
+    "fallbacks": 0,
+    "fn": 1088,
+    "fp": 14675,
+    "latency_violations": 1,
+    "max_end_to_end_ms": 52.521664,
+    "max_temperature_C": 30.558,
+    "min_cpu_frequency_mhz": 1400.0,
+    "policy": "Threshold",
+    "records": 96000,
+    "regime": "binding_resource",
+    "runs": 10,
+    "safe_set_sizes": {
+      "3": 6000
+    },
+    "thermal_violations": 0,
+    "tn": 27261,
+    "tp": 52976,
+    "windows": 6000
+  },
+  {
+    "actions": {
+      "fisvdd_revision": 282,
+      "lucid_revision": 1241,
+      "oi_svdd_as_elm_revision": 916,
+      "tinydl_revision": 3561
+    },
+    "any_violations": 0,
+    "fallbacks": 0,
+    "fn": 708,
+    "fp": 17798,
+    "latency_violations": 0,
+    "max_end_to_end_ms": 37.349959,
+    "max_temperature_C": 31.096,
+    "min_cpu_frequency_mhz": 1400.0,
+    "policy": "Unshielded-Q",
+    "records": 96000,
+    "regime": "binding_resource",
+    "runs": 10,
+    "safe_set_sizes": {
+      "3": 6000
+    },
+    "thermal_violations": 0,
+    "tn": 24138,
+    "tp": 53356,
+    "windows": 6000
+  }
+]

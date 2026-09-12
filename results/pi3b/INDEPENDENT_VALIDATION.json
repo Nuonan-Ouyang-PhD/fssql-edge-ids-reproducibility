@@ -1,0 +1,12 @@
+{
+  "aggregate_sha256": "dc0465273af331e0d1a3bc19ce574a85bec91ef851a511d986052f11f1876ae9",
+  "campaign": "formal_stress_extension_v3_20260910T004200Z",
+  "hardware_fault_samples": 0,
+  "hashes_ok": true,
+  "records": 576000,
+  "runs": 60,
+  "status": "PASS",
+  "statuses_ok": true,
+  "trace_index_multiplicity_ok": true,
+  "windows": 36000
+}

@@ -1,0 +1,36 @@
+{
+  "status": "FROZEN_DEVELOPMENT_RISK_PROXY",
+  "purpose": "independent cheap p_t estimator; not a member of the four-action IDS pool",
+  "features": [
+    "rate",
+    "sttl",
+    "dttl",
+    "sload",
+    "dload",
+    "ct_state_ttl",
+    "ct_dst_src_ltm",
+    "is_sm_ips_ports"
+  ],
+  "forbidden_inputs": [
+    "id",
+    "attack_cat",
+    "label",
+    "official-test labels"
+  ],
+  "base_model": "balanced logistic regression",
+  "base_fit_scope": "model_train folds 0 and 1",
+  "base_fit_rows": 70405,
+  "probability_calibration": "Platt logistic calibration on disjoint model_train fold 2",
+  "calibration_rows": 35538,
+  "validation_scope": "validation fold 3; reporting only",
+  "validation_rows": 34506,
+  "validation_metrics": {
+    "roc_auc": 0.9126865704794779,
+    "brier_score": 0.0850118948602011,
+    "log_loss": 0.30428554782354456
+  },
+  "artifact": "risk_proxy/risk_proxy.npz",
+  "artifact_sha256": "eff41b7f4bd7b6303ba32d39b19be6e896d9b8c2de8d3a32f850000ea3c712c2",
+  "official_test_access": "not read or transformed",
+  "remaining_acceptance": "measure Pi-local inference overhead during device calibration"
+}

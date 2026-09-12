@@ -1,0 +1,20 @@
+{
+  "status": "INDEPENDENT_Q_TRAINING_VALIDATION_PASS",
+  "official_test_access": "not used",
+  "total_training_windows": 120000,
+  "tables": 20,
+  "checks": [
+    "all Q-config input hashes reproduce",
+    "all 21 manifest artifact hashes reproduce",
+    "independent deterministic replay reproduces checkpoints.csv byte-for-byte",
+    "independent deterministic replay reproduces every array in all 20 Q-table NPZ files",
+    "each policy has exactly 10 seeds and 6000 development windows per seed",
+    "checkpoint rows cover every 100-window point through 6000",
+    "no official-test file is a configured trainer input",
+    "sparse visited-state support and nonzero final TD error are retained rather than tuned away"
+  ],
+  "q_config_sha256": "82894b5435ffc923c0704e39ba0786256ae6329c491d4b0476c0c6365fa1f182",
+  "trainer_sha256": "87d3c6409a2f6781690a8fa1831e2a5c6c8f4d42d11aa35c9f6d32ed592df207",
+  "q_manifest_sha256": "f0a45e60c00260ffcc38dd56a7472bdf0f9978a645574edcf2e9c2e61d01fca9",
+  "checkpoints_sha256": "22468b1f1acaa653035fa2a946dfe25ca1d337de1dfc69d2d6c95c9406785de9"
+}

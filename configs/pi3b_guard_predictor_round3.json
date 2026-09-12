@@ -1,0 +1,49 @@
+{
+  "status": "FROZEN_BEFORE_FIT_RESULT_INSPECTION",
+  "device_id": "pi3bplus",
+  "calibration_round": 3,
+  "collection_config": "configs/pi3b_calibration_round3.json",
+  "prior_guard_reuse": false,
+  "latency_target": "end_to_end_ms",
+  "latency_predictor": {
+    "type": "empirical_lookup",
+    "cell_keys": ["action", "workload_bin", "background"],
+    "fit_statistic": "Q0.99",
+    "quantile_method": "higher",
+    "validity_condition": "fanless Pi 3B+ uses ondemand governor; per-window CPU frequencies are retained as descriptive telemetry",
+    "fallback": "none; all declared cells must exist in every split"
+  },
+  "thermal_target": "T_end_C",
+  "thermal_predictor": {
+    "type": "ordinary_least_squares",
+    "continuous_features": ["T_start_C", "log2_n_records", "background_duty", "end_to_end_ms"],
+    "continuous_scaling": "fit-split mean and population standard deviation",
+    "categorical_reference_action": "fisvdd_revision",
+    "action_indicators": ["is_lucid_revision", "is_tinydl_revision", "is_oi_svdd_as_elm_revision"],
+    "interactions": [],
+    "intercept": true,
+    "solver": "numpy.linalg.lstsq",
+    "fit_split_only": true
+  },
+  "residual_definition": "measured minus predicted",
+  "margin": {
+    "latency_scope": "separate epsilon_tau per action across all declared workload/background cells",
+    "thermal_scope": "one shared epsilon_T across all actions and declared cells",
+    "quantile": 0.99,
+    "quantile_method": "higher",
+    "one_sided_rule": "max(0, Q0.99(residual))",
+    "fixed_latency_buffer_ms": 10.0,
+    "fixed_thermal_buffer_c": 0.6,
+    "margin_split_only": true
+  },
+  "coverage": {
+    "split": "coverage only",
+    "latency_covered": "end_to_end_ms <= latency_prediction_ms + action_epsilon_tau_ms + 10.0 ms fixed buffer",
+    "thermal_covered": "T_end_C <= thermal_prediction_C + shared_epsilon_T_C + 0.6 C fixed buffer",
+    "reports": ["marginal", "joint", "by_action", "by_cell"],
+    "tuning_forbidden": true
+  },
+  "maximum_rounds": 3,
+  "automatic_recalibration": false,
+  "official_test_access": "forbidden"
+}

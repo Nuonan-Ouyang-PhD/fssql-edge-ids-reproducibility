@@ -1,0 +1,46 @@
+{
+  "status": "DEVELOPMENT_MODELS_FROZEN",
+  "official_test_access": "not read or transformed",
+  "files": {
+    "models/MODEL_HYPERPARAMETERS.json": {
+      "size_bytes": 2023,
+      "sha256": "3e61a35b7273dc7aa98fed8eb4f8425f8f7c126983eac3f337240b6b3f8d133c"
+    },
+    "models/VALIDATION_METRICS.csv": {
+      "size_bytes": 492,
+      "sha256": "7b2db09489ebc2c2e02c7604b0a7749a3a218d8d0b6abf547123f963affa1755"
+    },
+    "models/artifacts/fisvdd_revision.npz": {
+      "size_bytes": 6037,
+      "sha256": "0dd092d97498fdf45713e4d14ac6cbdef1b1ca01da04133e7f4b891880c9dc0a"
+    },
+    "models/artifacts/lucid_revision.npz": {
+      "size_bytes": 1520,
+      "sha256": "9d81b5cbd284bd25528bc6ecd8a88f80933f95c4ef5cbc06b9c15ffaa9e78eb9"
+    },
+    "models/artifacts/lucid_revision.pt": {
+      "size_bytes": 3235,
+      "sha256": "e83cbae2d69d004793d9a22e87fcdaae5785ddf71eb1d25df0c8a14dbf028633"
+    },
+    "models/artifacts/lucid_revision_history.json": {
+      "size_bytes": 2133,
+      "sha256": "70f3f2645c9ae48a337d765f60876521568c379ed787b3cbcc3f9b1edd76d447"
+    },
+    "models/artifacts/oi_svdd_as_elm_revision.npz": {
+      "size_bytes": 98319,
+      "sha256": "8d8530e2ed82a0644b0e8fef577e5fdff2379d12f831aa32df4b8eeb5a253896"
+    },
+    "models/artifacts/tinydl_revision.npz": {
+      "size_bytes": 28039,
+      "sha256": "b97413e60db93333ee9b9bb88fe4257a3cf8d5d6a556a8f2f7372c36ddb2e047"
+    },
+    "models/artifacts/tinydl_revision.pt": {
+      "size_bytes": 32181,
+      "sha256": "214dddbf2de0f0d84bf4bc253f23a92e63892857cf7d4f23566c9542a5578aac"
+    },
+    "models/artifacts/tinydl_revision_history.json": {
+      "size_bytes": 2144,
+      "sha256": "51a80e21be5a2874f207958409b802282ba26bdbee283f9133aeacc8a8d53cb6"
+    }
+  }
+}

@@ -1,0 +1,117 @@
+{
+  "status": "PREREGISTERED_BEFORE_FINAL_TEST_OR_POLICY_EXECUTION",
+  "device_id": "pi3bplus",
+  "policies": [
+    "Static-Heavy",
+    "Static-Light",
+    "Round-Robin",
+    "Greedy-Risk",
+    "Safe-Greedy",
+    "Threshold",
+    "Unshielded-Q",
+    "FSSQL-R"
+  ],
+  "regimes": ["natural", "near_cap"],
+  "evaluation_seeds": [4101, 4102, 4103, 4104, 4105, 4106, 4107, 4108, 4109, 4110],
+  "windows_per_run": 600,
+  "decision_window_ms": 100.0,
+  "constraints": {
+    "latency_cap_ms": 40.0,
+    "thermal_cap_c": 82.0,
+    "emergency_stop_c": 58.0
+  },
+  "workloads": {
+    "natural": {"n_records": 1, "background": "B0", "config": "configs/natural_workload.json", "config_sha256": "4594fc72153fd98e0145bf171ed530197a689c32de32eec2f5bc5d6159e8f850"},
+    "near_cap": {"n_records": 1, "background": "B0", "config": "configs/near_cap_workload.json", "config_sha256": "57934ae14513abc4878313651fb8293610be088c1a30da1cfb73a0532c28fed1"}
+  },
+  "workload_interpretation": "The outcome-blind near-cap rule selected the same n=1/B0 parameters as the frozen natural workload. Both labels remain in the required matrix, but no regime-separation claim may be made from the labels alone.",
+  "action_order": [
+    "fisvdd_revision",
+    "lucid_revision",
+    "tinydl_revision",
+    "oi_svdd_as_elm_revision"
+  ],
+  "action_roles": {
+    "light": "fisvdd_revision",
+    "heavy": "tinydl_revision",
+    "light_rule": "lowest median V2 fit-cell Q0.99 latency across the frozen calibration grid",
+    "heavy_rule": "highest frozen development-validation F1"
+  },
+  "policy_logic": {
+    "Static-Heavy": "Always select tinydl_revision.",
+    "Static-Light": "Always select fisvdd_revision.",
+    "Round-Robin": "Select action_order[window_id mod 4].",
+    "Greedy-Risk": "Without a shield, maximize p_risk*validation_TPR - (1-p_risk)*validation_FPR; ties use action_order.",
+    "Safe-Greedy": "Using the exact V2 guard shared with FSSQL-R, maximize the frozen immediate total reward over A_safe; use the frozen least-violating fallback if empty.",
+    "Threshold": "Apply the frozen conventional threshold hysteresis without A_safe.",
+    "Unshielded-Q": "Greedy argmax from the mapped frozen Unshielded-Q table over all actions; epsilon=0 and no update.",
+    "FSSQL-R": "Greedy argmax from the mapped frozen FSSQL-R table over the exact same V2 A_safe used by Safe-Greedy; epsilon=0 and no update; frozen fallback if empty."
+  },
+  "threshold_controller": {
+    "uses_shield": false,
+    "T_hi_C": 80.99816539732174,
+    "T_lo_C": 78.99816539732174,
+    "q_hi_records": 256,
+    "q_lo_records": 64,
+    "p_hi": 0.7,
+    "heavy_action": "tinydl_revision",
+    "light_action": "fisvdd_revision",
+    "derivation": "T_hi=82-epsilon_T; T_lo=T_hi-2; TinyDL conservative B0 latency is <=40 ms through n256 and >40 ms at n512; p_hi uses the preregistered validation-only default."
+  },
+  "q_learning": {
+    "config": "configs/q_learning_protocol.json",
+    "config_sha256": "82894b5435ffc923c0704e39ba0786256ae6329c491d4b0476c0c6365fa1f182",
+    "evaluation_seed_to_training_seed": {"4101": 3101, "4102": 3102, "4103": 3103, "4104": 3104, "4105": 3105, "4106": 3106, "4107": 3107, "4108": 3108, "4109": 3109, "4110": 3110},
+    "evaluation_epsilon": 0.0,
+    "evaluation_updates": false,
+    "evaluation_replay_updates": false
+  },
+  "execution_order": {
+    "rule": "Within each matched seed block, apply numpy.random.default_rng(base_seed + evaluation_seed).permutation to all 16 regime/policy combinations; execute seed blocks in ascending seed order.",
+    "base_seed": 20260909,
+    "matrix_generator": "scripts/build_policy_experiment_matrix.py",
+    "matrix_generator_sha256": "b32f9f2703ffeac9089576cabe5dbd2adc3d2517e9982456993b86edab05a8e5",
+    "matrix_path": "configs/pi3b_policy_experiment_matrix.csv",
+    "expected_matrix_sha256": "6c1645c1c647bc860ba09a8e15d58c44a52bbaa1903f9950ecd5c4240643a51e"
+  },
+  "start_and_cooldown": {
+    "idle_samples": 30,
+    "idle_interval_seconds": 1.0,
+    "start_limit": "temperature <= idle median + 2.0 C",
+    "required_governor": "performance",
+    "minimum_frequency_mhz": 1350.0,
+    "required_current_throttled_low_nibble": 0,
+    "cooling": "heatsink, continuously running fan, case top open",
+    "power": "corrected/replaced adapter and cable on stable wall-outlet path"
+  },
+  "invalid_if": [
+    "any current undervoltage or throttle low-nibble bit",
+    "any per-window CPU frequency below 1350 MHz",
+    "temperature at or above 58 C",
+    "cooling or power attestation changes",
+    "input/model/config/Q-table hash mismatch",
+    "missing, non-finite, or incomplete required log fields",
+    "unrelated background job or unexpected process/I/O failure"
+  ],
+  "invalid_attempt_rule": "Retain the entire partial attempt and lineage. Stop the campaign; never stitch runs and never retry silently.",
+  "required_window_fields": [
+    "run_id", "device_id", "policy", "regime", "seed", "window_id", "wall_timestamp",
+    "mono_start_ns", "mono_end_ns", "p_risk", "T_start_C", "T_end_C", "backlog_start",
+    "backlog_end", "energy_proxy_start", "prev_action", "selected_action", "safe_set_size",
+    "safe_set_mask", "predicted_latency_by_action_ms", "latency_guard_headroom_by_action_ms",
+    "predicted_temperature_by_action_C", "thermal_headroom_by_action_C", "tau_hat_ms",
+    "tau_upper_ms", "temp_hat_next_C", "temp_upper_C", "latency_slack_ms", "thermal_slack_C",
+    "fallback", "telemetry_ms", "state_build_ms", "guard_ms", "selection_ms", "switch_ms",
+    "feature_ms", "inference_ms", "q_update_ms", "replay_update_ms", "logging_ms",
+    "total_controller_ms", "end_to_end_ms", "throttled", "undervoltage", "cpu_frequency_min_mhz",
+    "n_records", "background", "tp", "fp", "tn", "fn", "reward_security", "reward_energy",
+    "reward_backlog", "reward_switch", "reward_total", "latency_violation", "thermal_violation",
+    "any_violation", "valid"
+  ],
+  "official_test": {
+    "status_at_preregistration": "sealed",
+    "scheduler_forbidden_fields": ["label", "attack_cat", "id"],
+    "opening_rule": "Open only after near-cap freeze, policy preregistration, Q-learning configuration, frozen Q tables, hashes, Git-clean check, and device preflight all pass.",
+    "post_open_rule": "No model, guard, workload, threshold, reward, state-bin, Q-learning, or policy change based on official-test outcomes."
+  }
+}

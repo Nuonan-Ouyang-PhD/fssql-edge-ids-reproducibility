@@ -1,0 +1,168 @@
+{
+  "status": "FROZEN_PI4B8_Q_TRAINING_PREREGISTRATION",
+  "implementation_scope": "Transparent revision implementation because the submitted numeric Q-learning hyperparameters were not retained; not claimed as the historical setting.",
+  "actions": [
+    "fisvdd_revision",
+    "lucid_revision",
+    "tinydl_revision",
+    "oi_svdd_as_elm_revision"
+  ],
+  "training": {
+    "policies": [
+      "Unshielded-Q",
+      "FSSQL-R"
+    ],
+    "seeds": [
+      5101,
+      5102,
+      5103,
+      5104,
+      5105
+    ],
+    "windows_per_seed": 6000,
+    "episode_windows": 600,
+    "checkpoint_every": 100,
+    "workload": "Pi4B8 scheduler-train labeled development package; n16/B0",
+    "official_test_access": "forbidden"
+  },
+  "state": {
+    "ordered_components": [
+      "risk_bin",
+      "temperature_bin",
+      "energy_bin",
+      "backlog_bin",
+      "previous_action"
+    ],
+    "risk_bin_upper_edges": [
+      0.25,
+      0.5,
+      0.75
+    ],
+    "temperature_C_upper_edges": [
+      35.0,
+      45.0,
+      55.0
+    ],
+    "energy_residual_upper_edges": [
+      0.25,
+      0.5,
+      0.75
+    ],
+    "backlog_upper_edges": [
+      0.5,
+      2.0,
+      8.0
+    ],
+    "previous_action_values": [
+      "none",
+      "fisvdd_revision",
+      "lucid_revision",
+      "tinydl_revision",
+      "oi_svdd_as_elm_revision"
+    ],
+    "number_of_states": 1280,
+    "number_of_actions": 4,
+    "number_of_state_action_pairs": 5120
+  },
+  "q_update": {
+    "initialization": "all zeros",
+    "gamma": 0.95,
+    "alpha_schedule": "min(0.5, (1 + state_action_visit_count)^-0.6)",
+    "epsilon_schedule": "linear from 1.0 at window 0 to 0.05 at window 4500, then 0.05 through window 5999",
+    "tie_break": "first action in frozen action order",
+    "masked_selection": "FSSQL-R explores and maximizes only over the frozen V2 safe set; Unshielded-Q uses all four actions.",
+    "masked_target": "FSSQL-R recomputes the frozen V2 safe set at stored next state; empty sets use the least-violating FISVDD fallback."
+  },
+  "replay": {
+    "capacity": 512,
+    "storage": "FIFO",
+    "extra_uniform_updates_per_window": 4,
+    "sample_with_replacement": true,
+    "online_update_before_replay": true
+  },
+  "development_dynamics": {
+    "temperature_initialization": "median V2 fit n1/B0 T_start_C, reset every 600-window episode",
+    "temperature_transition": "frozen V2 thermal predictor without guard margins for the chosen action",
+    "arrival_records_per_window": 1,
+    "service_records_per_window": 1,
+    "backlog_update": "max(0, backlog + arrival - service)",
+    "energy_initialization": 1.0,
+    "energy_cost": "0.001 times action n1/B0 latency predictor divided by the largest action n1/B0 latency predictor; reset every 600-window episode"
+  },
+  "reward": {
+    "security": "p_risk*validation_TPR - (1-p_risk)*validation_FPR",
+    "false_positive_weight": 1.0,
+    "energy_weight": 0.1,
+    "backlog_weight": 0.05,
+    "switch_weight": 0.02,
+    "backlog_normalizer": 256.0,
+    "total": "security - energy_weight*normalized_energy_cost - backlog_weight*min(backlog/256,1) - switch_weight*I(action changes)"
+  },
+  "evaluation": {
+    "training_to_evaluation_seed_map": {
+      "4101": 3101,
+      "4102": 3102,
+      "4103": 3103,
+      "4104": 3104,
+      "4105": 3105,
+      "4106": 3106,
+      "4107": 3107,
+      "4108": 3108,
+      "4109": 3109,
+      "4110": 3110
+    },
+    "epsilon": 0.0,
+    "q_updates": false,
+    "replay_updates": false
+  },
+  "inputs": {
+    "near_cap_config": {
+      "path": "configs/near_cap_workload.json",
+      "sha256": "57934ae14513abc4878313651fb8293610be088c1a30da1cfb73a0532c28fed1"
+    },
+    "near_cap_summary": {
+      "path": "workloads/pi3b/near_cap/freeze_v1/NEAR_CAP_FREEZE_SUMMARY.json",
+      "sha256": "a939e0aa20b49c5e487e7d350e3505bba78deb2e3d0a9d92254135fbbd7070b0"
+    },
+    "scheduler_features": {
+      "path": "device_calibration/inputs/scheduler_train_6000_features.npy",
+      "sha256": "4cbb6849d269129a01038693aa6a981017b55d8949da81074aece2e1100e823d"
+    },
+    "scheduler_risk_features": {
+      "path": "device_calibration/inputs/scheduler_train_6000_risk_features.npy",
+      "sha256": "fee72cdd9445e8ebd4ecb12e888848b52269bd0fe81ef259ecf25525bf711dcd"
+    },
+    "validation_metrics": {
+      "path": "models/VALIDATION_METRICS.csv",
+      "sha256": "7b2db09489ebc2c2e02c7604b0a7749a3a218d8d0b6abf547123f963affa1755"
+    },
+    "split_manifest": {
+      "path": "data/SPLIT_MANIFEST.csv",
+      "sha256": "1c70959a6d12ea1bdb6098e1945296f3e17760e1027426a087877407cbbfe169"
+    },
+    "model_manifest": {
+      "path": "models/MODEL_SHA256.json",
+      "sha256": "1c9c21560fcfaf174b20c61ce3f9edfcdc64bb356839bb00128b0c9aaa268847"
+    },
+    "fit_raw": {
+      "path": "calibration/pi4b8/formal_fit_20260910_v3/raw_windows.csv",
+      "sha256": "2bdd3499aa9fd6e9702e01c1101f73f493614d37f1d49a3a5fc11ddac1350079"
+    },
+    "latency_predictor": {
+      "path": "calibration/pi4b8/frozen_guard_fit_margin_v1_run2/latency_predictor.csv",
+      "sha256": "47f9126b40d49e2b085bab34ea595e3a1c339cb97f5d61b644863f8d78cf273c"
+    },
+    "thermal_predictor": {
+      "path": "calibration/pi4b8/frozen_guard_fit_margin_v1_run2/thermal_predictor.json",
+      "sha256": "ba65dfec91c76ee86ad18ebc6f6b99e9c4881c7b46e20cd9cebf086b37d2a6e5"
+    },
+    "guard_margins": {
+      "path": "calibration/pi4b8/frozen_guard_fit_margin_v1_run2/guard_margins.json",
+      "sha256": "bedc7b4ce2be5efce82dea220a9d311052aeea9a80d1022680c38c65c16c523a"
+    },
+    "risk_proxy": {
+      "path": "risk_proxy/risk_proxy.npz",
+      "sha256": "eff41b7f4bd7b6303ba32d39b19be6e896d9b8c2de8d3a32f850000ea3c712c2"
+    }
+  }
+}

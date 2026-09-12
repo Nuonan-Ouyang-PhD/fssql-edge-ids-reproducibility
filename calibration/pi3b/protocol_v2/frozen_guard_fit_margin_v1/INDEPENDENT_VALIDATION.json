@@ -1,0 +1,14 @@
+{
+  "status": "INDEPENDENT_FIT_MARGIN_VALIDATION_PASS",
+  "protocol_version": 2,
+  "validated_at_stage": "before coverage collection",
+  "fit_margin_residual_rows": 5760,
+  "margin_rows": 2880,
+  "checks": [
+    "all four generated-artifact SHA-256 values reproduce FIT_MARGIN_SUMMARY.json",
+    "all four action-specific latency margins reproduce max(0, higher Q0.99) from V2 margin rows only",
+    "the shared thermal margin reproduces max(0, higher Q0.99) from V2 margin rows only",
+    "the fixed 10.0 ms latency and 0.6 C thermal buffers match the V2 preregistration"
+  ],
+  "coverage_access": "not used"
+}

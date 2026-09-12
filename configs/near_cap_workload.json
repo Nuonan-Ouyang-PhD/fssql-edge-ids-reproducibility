@@ -1,0 +1,101 @@
+{
+  "status": "FROZEN_BEFORE_FORMAL_POLICY_EVALUATION",
+  "freeze_version": 1,
+  "device_id": "pi3bplus",
+  "selection": {
+    "rule": "Choose the first candidate in the predeclared order n=[1,16,64,256,512,1024], background=[B0,B1,B2] for which at least one high-utility action has conservative calibration-only latency in inclusive [36,44] ms, the light action is strictly below 32 ms, and all qualifying actions are at or below 82 C.",
+    "order_predefined_before_diagnostic": true,
+    "criteria_predefined_before_diagnostic": true,
+    "selected_candidate": "n=1|B0",
+    "qualifying_high_utility_action": "lucid_revision",
+    "selection_applied_once": true
+  },
+  "workload": {
+    "n_records": 1,
+    "batch_semantics": "Exactly one input record is preprocessed and passed to the selected resident IDS action in each decision window.",
+    "background": {
+      "id": "B0",
+      "description": "No experiment-created background CPU load",
+      "busy_cpu_count": 0,
+      "duty_cycle": 0.0
+    },
+    "arrival_rule": "One record arrives at the beginning of every 100 ms decision window; the selected action processes that record within the same window and no synthetic burst or policy-dependent arrival modification is applied.",
+    "windows_per_run": 600,
+    "nominal_run_duration_seconds": 60.0
+  },
+  "constraints": {
+    "latency_cap_ms": 40.0,
+    "thermal_cap_c": 82.0,
+    "decision_window_ms": 100.0,
+    "emergency_stop_c": 58.0
+  },
+  "start_and_cooldown": {
+    "idle_samples": 30,
+    "idle_interval_seconds": 1.0,
+    "idle_baseline_statistic": "median",
+    "start_temperature_limit": "current temperature <= idle-baseline median + 2.0 C",
+    "required_current_throttled_mask": "low nibble of get_throttled is 0",
+    "invalid_attempt_rule": "Preserve complete attempt lineage; do not stitch partial runs or retry silently."
+  },
+  "device_conditions": {
+    "cpu_governor": "performance",
+    "minimum_observed_cpu_frequency_mhz": 1350.0,
+    "cooling": "Heatsink installed; active fan runs continuously; case top remains removed/open.",
+    "power": "User-confirmed corrected/replaced adapter and cable on stable wall-outlet power path.",
+    "condition_change_rule": "Stop before or during execution if cooling, fan, case, governor, power path, frequency, or current-fault condition changes."
+  },
+  "generator": {
+    "source": "frozen scheduler_train 6000-row development input for diagnostic and Q training; formal evaluation uses the identically specified permutation rule after the official test is opened",
+    "source_rows": 6000,
+    "algorithm": "numpy.random.default_rng(seed).permutation(source_rows), take first 600 indices without replacement",
+    "matched_seeds": [4101, 4102, 4103, 4104, 4105, 4106, 4107, 4108, 4109, 4110],
+    "seed_reuse": "The same ordered input trace is used by every policy within a regime for a given seed.",
+    "cycling": false
+  },
+  "actions": [
+    "fisvdd_revision",
+    "lucid_revision",
+    "tinydl_revision",
+    "oi_svdd_as_elm_revision"
+  ],
+  "inputs": {
+    "feasibility_config": {"path": "configs/pi3b_protocol_v2_feasibility.json", "sha256": "4384dd89e684d199ebebe4223b62c514a6200961aef8e0beca74ae28f22163f5"},
+    "feasibility_summary": {"path": "calibration/pi3b/protocol_v2/feasibility_v1/feasibility_summary.json", "sha256": "cd8f945f549163fae081315a90d6a4b2132d775a846b14a33d88c574d8261666"},
+    "feasibility_cells": {"path": "calibration/pi3b/protocol_v2/feasibility_v1/feasibility_cells.csv", "sha256": "008fc72100d41f66ebcaa85a6041e8f33fbc7a6b872aac525e5de76a747234ec"},
+    "fit_raw": {"path": "calibration/pi3b/protocol_v2/fit/pi3bplus_v2_fit_20260909T124920Z/raw_windows.csv", "sha256": "8feb1571ebb5067e6fdb691fe96400d3818d7787ff782a1f0955ae4d624db150"},
+    "latency_predictor": {"path": "calibration/pi3b/protocol_v2/frozen_guard_fit_margin_v1/latency_predictor.csv", "sha256": "9ec98d3cbce16657622905a12dc238aa10beb526a5304316a86c2841b2545edb"},
+    "thermal_predictor": {"path": "calibration/pi3b/protocol_v2/frozen_guard_fit_margin_v1/thermal_predictor.json", "sha256": "71ca6317ead2e59af43ad034634f6e5d115b437b81578aee55b5fcc1b64cc072"},
+    "guard_margins": {"path": "calibration/pi3b/protocol_v2/frozen_guard_fit_margin_v1/guard_margins.json", "sha256": "1a55ec7f33333b67456d0dddfafd08d46ea8b255f40ea5f56834f9029328e051"},
+    "scheduler_input_manifest": {"path": "device_calibration/inputs/MANIFEST.json", "sha256": "419db9b61df6d0fe6ce76e333b9edede9839c44927aa3a4ebbac0dfe126f7ca8"},
+    "source_index": {"path": "device_calibration/inputs/SOURCE_INDEX.csv", "sha256": "2ce2ce8f511300c1defa2c0beb536a81d4d99a755aba8a838f3d218c97f4fc4f"},
+    "physical_attestation": {"path": "provenance/PI3B_PROTOCOL_V2_PHYSICAL_CONDITION_ATTESTATION.md", "sha256": "b8b9f965f166d5566d10501335844826a43ae16e81281f8b43e4764589b71688"},
+    "power_attestation": {"path": "provenance/PI3B_PROTOCOL_V2_POWER_CORRECTION_ATTESTATION.md", "sha256": "c2f4f3a7c896a3ebfb1b55544080faa2194bca3a22a084e86c682a5640d0f2ed"},
+    "hardware_manifest": {"path": "provenance/PI3B_PROTOCOL_V2_POWER_CORRECTED_HARDWARE_MANIFEST.json", "sha256": "c2c4ec87d075391c1583850898d2f2fc31abf623f00554671b0279c8ac10f000"}
+  },
+  "generator_script": {
+    "path": "scripts/build_near_cap_freeze.py",
+    "sha256": "b36650d4d60d09dfa98b2ade0a4a37e09f8a076930577d5dd08b091111e11cb5"
+  },
+  "expected_workload_generation_sha256": {
+    "expected_trace_indices.csv": "b4eccd3f1e3965cfa26f3266b2188292cc6f5617cb372f42f2e7b07e272261b2",
+    "per_seed_canonical_trace": {
+      "4101": "ef68da641a202017267819bd9b6e7dc63438cef0119e7ad2767bde6508e77f6e",
+      "4102": "2f1acec678cc998415404ab0a8c23a171264f4cc689858bcdc713f59ea2552ec",
+      "4103": "f40e56ce776a5b48552f404e7117db405bce50eb924c28325ff4b9683c9df3a2",
+      "4104": "bb123f291c32f759bde6f98c5713512ab9d2dd159a2d48f3421a96282c9d6981",
+      "4105": "6e8eff85be1ffba0c8ae5c20d563445fbfe5b0f513566001a6e0f1e5ded7ce39",
+      "4106": "6b86877119736c7a0271e1ed2deda3629b61998a09b80535c0d522e1e389cecb",
+      "4107": "477e567be2fb84a2028b7a33c664af0e4030b673dd7b71ee78a082ad92a68cf9",
+      "4108": "d5b7aa7ca3e5e5813fb3a3554d574b232d2b18189bf66a4058aff1cb63031a42",
+      "4109": "0a81c4fcfffc8f0da77833968dedd8d4fa01192a4dd3b3207a542e26e8e9bf27",
+      "4110": "c1c2a1be8c56341da593b79a9310bc88552f0eeab85e2806c0b939bf32148c63"
+    }
+  },
+  "safe_set_diagnostic_rule": "Evaluate all four frozen guard actions at the V2 fit n1/B0 T_start states in obs_id order, cycling those calibration states across 600 windows for every matched seed; do not select a policy or evolve a policy-dependent state.",
+  "evidence_boundary": {
+    "official_test_access": "forbidden",
+    "policy_outcomes_access": "forbidden",
+    "coverage_residuals_access": "forbidden",
+    "permitted": "Frozen scheduler-train identities, V2 fit states, frozen V2 predictors and margins, and the already committed feasibility result only."
+  }
+}

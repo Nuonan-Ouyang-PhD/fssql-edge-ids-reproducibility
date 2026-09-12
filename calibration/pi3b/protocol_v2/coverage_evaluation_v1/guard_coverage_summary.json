@@ -1,0 +1,485 @@
+{
+  "status": "HELD_OUT_COVERAGE_REPORTED_NO_TUNING",
+  "device_id": "pi3bplus",
+  "protocol_version": 2,
+  "calibration_round": 1,
+  "coverage_run_id": "pi3bplus_v2_coverage_20260909T130714Z",
+  "coverage_raw_sha256": "42691d996c66744eec335aede668437c5150fbb66331d09d57e76f13eb1e560b",
+  "fit_run_id": "pi3bplus_v2_fit_20260909T124920Z",
+  "margin_run_id": "pi3bplus_v2_margin_20260909T125804Z",
+  "collection_config_sha256": "6f47fd05c03f7999fbed6fba0507bc4393195f3b1a66ce9ae4985c7401a09a9a",
+  "predictor_config_sha256": "d8306dd78aa33a53bd78bc8ce0a2e5a1563e56b2e86f26c148cdeff6755372b2",
+  "fit_margin_summary_sha256": "f8df659f10ed3c05c8d26b53896d4e746431c56810142556b65dd118295cae79",
+  "overall": {
+    "n": 2880,
+    "latency_coverage": 0.9996527777777777,
+    "thermal_coverage": 1.0,
+    "joint_coverage": 0.9996527777777777
+  },
+  "by_action": {
+    "fisvdd_revision": {
+      "n": 720,
+      "latency_coverage": 1.0,
+      "thermal_coverage": 1.0,
+      "joint_coverage": 1.0
+    },
+    "lucid_revision": {
+      "n": 720,
+      "latency_coverage": 0.9986111111111111,
+      "thermal_coverage": 1.0,
+      "joint_coverage": 0.9986111111111111
+    },
+    "oi_svdd_as_elm_revision": {
+      "n": 720,
+      "latency_coverage": 1.0,
+      "thermal_coverage": 1.0,
+      "joint_coverage": 1.0
+    },
+    "tinydl_revision": {
+      "n": 720,
+      "latency_coverage": 1.0,
+      "thermal_coverage": 1.0,
+      "joint_coverage": 1.0
+    }
+  },
+  "by_cell": {
+    "fisvdd_revision|n1|B0": {
+      "n": 40,
+      "latency_coverage": 1.0,
+      "thermal_coverage": 1.0,
+      "joint_coverage": 1.0
+    },
+    "fisvdd_revision|n1|B1": {
+      "n": 40,
+      "latency_coverage": 1.0,
+      "thermal_coverage": 1.0,
+      "joint_coverage": 1.0
+    },
+    "fisvdd_revision|n1|B2": {
+      "n": 40,
+      "latency_coverage": 1.0,
+      "thermal_coverage": 1.0,
+      "joint_coverage": 1.0
+    },
+    "fisvdd_revision|n1024|B0": {
+      "n": 40,
+      "latency_coverage": 1.0,
+      "thermal_coverage": 1.0,
+      "joint_coverage": 1.0
+    },
+    "fisvdd_revision|n1024|B1": {
+      "n": 40,
+      "latency_coverage": 1.0,
+      "thermal_coverage": 1.0,
+      "joint_coverage": 1.0
+    },
+    "fisvdd_revision|n1024|B2": {
+      "n": 40,
+      "latency_coverage": 1.0,
+      "thermal_coverage": 1.0,
+      "joint_coverage": 1.0
+    },
+    "fisvdd_revision|n16|B0": {
+      "n": 40,
+      "latency_coverage": 1.0,
+      "thermal_coverage": 1.0,
+      "joint_coverage": 1.0
+    },
+    "fisvdd_revision|n16|B1": {
+      "n": 40,
+      "latency_coverage": 1.0,
+      "thermal_coverage": 1.0,
+      "joint_coverage": 1.0
+    },
+    "fisvdd_revision|n16|B2": {
+      "n": 40,
+      "latency_coverage": 1.0,
+      "thermal_coverage": 1.0,
+      "joint_coverage": 1.0
+    },
+    "fisvdd_revision|n256|B0": {
+      "n": 40,
+      "latency_coverage": 1.0,
+      "thermal_coverage": 1.0,
+      "joint_coverage": 1.0
+    },
+    "fisvdd_revision|n256|B1": {
+      "n": 40,
+      "latency_coverage": 1.0,
+      "thermal_coverage": 1.0,
+      "joint_coverage": 1.0
+    },
+    "fisvdd_revision|n256|B2": {
+      "n": 40,
+      "latency_coverage": 1.0,
+      "thermal_coverage": 1.0,
+      "joint_coverage": 1.0
+    },
+    "fisvdd_revision|n512|B0": {
+      "n": 40,
+      "latency_coverage": 1.0,
+      "thermal_coverage": 1.0,
+      "joint_coverage": 1.0
+    },
+    "fisvdd_revision|n512|B1": {
+      "n": 40,
+      "latency_coverage": 1.0,
+      "thermal_coverage": 1.0,
+      "joint_coverage": 1.0
+    },
+    "fisvdd_revision|n512|B2": {
+      "n": 40,
+      "latency_coverage": 1.0,
+      "thermal_coverage": 1.0,
+      "joint_coverage": 1.0
+    },
+    "fisvdd_revision|n64|B0": {
+      "n": 40,
+      "latency_coverage": 1.0,
+      "thermal_coverage": 1.0,
+      "joint_coverage": 1.0
+    },
+    "fisvdd_revision|n64|B1": {
+      "n": 40,
+      "latency_coverage": 1.0,
+      "thermal_coverage": 1.0,
+      "joint_coverage": 1.0
+    },
+    "fisvdd_revision|n64|B2": {
+      "n": 40,
+      "latency_coverage": 1.0,
+      "thermal_coverage": 1.0,
+      "joint_coverage": 1.0
+    },
+    "lucid_revision|n1|B0": {
+      "n": 40,
+      "latency_coverage": 1.0,
+      "thermal_coverage": 1.0,
+      "joint_coverage": 1.0
+    },
+    "lucid_revision|n1|B1": {
+      "n": 40,
+      "latency_coverage": 1.0,
+      "thermal_coverage": 1.0,
+      "joint_coverage": 1.0
+    },
+    "lucid_revision|n1|B2": {
+      "n": 40,
+      "latency_coverage": 1.0,
+      "thermal_coverage": 1.0,
+      "joint_coverage": 1.0
+    },
+    "lucid_revision|n1024|B0": {
+      "n": 40,
+      "latency_coverage": 1.0,
+      "thermal_coverage": 1.0,
+      "joint_coverage": 1.0
+    },
+    "lucid_revision|n1024|B1": {
+      "n": 40,
+      "latency_coverage": 1.0,
+      "thermal_coverage": 1.0,
+      "joint_coverage": 1.0
+    },
+    "lucid_revision|n1024|B2": {
+      "n": 40,
+      "latency_coverage": 1.0,
+      "thermal_coverage": 1.0,
+      "joint_coverage": 1.0
+    },
+    "lucid_revision|n16|B0": {
+      "n": 40,
+      "latency_coverage": 1.0,
+      "thermal_coverage": 1.0,
+      "joint_coverage": 1.0
+    },
+    "lucid_revision|n16|B1": {
+      "n": 40,
+      "latency_coverage": 1.0,
+      "thermal_coverage": 1.0,
+      "joint_coverage": 1.0
+    },
+    "lucid_revision|n16|B2": {
+      "n": 40,
+      "latency_coverage": 1.0,
+      "thermal_coverage": 1.0,
+      "joint_coverage": 1.0
+    },
+    "lucid_revision|n256|B0": {
+      "n": 40,
+      "latency_coverage": 1.0,
+      "thermal_coverage": 1.0,
+      "joint_coverage": 1.0
+    },
+    "lucid_revision|n256|B1": {
+      "n": 40,
+      "latency_coverage": 1.0,
+      "thermal_coverage": 1.0,
+      "joint_coverage": 1.0
+    },
+    "lucid_revision|n256|B2": {
+      "n": 40,
+      "latency_coverage": 0.975,
+      "thermal_coverage": 1.0,
+      "joint_coverage": 0.975
+    },
+    "lucid_revision|n512|B0": {
+      "n": 40,
+      "latency_coverage": 1.0,
+      "thermal_coverage": 1.0,
+      "joint_coverage": 1.0
+    },
+    "lucid_revision|n512|B1": {
+      "n": 40,
+      "latency_coverage": 1.0,
+      "thermal_coverage": 1.0,
+      "joint_coverage": 1.0
+    },
+    "lucid_revision|n512|B2": {
+      "n": 40,
+      "latency_coverage": 1.0,
+      "thermal_coverage": 1.0,
+      "joint_coverage": 1.0
+    },
+    "lucid_revision|n64|B0": {
+      "n": 40,
+      "latency_coverage": 1.0,
+      "thermal_coverage": 1.0,
+      "joint_coverage": 1.0
+    },
+    "lucid_revision|n64|B1": {
+      "n": 40,
+      "latency_coverage": 1.0,
+      "thermal_coverage": 1.0,
+      "joint_coverage": 1.0
+    },
+    "lucid_revision|n64|B2": {
+      "n": 40,
+      "latency_coverage": 1.0,
+      "thermal_coverage": 1.0,
+      "joint_coverage": 1.0
+    },
+    "oi_svdd_as_elm_revision|n1|B0": {
+      "n": 40,
+      "latency_coverage": 1.0,
+      "thermal_coverage": 1.0,
+      "joint_coverage": 1.0
+    },
+    "oi_svdd_as_elm_revision|n1|B1": {
+      "n": 40,
+      "latency_coverage": 1.0,
+      "thermal_coverage": 1.0,
+      "joint_coverage": 1.0
+    },
+    "oi_svdd_as_elm_revision|n1|B2": {
+      "n": 40,
+      "latency_coverage": 1.0,
+      "thermal_coverage": 1.0,
+      "joint_coverage": 1.0
+    },
+    "oi_svdd_as_elm_revision|n1024|B0": {
+      "n": 40,
+      "latency_coverage": 1.0,
+      "thermal_coverage": 1.0,
+      "joint_coverage": 1.0
+    },
+    "oi_svdd_as_elm_revision|n1024|B1": {
+      "n": 40,
+      "latency_coverage": 1.0,
+      "thermal_coverage": 1.0,
+      "joint_coverage": 1.0
+    },
+    "oi_svdd_as_elm_revision|n1024|B2": {
+      "n": 40,
+      "latency_coverage": 1.0,
+      "thermal_coverage": 1.0,
+      "joint_coverage": 1.0
+    },
+    "oi_svdd_as_elm_revision|n16|B0": {
+      "n": 40,
+      "latency_coverage": 1.0,
+      "thermal_coverage": 1.0,
+      "joint_coverage": 1.0
+    },
+    "oi_svdd_as_elm_revision|n16|B1": {
+      "n": 40,
+      "latency_coverage": 1.0,
+      "thermal_coverage": 1.0,
+      "joint_coverage": 1.0
+    },
+    "oi_svdd_as_elm_revision|n16|B2": {
+      "n": 40,
+      "latency_coverage": 1.0,
+      "thermal_coverage": 1.0,
+      "joint_coverage": 1.0
+    },
+    "oi_svdd_as_elm_revision|n256|B0": {
+      "n": 40,
+      "latency_coverage": 1.0,
+      "thermal_coverage": 1.0,
+      "joint_coverage": 1.0
+    },
+    "oi_svdd_as_elm_revision|n256|B1": {
+      "n": 40,
+      "latency_coverage": 1.0,
+      "thermal_coverage": 1.0,
+      "joint_coverage": 1.0
+    },
+    "oi_svdd_as_elm_revision|n256|B2": {
+      "n": 40,
+      "latency_coverage": 1.0,
+      "thermal_coverage": 1.0,
+      "joint_coverage": 1.0
+    },
+    "oi_svdd_as_elm_revision|n512|B0": {
+      "n": 40,
+      "latency_coverage": 1.0,
+      "thermal_coverage": 1.0,
+      "joint_coverage": 1.0
+    },
+    "oi_svdd_as_elm_revision|n512|B1": {
+      "n": 40,
+      "latency_coverage": 1.0,
+      "thermal_coverage": 1.0,
+      "joint_coverage": 1.0
+    },
+    "oi_svdd_as_elm_revision|n512|B2": {
+      "n": 40,
+      "latency_coverage": 1.0,
+      "thermal_coverage": 1.0,
+      "joint_coverage": 1.0
+    },
+    "oi_svdd_as_elm_revision|n64|B0": {
+      "n": 40,
+      "latency_coverage": 1.0,
+      "thermal_coverage": 1.0,
+      "joint_coverage": 1.0
+    },
+    "oi_svdd_as_elm_revision|n64|B1": {
+      "n": 40,
+      "latency_coverage": 1.0,
+      "thermal_coverage": 1.0,
+      "joint_coverage": 1.0
+    },
+    "oi_svdd_as_elm_revision|n64|B2": {
+      "n": 40,
+      "latency_coverage": 1.0,
+      "thermal_coverage": 1.0,
+      "joint_coverage": 1.0
+    },
+    "tinydl_revision|n1|B0": {
+      "n": 40,
+      "latency_coverage": 1.0,
+      "thermal_coverage": 1.0,
+      "joint_coverage": 1.0
+    },
+    "tinydl_revision|n1|B1": {
+      "n": 40,
+      "latency_coverage": 1.0,
+      "thermal_coverage": 1.0,
+      "joint_coverage": 1.0
+    },
+    "tinydl_revision|n1|B2": {
+      "n": 40,
+      "latency_coverage": 1.0,
+      "thermal_coverage": 1.0,
+      "joint_coverage": 1.0
+    },
+    "tinydl_revision|n1024|B0": {
+      "n": 40,
+      "latency_coverage": 1.0,
+      "thermal_coverage": 1.0,
+      "joint_coverage": 1.0
+    },
+    "tinydl_revision|n1024|B1": {
+      "n": 40,
+      "latency_coverage": 1.0,
+      "thermal_coverage": 1.0,
+      "joint_coverage": 1.0
+    },
+    "tinydl_revision|n1024|B2": {
+      "n": 40,
+      "latency_coverage": 1.0,
+      "thermal_coverage": 1.0,
+      "joint_coverage": 1.0
+    },
+    "tinydl_revision|n16|B0": {
+      "n": 40,
+      "latency_coverage": 1.0,
+      "thermal_coverage": 1.0,
+      "joint_coverage": 1.0
+    },
+    "tinydl_revision|n16|B1": {
+      "n": 40,
+      "latency_coverage": 1.0,
+      "thermal_coverage": 1.0,
+      "joint_coverage": 1.0
+    },
+    "tinydl_revision|n16|B2": {
+      "n": 40,
+      "latency_coverage": 1.0,
+      "thermal_coverage": 1.0,
+      "joint_coverage": 1.0
+    },
+    "tinydl_revision|n256|B0": {
+      "n": 40,
+      "latency_coverage": 1.0,
+      "thermal_coverage": 1.0,
+      "joint_coverage": 1.0
+    },
+    "tinydl_revision|n256|B1": {
+      "n": 40,
+      "latency_coverage": 1.0,
+      "thermal_coverage": 1.0,
+      "joint_coverage": 1.0
+    },
+    "tinydl_revision|n256|B2": {
+      "n": 40,
+      "latency_coverage": 1.0,
+      "thermal_coverage": 1.0,
+      "joint_coverage": 1.0
+    },
+    "tinydl_revision|n512|B0": {
+      "n": 40,
+      "latency_coverage": 1.0,
+      "thermal_coverage": 1.0,
+      "joint_coverage": 1.0
+    },
+    "tinydl_revision|n512|B1": {
+      "n": 40,
+      "latency_coverage": 1.0,
+      "thermal_coverage": 1.0,
+      "joint_coverage": 1.0
+    },
+    "tinydl_revision|n512|B2": {
+      "n": 40,
+      "latency_coverage": 1.0,
+      "thermal_coverage": 1.0,
+      "joint_coverage": 1.0
+    },
+    "tinydl_revision|n64|B0": {
+      "n": 40,
+      "latency_coverage": 1.0,
+      "thermal_coverage": 1.0,
+      "joint_coverage": 1.0
+    },
+    "tinydl_revision|n64|B1": {
+      "n": 40,
+      "latency_coverage": 1.0,
+      "thermal_coverage": 1.0,
+      "joint_coverage": 1.0
+    },
+    "tinydl_revision|n64|B2": {
+      "n": 40,
+      "latency_coverage": 1.0,
+      "thermal_coverage": 1.0,
+      "joint_coverage": 1.0
+    }
+  },
+  "target_report_not_guarantee": 0.99,
+  "tuning_performed": false,
+  "artifact_sha256": {
+    "guard_residuals_coverage.csv": "f1ec8122b3967b6d6c423577f1f77e726411870aaab01bc8fb42ef3b141e8e18",
+    "guard_residual_ecdf.csv": "b39a12ef7696d5345d1903960700ecfa0927f176540c88579a06816c8160fe9e"
+  }
+}

@@ -1,0 +1,25 @@
+{
+  "status": "FROZEN_DEVICE_CALIBRATION_INPUT",
+  "source_split": "scheduler_train only",
+  "seed": 20260909,
+  "rows": 6000,
+  "official_test_access": "not read",
+  "files": {
+    "scheduler_train_6000_features.npy": {
+      "size_bytes": 4584128,
+      "sha256": "4cbb6849d269129a01038693aa6a981017b55d8949da81074aece2e1100e823d"
+    },
+    "scheduler_train_6000_risk_features.npy": {
+      "size_bytes": 384128,
+      "sha256": "fee72cdd9445e8ebd4ecb12e888848b52269bd0fe81ef259ecf25525bf711dcd"
+    },
+    "scheduler_train_6000_raw_features.csv": {
+      "size_bytes": 1042557,
+      "sha256": "1f764959e7c01ad67a235f01adecfe74f1c8df4af48a4b96e03d3eea96d7b399"
+    },
+    "SOURCE_INDEX.csv": {
+      "size_bytes": 175105,
+      "sha256": "2ce2ce8f511300c1defa2c0beb536a81d4d99a755aba8a838f3d218c97f4fc4f"
+    }
+  }
+}

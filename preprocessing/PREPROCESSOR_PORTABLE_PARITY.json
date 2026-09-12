@@ -1,0 +1,7 @@
+{
+  "status": "PASS",
+  "scope": "first 512 validation rows; official test not accessed",
+  "maximum_absolute_difference": 0.0,
+  "artifact": "preprocessing/preprocessor_portable.npz",
+  "artifact_sha256": "77d7ed29880adf3e3e1bcbbb59d5d705653b7c07fdcd88690041a45534b897be"
+}

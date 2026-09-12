@@ -1,0 +1,31 @@
+{
+  "status": "PI4B8_FORMAL_EVIDENCE_COMPLETE_PASS",
+  "accepted_cells": 60,
+  "accepted_windows": 36000,
+  "original_valid_complete": 58,
+  "replacement_valid": 2,
+  "original_invalid_preserved": [
+    "pi4b8_formal_40_safe_greedy_n16_B2_s5104",
+    "pi4b8_formal_51_fssql_r_n16_B2_s5105"
+  ],
+  "replacement_lineage": [
+    {
+      "run_id": "pi4b8_formal_40_safe_greedy_n16_B2_s5104_attempt2",
+      "status": "VALID_REPLACEMENT",
+      "windows": 600,
+      "meter_samples": 772,
+      "pi_sha256": "b0432f2f9d65e698b57340d77ac4cdce5b26318ef51e7f6187278927cc82d22e",
+      "powerz_sha256": "f76617d24d69525b5617f128ebc44c0106991ab4d3da6f8afbade786371c6c0a"
+    },
+    {
+      "run_id": "pi4b8_formal_51_fssql_r_n16_B2_s5105_attempt2",
+      "status": "VALID_REPLACEMENT",
+      "windows": 600,
+      "meter_samples": 775,
+      "pi_sha256": "75fe5b7c7e04bacf81b8fbb92d4c1316c8415ed265b102ba48f57c1734bcaa32",
+      "powerz_sha256": "f30e8547545be911082f120804bf967873ad9f3d29d82455ea948a8bf3a79b5d"
+    }
+  ],
+  "official_test": "sealed",
+  "scientific_statistics": "not_started"
+}

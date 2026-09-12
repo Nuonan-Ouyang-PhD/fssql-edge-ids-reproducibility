@@ -1,0 +1,71 @@
+{
+  "status": "PASS_ONE_SHOT_COMPLETE",
+  "rows_evaluated": 82332,
+  "detectors": [
+    {
+      "detector": "FISVDD",
+      "threshold_frozen": 0.05,
+      "rows": 82332,
+      "tp": 45332,
+      "fp": 37000,
+      "fn": 0,
+      "tn": 0,
+      "precision": 0.5506000097167566,
+      "recall": 1.0,
+      "f1": 0.7101767138739191,
+      "fpr": 1.0,
+      "auroc": 0.5350533326496885,
+      "pr_auc": 0.6218886961718839
+    },
+    {
+      "detector": "LUCID",
+      "threshold_frozen": 0.05,
+      "rows": 82332,
+      "tp": 45211,
+      "fp": 19188,
+      "fn": 121,
+      "tn": 17812,
+      "precision": 0.7020450628115343,
+      "recall": 0.997330803847172,
+      "f1": 0.8240333178409017,
+      "fpr": 0.5185945945945946,
+      "auroc": 0.8620634427443414,
+      "pr_auc": 0.8468513793134178
+    },
+    {
+      "detector": "TinyDL",
+      "threshold_frozen": 0.315,
+      "rows": 82332,
+      "tp": 44414,
+      "fp": 12514,
+      "fn": 918,
+      "tn": 24486,
+      "precision": 0.7801784710511523,
+      "recall": 0.9797494043942468,
+      "f1": 0.8686485429297869,
+      "fpr": 0.3382162162162162,
+      "auroc": 0.97041123447192,
+      "pr_auc": 0.9784460609943639
+    },
+    {
+      "detector": "OI-SVDD+AS-ELM",
+      "threshold_frozen": 0.065,
+      "rows": 82332,
+      "tp": 45218,
+      "fp": 15581,
+      "fn": 114,
+      "tn": 21419,
+      "precision": 0.7437293376535798,
+      "recall": 0.9974852201535339,
+      "f1": 0.8521167236716889,
+      "fpr": 0.4211081081081081,
+      "auroc": 0.9513062140937374,
+      "pr_auc": 0.958378978903266
+    }
+  ],
+  "test_sha256": "734fe6642edf758f7c94d7d9149426b49d202fe8e7bf0bef47392489c3c0a559",
+  "threshold_source": "models/MODEL_HYPERPARAMETERS.json",
+  "official_test": "opened_once",
+  "no_tuning": true,
+  "development_phase": "closed"
+}

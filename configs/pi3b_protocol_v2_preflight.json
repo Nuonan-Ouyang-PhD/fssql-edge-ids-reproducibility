@@ -1,0 +1,63 @@
+{
+  "status": "PREFLIGHT_ONLY_NOT_FORMAL_CALIBRATION",
+  "protocol_version": 2,
+  "device_id": "pi3bplus",
+  "calibration_round": 0,
+  "evidence_source": "scheduler_train only",
+  "official_test_access": "forbidden",
+  "physical_condition_attestation": "provenance/PI3B_PROTOCOL_V2_PHYSICAL_CONDITION_ATTESTATION.md",
+  "physical_condition_attestation_sha256": "b8b9f965f166d5566d10501335844826a43ae16e81281f8b43e4764589b71688",
+  "hardware_manifest": "provenance/PI3B_PROTOCOL_V2_HARDWARE_MANIFEST.json",
+  "hardware_manifest_sha256": "1f681b99c30cfc44ad1ae5b88b6d4959819618217f7c4e8f5e082388bf1debdc",
+  "decision_window_ms": 100.0,
+  "latency_cap_ms": 40.0,
+  "thermal_cap_c": 82.0,
+  "emergency_stop_c": 55.0,
+  "expected_governor": "performance",
+  "frequency_invariant": {
+    "telemetry": "per-window scaling_cur_freq at start and end on every online CPU",
+    "minimum_observed_mhz": 1350.0,
+    "violation_action": "invalidate the complete preflight"
+  },
+  "numpy_thread_count": 1,
+  "idle_baseline": {
+    "samples": 3,
+    "interval_seconds": 0.1,
+    "statistic": "median",
+    "start_limit_c_above_baseline": 2.0
+  },
+  "actions": ["lucid_revision"],
+  "batch_semantics": "Targeted worst-duration thermal preflight: resident LUCID portable NumPy model processes 1024 records with one pinned full-duty background CPU.",
+  "workload_records_per_window": [1024],
+  "background_conditions": [
+    {"id": "B2", "description": "one logical CPU at 100 percent duty", "busy_cpu_count": 1, "duty_cycle": 1.0, "pinned_cpu": 3, "period_ms": 100.0}
+  ],
+  "observations_per_action_workload_background_cell": 800,
+  "block_stabilization_seconds": 0.5,
+  "split_seeds": {"fit": 7599, "margin": 7600, "coverage": 7601},
+  "split_order_rule": "Preflight only; no row may be used for V2 predictor fitting, margins, coverage, or policy evaluation.",
+  "condition_order": "single targeted condition",
+  "row_schedule": "seeded permutation of frozen scheduler_train rows, cycling after exhaustion",
+  "latency_predictor": "not fitted in preflight",
+  "thermal_predictor": "not fitted in preflight",
+  "margin_rule": {
+    "quantile": 0.99,
+    "method": "higher",
+    "residual": "not applicable to preflight",
+    "one_sided_positive": true,
+    "fixed_latency_buffer_ms": 10.0,
+    "fixed_thermal_buffer_c": 0.6
+  },
+  "coverage_rule": "not applicable to preflight",
+  "power_monitor_interval_seconds": 1.0,
+  "acceptance_rule": "800/800 targeted windows, all observed frequencies at least 1350 MHz, maximum temperature below 55 C, no current low-nibble throttle or undervoltage bit, and no other invalidation",
+  "invalid_if": [
+    "any current undervoltage or throttle low-nibble bit is observed",
+    "any recorded CPU frequency is below 1350 MHz",
+    "temperature reaches 55 C",
+    "input/preprocessor parity fails",
+    "missing or non-finite timing/probability/temperature",
+    "unexpected process or I/O failure"
+  ],
+  "automatic_retry": false
+}

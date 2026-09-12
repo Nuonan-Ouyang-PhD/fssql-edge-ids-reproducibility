@@ -1,0 +1,8 @@
+{
+  "status": "PI4B8_FINAL_EXECUTION_MANIFEST",
+  "commissioning_run_id": "pi4b8_commissioning_v4_final_20260911",
+  "commissioning_validation_sha256": "7c6e616092dd6698cd9fc0bed9aa7a913dcd5286e609f6fb4cb54f3fa4f1f6ac",
+  "commissioning_decision_sha256": "c807b6f3b50a42cf87a91026731dfed86b10888dced6d4c05f684dbfe844c73f",
+  "orchestrator_sha256": "1123ab6a6a289f61abd61387f49d5b64e5e45c4ab128a2a35e8521c5478a386e",
+  "runtime_package_manifest_sha256": "7b18cdcb7af288724f990a6b13d83a004cb489cffb064c02d76c5a696b3c9bc1"
+}

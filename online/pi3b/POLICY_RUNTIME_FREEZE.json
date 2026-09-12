@@ -1,0 +1,40 @@
+{
+  "status": "FROZEN_BEFORE_OFFICIAL_TEST_OPENING_OR_FORMAL_POLICY_EXECUTION",
+  "evidence_boundary": "Development smoke used scheduler-train rows only; official test remained sealed.",
+  "files": {
+    "scripts/open_official_test.py": "720b4ed253dc0152a7f2ca16979a7fbdbf01d005e86217c0ea81d5131532df8e",
+    "online/pi3b/collect_policy_run.py": "0e6cc8c6c6bce15ecfa827fd5b62919c53f15d37a8ffd3066ad994097c257c12",
+    "online/pi3b/run_policy_campaign.py": "5366bbd0874b6b5e8d2829c1e24eab26a274e95f12ec78d2750968860495fadd",
+    "configs/pi3b_policy_experiment.json": "2d475647136b387af38b8e2d68f4b24bac8c9226abd340540b04bcd6f18976d4",
+    "configs/pi3b_policy_experiment_matrix.csv": "6c1645c1c647bc860ba09a8e15d58c44a52bbaa1903f9950ecd5c4240643a51e",
+    "configs/q_learning_protocol.json": "82894b5435ffc923c0704e39ba0786256ae6329c491d4b0476c0c6365fa1f182",
+    "configs/natural_workload.json": "4594fc72153fd98e0145bf171ed530197a689c32de32eec2f5bc5d6159e8f850",
+    "configs/near_cap_workload.json": "57934ae14513abc4878313651fb8293610be088c1a30da1cfb73a0532c28fed1",
+    "q_training/Q_TABLE_MANIFEST.json": "f0a45e60c00260ffcc38dd56a7472bdf0f9978a645574edcf2e9c2e61d01fca9",
+    "models/MODEL_SHA256.json": "1c9c21560fcfaf174b20c61ce3f9edfcdc64bb356839bb00128b0c9aaa268847",
+    "preprocessing/PREPROCESSOR_PORTABLE_PARITY.json": "2751267c6f1b70faeb652b9f3a0271402e2e9c3787028e2f920bfeff4801c66e"
+  },
+  "runtime_invariants": {
+    "formal_evaluation_epsilon": 0.0,
+    "formal_q_updates": false,
+    "formal_replay_updates": false,
+    "safe_greedy_and_fssql_guard": "same frozen V2 predictors and margins",
+    "scheduler_label_access": "forbidden before selected-action inference",
+    "invalid_attempt_handling": "retain complete attempt and stop; no automatic retry or stitching"
+  },
+  "development_smoke": {
+    "device": "pi3bplus",
+    "all_eight_policy_paths_passed": true,
+    "final_hash-gated_fssql_path_passed": true,
+    "current_fault_bits_observed": false,
+    "minimum_cpu_frequency_mhz": 1400.0,
+    "maximum_temperature_C": 31.096,
+    "formal_evidence": false
+  },
+  "official_test_opening_tool_revision": {
+    "reason": "The first opening attempt exposed the official CSV UTF-8 BOM as part of the id field name and stopped before creating traces.",
+    "change": "Input decoding only: utf-8 to utf-8-sig.",
+    "policy_or_experiment_parameter_changed": false,
+    "incident_record": "provenance/FINAL_TEST_OPENING_INCIDENT.md"
+  }
+}

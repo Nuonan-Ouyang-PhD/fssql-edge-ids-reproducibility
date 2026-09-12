@@ -1,0 +1,34 @@
+{
+  "status": "PASS",
+  "scope": "first 512 validation rows; official test not accessed",
+  "checks": {
+    "lucid_revision": {
+      "samples": 512,
+      "maximum_absolute_probability_difference": 6.258989448948427e-08,
+      "status": "PASS"
+    },
+    "tinydl_revision": {
+      "samples": 512,
+      "maximum_absolute_probability_difference": 1.1403727029346555e-07,
+      "status": "PASS"
+    },
+    "fisvdd_revision": {
+      "samples": 512,
+      "finite_probabilities": true,
+      "probability_range": [
+        0.482771080940663,
+        0.5999460396476424
+      ],
+      "status": "PASS"
+    },
+    "oi_svdd_as_elm_revision": {
+      "samples": 512,
+      "finite_probabilities": true,
+      "probability_range": [
+        1.0739755382143106e-05,
+        0.9250474901139354
+      ],
+      "status": "PASS"
+    }
+  }
+}

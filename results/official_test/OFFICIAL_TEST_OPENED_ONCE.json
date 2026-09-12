@@ -1,0 +1,9 @@
+{
+  "status": "OFFICIAL_TEST_OPENED_ONCE_FOR_FINAL_EVALUATION",
+  "opened_utc": "2026-09-11T12:34:33.629103+00:00",
+  "test_sha256": "734fe6642edf758f7c94d7d9149426b49d202fe8e7bf0bef47392489c3c0a559",
+  "test_path": "data/raw/UNSW_NB15_testing-set.csv",
+  "source_commit": "22a90196a9556ae8c6d138cf364c36ba656dfa02",
+  "rows": 82332,
+  "no_further_test_access": true
+}

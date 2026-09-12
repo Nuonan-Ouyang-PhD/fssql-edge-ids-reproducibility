@@ -1,0 +1,23 @@
+{
+  "status": "PASS",
+  "marker": "COMMISSIONING_ONLY_EXCLUDED_FROM_FORMAL_STATISTICS",
+  "run_id": "pi4b8_commissioning_v4_final_20260911",
+  "checks": {
+    "windows_600": true,
+    "timing_fields": true,
+    "tp_fp_fn_tn_recomputable": true,
+    "pi_raw_sha256": "eb6793f65c7b635ddb409244e12770d7473a73f4d783ab8a10f8bde6f5bf7fcd",
+    "powerz_raw_sha256": "ed7f71289eec71423098687e690d8fd3c342181b471a4e9c76e79e20cbbd88b3",
+    "meter_monotonic": true,
+    "meter_samples": 774,
+    "ordering": true,
+    "pre_roll_s": 6.229517749999999,
+    "post_roll_s": 5.070436916000006,
+    "energy_J": 172.396895690868,
+    "energy_reproducible": true,
+    "run_id_binding": true,
+    "label_leakage": true,
+    "throttle_zero": true,
+    "frequency_min_mhz": 1800.0
+  }
+}

@@ -1,0 +1,14 @@
+{
+  "status": "FROZEN_BEFORE_FORMAL_POLICY_EVALUATION",
+  "regime": "natural",
+  "device_id": "pi3bplus",
+  "n_records": 1,
+  "background": "B0",
+  "arrival_rule": "One official-test record arrives at the beginning of every 100 ms window and is processed in the same window.",
+  "windows_per_run": 600,
+  "decision_window_ms": 100.0,
+  "matched_seeds": [4101, 4102, 4103, 4104, 4105, 4106, 4107, 4108, 4109, 4110],
+  "trace_rule": "numpy.random.default_rng(seed).permutation(official_test_rows), take first 600 without replacement",
+  "official_test_access_at_freeze": "forbidden",
+  "note": "The predefined near-cap selector also returned the minimum n=1/B0 candidate. Natural and near-cap therefore have identical operational workload parameters; regime labels are retained for the preregistered matrix, and this non-separation must be reported rather than repaired after outcomes are seen."
+}

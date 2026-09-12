@@ -1,0 +1,64 @@
+{
+  "status": "FROZEN_BEFORE_REPLACEMENTS",
+  "replacements": [
+    {
+      "run_id": "pi4b8_formal_40_safe_greedy_n16_B2_s5104",
+      "policy": "Safe-Greedy",
+      "condition": "n16/B2",
+      "seed": 5104,
+      "execution_order": 40,
+      "pi_execution_status": "completed_unknown_validity",
+      "expected_pi_raw_path": "/home/pi/tsusc_major_revision/pi4b8_formal_runtime_v4/pi4b8_formal_40_safe_greedy_n16_B2_s5104/windows.csv",
+      "local_pi_raw_present": true,
+      "remote_pi_raw_present": true,
+      "pi_rows": 600,
+      "pi_registry_match": true,
+      "expected_powerz_path": "/Users/nuonanouyang/Documents/Codex/2026-09-09/TSUSC_2026_07_0200_MAJOR_REVISION_REBUILD/evidence/pi4b8_formal_matrix/pi4b8_formal_40_safe_greedy_n16_B2_s5104/POWERZ_raw.csv",
+      "powerz_present": false,
+      "run_manifest_present": false,
+      "ack_present": false,
+      "validity_status": "INVALID_POWER_CAPTURE",
+      "original_attempt_status": "INVALID_POWER_CAPTURE",
+      "replacement_reason": "missing or invalid contemporaneous POWER-Z acquisition",
+      "authorized_before_scientific_outcomes": true,
+      "frozen_input_hash": ".formal_inputs/pi4b8_scheduler_train_v1/PACKAGE_MANIFEST.json",
+      "frozen_q_hash": "q_training/pi4b8_q_v1/Q_TABLE_MANIFEST.json",
+      "guard_config_runner_hashes": {
+        "config": "configs/pi4b8_online_experiment_v1.json",
+        "runner": "online/pi4b8/pi4b8_formal_runner.py",
+        "package_manifest": "PI4B8_FORMAL_RUNTIME_PACKAGE_MANIFEST_V4.json"
+      },
+      "powerz_protocol_hash": "configs/POWER_Z_HID_ACQUISITION_V1.md"
+    },
+    {
+      "run_id": "pi4b8_formal_51_fssql_r_n16_B2_s5105",
+      "policy": "FSSQL-R",
+      "condition": "n16/B2",
+      "seed": 5105,
+      "execution_order": 51,
+      "pi_execution_status": "completed_unknown_validity",
+      "expected_pi_raw_path": "/home/pi/tsusc_major_revision/pi4b8_formal_runtime_v4/pi4b8_formal_51_fssql_r_n16_B2_s5105/windows.csv",
+      "local_pi_raw_present": true,
+      "remote_pi_raw_present": true,
+      "pi_rows": 600,
+      "pi_registry_match": true,
+      "expected_powerz_path": "/Users/nuonanouyang/Documents/Codex/2026-09-09/TSUSC_2026_07_0200_MAJOR_REVISION_REBUILD/evidence/pi4b8_formal_matrix/pi4b8_formal_51_fssql_r_n16_B2_s5105/POWERZ_raw.csv",
+      "powerz_present": false,
+      "run_manifest_present": false,
+      "ack_present": false,
+      "validity_status": "INVALID_POWER_CAPTURE",
+      "original_attempt_status": "INVALID_POWER_CAPTURE",
+      "replacement_reason": "missing or invalid contemporaneous POWER-Z acquisition",
+      "authorized_before_scientific_outcomes": true,
+      "frozen_input_hash": ".formal_inputs/pi4b8_scheduler_train_v1/PACKAGE_MANIFEST.json",
+      "frozen_q_hash": "q_training/pi4b8_q_v1/Q_TABLE_MANIFEST.json",
+      "guard_config_runner_hashes": {
+        "config": "configs/pi4b8_online_experiment_v1.json",
+        "runner": "online/pi4b8/pi4b8_formal_runner.py",
+        "package_manifest": "PI4B8_FORMAL_RUNTIME_PACKAGE_MANIFEST_V4.json"
+      },
+      "powerz_protocol_hash": "configs/POWER_Z_HID_ACQUISITION_V1.md"
+    }
+  ],
+  "statement": "Authorized solely for technical POWER-Z invalidation before inspecting scientific outcomes."
+}

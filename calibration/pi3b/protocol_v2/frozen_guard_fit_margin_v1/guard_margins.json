@@ -1,0 +1,19 @@
+{
+  "status": "FROZEN_FROM_MARGIN_SPLIT_BEFORE_COVERAGE",
+  "quantile": 0.99,
+  "quantile_method": "higher",
+  "fixed_latency_buffer_ms": 10.0,
+  "fixed_thermal_buffer_c": 0.6,
+  "epsilon_tau_ms_by_action": {
+    "fisvdd_revision": 1.006696999999999,
+    "lucid_revision": 21.637905999999987,
+    "tinydl_revision": 0.5558169999999905,
+    "oi_svdd_as_elm_revision": 1.1114439999999988
+  },
+  "epsilon_T_C_shared": 1.001834602678251,
+  "fit_run_id": "pi3bplus_v2_fit_20260909T124920Z",
+  "margin_run_id": "pi3bplus_v2_margin_20260909T125804Z",
+  "fit_n": 2880,
+  "margin_n": 2880,
+  "coverage_access": "not used"
+}

@@ -1,0 +1,39 @@
+{
+  "status": "FROZEN_SCHEDULER_TRAIN_LABEL_RESTORATION",
+  "official_test": "sealed_not_read",
+  "rows": 6000,
+  "one_to_one": true,
+  "order_parity": true,
+  "feature_parity_cells_mismatch": 0,
+  "label_use": "scoring_only_after_action_output",
+  "files": {
+    "data/raw/UNSW_NB15_training-set.csv": {
+      "sha256": "bec7dd5ec88dc2a0ccc7a07879d338395ed7421750f675fd0339e07dfe0648fa",
+      "bytes": 32293018
+    },
+    "device_calibration/inputs/SOURCE_INDEX.csv": {
+      "sha256": "2ce2ce8f511300c1defa2c0beb536a81d4d99a755aba8a838f3d218c97f4fc4f",
+      "bytes": 175105
+    },
+    "device_calibration/inputs/scheduler_train_6000_raw_features.csv": {
+      "sha256": "1f764959e7c01ad67a235f01adecfe74f1c8df4af48a4b96e03d3eea96d7b399",
+      "bytes": 1042557
+    },
+    "device_calibration/inputs/scheduler_train_6000_labeled_online_source.csv": {
+      "sha256": "6ba80a8b28b5554bb13bb2a34e633f7dfbf0b90dc046ea316f79cd4b6808185c",
+      "bytes": 1178804
+    },
+    "device_calibration/inputs/scheduler_train_6000_label_lineage.csv": {
+      "sha256": "8465d5a24079b41caca796e7402b24ec0a318f9b7fec4ddc1de8ca3574a7418c",
+      "bytes": 273173
+    },
+    "data/SPLIT_MANIFEST.csv": {
+      "sha256": "1c70959a6d12ea1bdb6098e1945296f3e17760e1027426a087877407cbbfe169",
+      "bytes": 9709543
+    },
+    "data/LEAKAGE_AUDIT.json": {
+      "sha256": "726c8f4ac82465f16419c9413ff5028a77879cc511188746b2beff51be688ed1",
+      "bytes": 3160
+    }
+  }
+}

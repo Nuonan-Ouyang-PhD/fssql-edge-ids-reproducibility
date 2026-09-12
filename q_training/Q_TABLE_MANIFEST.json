@@ -1,0 +1,287 @@
+{
+  "status": "Q_TRAINING_AND_STABILITY_DIAGNOSTIC_PASS",
+  "config_sha256": "82894b5435ffc923c0704e39ba0786256ae6329c491d4b0476c0c6365fa1f182",
+  "trainer_sha256": "87d3c6409a2f6781690a8fa1831e2a5c6c8f4d42d11aa35c9f6d32ed592df207",
+  "official_test_access": "not used",
+  "policies": [
+    "Unshielded-Q",
+    "FSSQL-R"
+  ],
+  "seeds": [
+    3101,
+    3102,
+    3103,
+    3104,
+    3105,
+    3106,
+    3107,
+    3108,
+    3109,
+    3110
+  ],
+  "windows_per_policy_seed": 6000,
+  "total_training_windows": 120000,
+  "states": 1280,
+  "state_action_pairs": 5120,
+  "validation_positive_prevalence": 0.6724917405668579,
+  "validation_action_quality": {
+    "fisvdd_revision": {
+      "tpr": 1.0,
+      "fpr": 1.0,
+      "f1": 0.8041794458595415
+    },
+    "lucid_revision": {
+      "tpr": 0.9946132299073476,
+      "fpr": 0.24059817715246457,
+      "f1": 0.9419639213125459
+    },
+    "tinydl_revision": {
+      "tpr": 0.9790993320405085,
+      "fpr": 0.14140341562693526,
+      "f1": 0.9561685920501651
+    },
+    "oi_svdd_as_elm_revision": {
+      "tpr": 0.9953889248006895,
+      "fpr": 0.2017520573400583,
+      "f1": 0.950867587427701
+    }
+  },
+  "initial_temperature_C": 33.786,
+  "n1_B0_latency_hat_ms": {
+    "fisvdd_revision": 3.27285,
+    "lucid_revision": 5.146567,
+    "tinydl_revision": 3.109409,
+    "oi_svdd_as_elm_revision": 4.421503
+  },
+  "n1_B0_latency_upper_ms": {
+    "fisvdd_revision": 14.279546999999999,
+    "lucid_revision": 36.78447299999999,
+    "tinydl_revision": 13.66522599999999,
+    "oi_svdd_as_elm_revision": 15.532947
+  },
+  "runs": [
+    {
+      "policy": "Unshielded-Q",
+      "seed": 3101,
+      "visited_states": 34,
+      "visited_state_actions": 119,
+      "q_min": 0.0,
+      "q_max": 11.21454898795284,
+      "table": "tables/unshielded_q_seed_3101.npz",
+      "table_sha256": "d3c654e14eee2b242439d2c0b6f21db17c3cced3590ed4dc3563c2385fdd930c"
+    },
+    {
+      "policy": "Unshielded-Q",
+      "seed": 3102,
+      "visited_states": 36,
+      "visited_state_actions": 118,
+      "q_min": 0.0,
+      "q_max": 10.616786125244651,
+      "table": "tables/unshielded_q_seed_3102.npz",
+      "table_sha256": "810a389c1439c1ad7ec89f922fa188266a49c48f0ffd759d91d4e200cc122e9b"
+    },
+    {
+      "policy": "Unshielded-Q",
+      "seed": 3103,
+      "visited_states": 35,
+      "visited_state_actions": 124,
+      "q_min": 0.0,
+      "q_max": 10.90109341154852,
+      "table": "tables/unshielded_q_seed_3103.npz",
+      "table_sha256": "53e9db97c6d58f086d372a582eee26afe161fe5f904706566153b6713030f6e4"
+    },
+    {
+      "policy": "Unshielded-Q",
+      "seed": 3104,
+      "visited_states": 34,
+      "visited_state_actions": 116,
+      "q_min": 0.0,
+      "q_max": 10.527800833879038,
+      "table": "tables/unshielded_q_seed_3104.npz",
+      "table_sha256": "700ea6f3d9123b5fce3950318dd038035845e378276f675b2ff6fc07649c7b18"
+    },
+    {
+      "policy": "Unshielded-Q",
+      "seed": 3105,
+      "visited_states": 36,
+      "visited_state_actions": 123,
+      "q_min": 0.0,
+      "q_max": 10.624010673088831,
+      "table": "tables/unshielded_q_seed_3105.npz",
+      "table_sha256": "de5b782f95ac2693f6fa27d083567e16a06d6646b693a4bc090975f9cf926458"
+    },
+    {
+      "policy": "Unshielded-Q",
+      "seed": 3106,
+      "visited_states": 35,
+      "visited_state_actions": 122,
+      "q_min": 0.0,
+      "q_max": 11.042219121346644,
+      "table": "tables/unshielded_q_seed_3106.npz",
+      "table_sha256": "f7f3afdb4880fd8ce0645f1a2bd0f44d51302a2fdbb1b3325cf12ea5bdfcf941"
+    },
+    {
+      "policy": "Unshielded-Q",
+      "seed": 3107,
+      "visited_states": 35,
+      "visited_state_actions": 124,
+      "q_min": -0.7221678163866571,
+      "q_max": 10.78811536099263,
+      "table": "tables/unshielded_q_seed_3107.npz",
+      "table_sha256": "33af425c40c501482047483ae2fb26a3e2bb30d5fbaa47bae22686a8ddceab3e"
+    },
+    {
+      "policy": "Unshielded-Q",
+      "seed": 3108,
+      "visited_states": 34,
+      "visited_state_actions": 121,
+      "q_min": 0.0,
+      "q_max": 10.521832684249977,
+      "table": "tables/unshielded_q_seed_3108.npz",
+      "table_sha256": "538f995ff491cd2448c8d4813bf5fa33a22fdc59fd4c1cc53db0d0e6dacab037"
+    },
+    {
+      "policy": "Unshielded-Q",
+      "seed": 3109,
+      "visited_states": 38,
+      "visited_state_actions": 124,
+      "q_min": -0.4327673938950315,
+      "q_max": 10.65578839476677,
+      "table": "tables/unshielded_q_seed_3109.npz",
+      "table_sha256": "038fb5c6c1d8e29a3b093ad6e3d64dd500a3d446888a4029041f1687597f0fea"
+    },
+    {
+      "policy": "Unshielded-Q",
+      "seed": 3110,
+      "visited_states": 35,
+      "visited_state_actions": 118,
+      "q_min": 0.0,
+      "q_max": 11.301668316430696,
+      "table": "tables/unshielded_q_seed_3110.npz",
+      "table_sha256": "a1f5ad7b7efd36c02d91b30993e5e063a1ec47f11a25668926c61762a999851d"
+    },
+    {
+      "policy": "FSSQL-R",
+      "seed": 3101,
+      "visited_states": 34,
+      "visited_state_actions": 117,
+      "q_min": 0.0,
+      "q_max": 10.683693031765666,
+      "table": "tables/fssql_r_seed_3101.npz",
+      "table_sha256": "1e3dfbc96632678494bb38452cdcde2d031ea0c4eb823ca918d7a089819e00b2"
+    },
+    {
+      "policy": "FSSQL-R",
+      "seed": 3102,
+      "visited_states": 36,
+      "visited_state_actions": 118,
+      "q_min": 0.0,
+      "q_max": 10.580113888135461,
+      "table": "tables/fssql_r_seed_3102.npz",
+      "table_sha256": "115161c121c46d9da0546ae14452161ad5cf230bb5acb2326700fb4a88b0a7c4"
+    },
+    {
+      "policy": "FSSQL-R",
+      "seed": 3103,
+      "visited_states": 35,
+      "visited_state_actions": 118,
+      "q_min": 0.0,
+      "q_max": 10.664417221608447,
+      "table": "tables/fssql_r_seed_3103.npz",
+      "table_sha256": "e15affc3d8659966073c500c8913457d8535616ae6228ea82a3348d09ce1b9a2"
+    },
+    {
+      "policy": "FSSQL-R",
+      "seed": 3104,
+      "visited_states": 34,
+      "visited_state_actions": 120,
+      "q_min": 0.0,
+      "q_max": 10.395089704501453,
+      "table": "tables/fssql_r_seed_3104.npz",
+      "table_sha256": "c390a904d92fbcc39a22f67620df800f01ae4e364cc5264f9429e8f481e340fb"
+    },
+    {
+      "policy": "FSSQL-R",
+      "seed": 3105,
+      "visited_states": 36,
+      "visited_state_actions": 119,
+      "q_min": 0.0,
+      "q_max": 11.323441650151526,
+      "table": "tables/fssql_r_seed_3105.npz",
+      "table_sha256": "b979b6c553aca5f4bf35af3a1f4816fef1690aa5cba66cbe264be9d88c5a6870"
+    },
+    {
+      "policy": "FSSQL-R",
+      "seed": 3106,
+      "visited_states": 35,
+      "visited_state_actions": 121,
+      "q_min": 0.0,
+      "q_max": 11.35826653214558,
+      "table": "tables/fssql_r_seed_3106.npz",
+      "table_sha256": "c287f303ab6785644da806934256d24180a164d479ead05a644e709a2c231422"
+    },
+    {
+      "policy": "FSSQL-R",
+      "seed": 3107,
+      "visited_states": 34,
+      "visited_state_actions": 118,
+      "q_min": 0.0,
+      "q_max": 11.006097944999658,
+      "table": "tables/fssql_r_seed_3107.npz",
+      "table_sha256": "77ae0d837bbdb3e36b4dcad8abb9642f61f13990b8e0751cdf54802720bb0b11"
+    },
+    {
+      "policy": "FSSQL-R",
+      "seed": 3108,
+      "visited_states": 34,
+      "visited_state_actions": 121,
+      "q_min": 0.0,
+      "q_max": 10.712942184642245,
+      "table": "tables/fssql_r_seed_3108.npz",
+      "table_sha256": "ab3c1770920233785c1a4b906d8e8e2bff3c6cdb23c419b6798d0d8305151b79"
+    },
+    {
+      "policy": "FSSQL-R",
+      "seed": 3109,
+      "visited_states": 36,
+      "visited_state_actions": 122,
+      "q_min": 0.0,
+      "q_max": 10.548928380187744,
+      "table": "tables/fssql_r_seed_3109.npz",
+      "table_sha256": "0ff3d00b0a0697ce63cdb11c2ac1569bf289cf91c4db0f16e7fca1391e17ed86"
+    },
+    {
+      "policy": "FSSQL-R",
+      "seed": 3110,
+      "visited_states": 35,
+      "visited_state_actions": 115,
+      "q_min": 0.0,
+      "q_max": 10.467314577110663,
+      "table": "tables/fssql_r_seed_3110.npz",
+      "table_sha256": "289423a761ce35971c3f1b711cc02cf87e987c5f3a435e0de52cb2c61a6c1039"
+    }
+  ],
+  "artifact_sha256": {
+    "tables/unshielded_q_seed_3101.npz": "d3c654e14eee2b242439d2c0b6f21db17c3cced3590ed4dc3563c2385fdd930c",
+    "tables/unshielded_q_seed_3102.npz": "810a389c1439c1ad7ec89f922fa188266a49c48f0ffd759d91d4e200cc122e9b",
+    "tables/unshielded_q_seed_3103.npz": "53e9db97c6d58f086d372a582eee26afe161fe5f904706566153b6713030f6e4",
+    "tables/unshielded_q_seed_3104.npz": "700ea6f3d9123b5fce3950318dd038035845e378276f675b2ff6fc07649c7b18",
+    "tables/unshielded_q_seed_3105.npz": "de5b782f95ac2693f6fa27d083567e16a06d6646b693a4bc090975f9cf926458",
+    "tables/unshielded_q_seed_3106.npz": "f7f3afdb4880fd8ce0645f1a2bd0f44d51302a2fdbb1b3325cf12ea5bdfcf941",
+    "tables/unshielded_q_seed_3107.npz": "33af425c40c501482047483ae2fb26a3e2bb30d5fbaa47bae22686a8ddceab3e",
+    "tables/unshielded_q_seed_3108.npz": "538f995ff491cd2448c8d4813bf5fa33a22fdc59fd4c1cc53db0d0e6dacab037",
+    "tables/unshielded_q_seed_3109.npz": "038fb5c6c1d8e29a3b093ad6e3d64dd500a3d446888a4029041f1687597f0fea",
+    "tables/unshielded_q_seed_3110.npz": "a1f5ad7b7efd36c02d91b30993e5e063a1ec47f11a25668926c61762a999851d",
+    "tables/fssql_r_seed_3101.npz": "1e3dfbc96632678494bb38452cdcde2d031ea0c4eb823ca918d7a089819e00b2",
+    "tables/fssql_r_seed_3102.npz": "115161c121c46d9da0546ae14452161ad5cf230bb5acb2326700fb4a88b0a7c4",
+    "tables/fssql_r_seed_3103.npz": "e15affc3d8659966073c500c8913457d8535616ae6228ea82a3348d09ce1b9a2",
+    "tables/fssql_r_seed_3104.npz": "c390a904d92fbcc39a22f67620df800f01ae4e364cc5264f9429e8f481e340fb",
+    "tables/fssql_r_seed_3105.npz": "b979b6c553aca5f4bf35af3a1f4816fef1690aa5cba66cbe264be9d88c5a6870",
+    "tables/fssql_r_seed_3106.npz": "c287f303ab6785644da806934256d24180a164d479ead05a644e709a2c231422",
+    "tables/fssql_r_seed_3107.npz": "77ae0d837bbdb3e36b4dcad8abb9642f61f13990b8e0751cdf54802720bb0b11",
+    "tables/fssql_r_seed_3108.npz": "ab3c1770920233785c1a4b906d8e8e2bff3c6cdb23c419b6798d0d8305151b79",
+    "tables/fssql_r_seed_3109.npz": "0ff3d00b0a0697ce63cdb11c2ac1569bf289cf91c4db0f16e7fca1391e17ed86",
+    "tables/fssql_r_seed_3110.npz": "289423a761ce35971c3f1b711cc02cf87e987c5f3a435e0de52cb2c61a6c1039",
+    "checkpoints.csv": "22468b1f1acaa653035fa2a946dfe25ca1d337de1dfc69d2d6c95c9406785de9"
+  }
+}

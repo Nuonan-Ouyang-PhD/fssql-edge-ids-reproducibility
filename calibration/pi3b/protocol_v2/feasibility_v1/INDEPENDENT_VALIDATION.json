@@ -1,0 +1,15 @@
+{
+  "status": "INDEPENDENT_FEASIBILITY_VALIDATION_PASS",
+  "protocol_version": 2,
+  "cell_rows": 72,
+  "candidate_count": 18,
+  "passing_candidate_indices": [0, 1, 2],
+  "selected_first_passing_candidate_index": 0,
+  "checks": [
+    "feasibility_cells.csv SHA-256 reproduces feasibility_summary.json",
+    "72 action/candidate rows reproduce 18 complete four-action candidates",
+    "candidate 0 is the first passing candidate in the frozen order",
+    "input hashes match V2 fit, predictor, margins, and validation metrics",
+    "coverage residuals and policy outcomes were not accessed"
+  ]
+}

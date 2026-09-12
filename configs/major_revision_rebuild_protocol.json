@@ -1,0 +1,274 @@
+{
+  "manuscript": {
+    "id": "TSUSC-2026-07-0200",
+    "decision": "Major Revision",
+    "decision_date": "2026-09-08",
+    "revision_deadline": "2026-12-07",
+    "source": "baseline_readonly/main-11.tex"
+  },
+  "evidence_boundary": {
+    "old_raw_assets_available": false,
+    "old_submitted_numbers_status": "historical_context_only_not_revalidated",
+    "forbidden_evidence_sources": [
+      "later fssql-experiment GitHub results",
+      "2026-09-07 Extension Freeze empirical numbers",
+      "other FSSQL/TNSM/TDSC project results"
+    ],
+    "new_results_supersede_old_empirical_results": true
+  },
+  "submitted_method_constants_to_preserve": {
+    "latency_cap_ms": 40.0,
+    "thermal_cap_C": 82.0,
+    "decision_window_ms": 100.0,
+    "main_windows_per_run": 600,
+    "main_run_duration_s": 60.0,
+    "dataset": "UNSW-NB15",
+    "submitted_platform": "Raspberry Pi 3 Model B+",
+    "action_labels": [
+      "FISVDD",
+      "LUCID",
+      "OI-SVDD+AS-ELM",
+      "TinyDL"
+    ],
+    "policy_set": [
+      "Static-Heavy",
+      "Static-Light",
+      "Round-Robin",
+      "Greedy-Risk",
+      "Safe-Greedy",
+      "Unshielded Q",
+      "FSSQL-R",
+      "Threshold"
+    ]
+  },
+  "hardware": {
+    "pi3bplus": {
+      "role": "primary continuity/core rebuild",
+      "mandatory": true
+    },
+    "pi4b4g": {
+      "role": "optional same-generation robustness",
+      "mandatory": false
+    },
+    "pi4b8g": {
+      "role": "second-device + physical energy",
+      "mandatory": true,
+      "power_meter": "POWER-Z KM002C/KM003C via POWER-Z Lab macOS"
+    },
+    "pi5": {
+      "role": "optional cross-generation robustness",
+      "mandatory": false
+    },
+    "mac_mini_m4": {
+      "role": "orchestration/offline training/statistics",
+      "target_hardware": false
+    }
+  },
+  "data_freeze": {
+    "source": "official UNSW-NB15 train/test files",
+    "development_split_from_official_train": {
+      "model_train": 0.6,
+      "validation": 0.2,
+      "scheduler_train": 0.2
+    },
+    "split_seed": 20260909,
+    "final_test": "official test file untouched until model/policy/guard protocol freeze",
+    "labels_hidden_from_scheduler": true,
+    "dataset_hashes_required": true,
+    "duplicate/leakage_audit_required": true
+  },
+  "model_reimplementation": {
+    "exact_old_artifacts_available": false,
+    "rule": "extract every implementable detail from submitted manuscript and cited public implementations; do not invent historical hyperparameters",
+    "if_under_specified": "freeze a transparent revision reimplementation before final-test opening; preserve heterogeneous classical/shallow/deep action roles; document every deviation in MODEL_REIMPLEMENTATION_DECISION.md",
+    "all_hyperparameters_reported": true
+  },
+  "risk_proxy": {
+    "old_exact_implementation_available": false,
+    "rule": "specify a cheap frozen risk estimator from development data only; do not call it RiskScout or import another project's artifact; document inputs, training, calibration, inference cost and leakage audit"
+  },
+  "guard": {
+    "fit_margin_coverage_splits_must_be_independent": true,
+    "latency_margin_quantile": 0.99,
+    "thermal_margin_quantile": 0.99,
+    "fixed_buffer_default": {
+      "latency_ms": 0.0,
+      "thermal_C": 0.0
+    },
+    "coverage_target_report_not_guarantee": 0.99,
+    "max_recalibration_rounds": 3,
+    "recalibration_rule": "new independent calibration/margin/coverage data; never tune on evaluation runs"
+  },
+  "q_learning": {
+    "training_windows_per_seed": 6000,
+    "training_seeds": [
+      3101,
+      3102,
+      3103,
+      3104,
+      3105,
+      3106,
+      3107,
+      3108,
+      3109,
+      3110
+    ],
+    "checkpoint_every": 100,
+    "evaluation_updates": false,
+    "evaluation_epsilon": 0.0,
+    "state_bins_to_freeze_before_training": true,
+    "primary_learning_curve_marker_window": 600,
+    "rule": "if submitted paper does not specify numeric hyperparameters, preregister transparent values in consolidated parameter table before opening final test"
+  },
+  "main_online_pi3b": {
+    "methods": [
+      "Static-Heavy",
+      "Static-Light",
+      "Round-Robin",
+      "Greedy-Risk",
+      "Safe-Greedy",
+      "Unshielded Q",
+      "FSSQL-R",
+      "Threshold"
+    ],
+    "regimes": [
+      "natural",
+      "near_cap"
+    ],
+    "evaluation_seeds": [
+      4101,
+      4102,
+      4103,
+      4104,
+      4105,
+      4106,
+      4107,
+      4108,
+      4109,
+      4110
+    ],
+    "windows": 600,
+    "matched_workload": true,
+    "randomized_method_order_per_seed": true,
+    "cooldown_rule": "start <= idle_baseline_C + 2.0 C and get_throttled shows no current undervoltage/throttle; otherwise wait/restart block",
+    "invalid_run_lineage_required": true
+  },
+  "near_cap_freeze": {
+    "derive_from": "calibration-only device capacity/latency/thermal measurements",
+    "policy_outcomes_forbidden": true,
+    "selection_criterion": "choose the first deterministic candidate workload (ordered predeclared grid) for which at least one high-utility action has calibration-predicted p99 end-to-end latency in [0.90,1.10]*40 ms while the light action remains <0.80*40 ms; thermal/background pressure may be added only from the predeclared grid",
+    "freeze_json_before_evaluation": true
+  },
+  "threshold_controller": {
+    "training": false,
+    "uses_shield": false,
+    "T_hi_rule": "T_max - calibration epsilon_T",
+    "T_lo_rule": "T_hi - 2 C",
+    "q_hi_rule": "highest calibration-only backlog bin at which heavy-action conservative latency upper bound remains <= 40 ms",
+    "q_lo_rule": "previous lower backlog bin, else 0",
+    "logic": "if T>=T_hi or q>=q_hi -> light; elif T<=T_lo and q<=q_lo and risk>=p_hi -> heavy; else hold previous; p_hi frozen on validation data",
+    "test_tuning_forbidden": true
+  },
+  "pi4b8_validation": {
+    "device_specific_guard_calibration": true,
+    "methods": [
+      "Static-Light",
+      "Threshold",
+      "Safe-Greedy",
+      "FSSQL-R"
+    ],
+    "regimes": [
+      "natural",
+      "near_cap"
+    ],
+    "seeds": [
+      5101,
+      5102,
+      5103,
+      5104,
+      5105
+    ],
+    "windows": 600,
+    "physical_power_same_runs": true
+  },
+  "background_robustness": {
+    "primary_device": "Pi 3B+",
+    "secondary_if_parallel": "Pi 4B 8GB",
+    "methods": [
+      "Threshold",
+      "FSSQL-R"
+    ],
+    "conditions": [
+      "B0:none",
+      "B1:one_cpu_50pct",
+      "B2:one_cpu_100pct"
+    ],
+    "seeds": [
+      6101,
+      6102,
+      6103
+    ],
+    "windows": 600,
+    "stress_process_parameters_frozen": true
+  },
+  "power": {
+    "primary_instrumented_device": "Pi 4B 8GB",
+    "instrument": "POWER-Z KM002C/KM003C",
+    "software": "POWER-Z Lab macOS",
+    "measurement_boundary": "whole-device input power",
+    "sample_rate_hz_target": 10,
+    "sample_rate_hz_min": 5,
+    "preroll_s": 5,
+    "main_s": 60,
+    "postroll_s": 5,
+    "metrics": [
+      "average_W",
+      "peak_W_if_rate_supports",
+      "total_J",
+      "J_per_window",
+      "J_per_1000_records_if_denominator_valid",
+      "J_per_correct_attack_if_denominator_valid"
+    ],
+    "pi3b_power_subset": {
+      "preferred": true,
+      "requires_safe_compatible_power_path": true,
+      "methods": [
+        "Static-Light",
+        "Threshold",
+        "Safe-Greedy",
+        "FSSQL-R"
+      ],
+      "seeds": [
+        7101,
+        7102,
+        7103
+      ]
+    }
+  },
+  "statistics": {
+    "experimental_unit": "seed/run",
+    "primary_contrast": "FSSQL-R vs Safe-Greedy",
+    "secondary_contrasts": [
+      "FSSQL-R vs Threshold",
+      "FSSQL-R vs Static-Light"
+    ],
+    "report": [
+      "per-seed values",
+      "mean",
+      "SD",
+      "median",
+      "paired mean difference",
+      "95% paired bootstrap CI",
+      "exact paired sign-flip p where n<=20",
+      "paired Cohen dz"
+    ],
+    "windows_not_independent_n": true
+  },
+  "required_claim_scope": {
+    "hard_safety": "conditional on bounded one-step prediction error; empirical residual coverage reported",
+    "shielding": "useful for safe adaptive/higher-utility selection under binding constraints, not universally necessary",
+    "MCU": "prospective only unless measured",
+    "energy": "physical W/J claims only on instrumented device(s)",
+    "generality": "Pi3B+ primary + Pi4B8 second-device; optional Pi4B4/Pi5 as extra robustness"
+  }
+}

@@ -1,0 +1,14 @@
+{
+  "status": "INDEPENDENT_COVERAGE_VALIDATION_PASS",
+  "protocol_version": 2,
+  "rows": 2880,
+  "latency_covered_rows": 2879,
+  "thermal_covered_rows": 2880,
+  "joint_covered_rows": 2879,
+  "checks": [
+    "coverage residual and ECDF SHA-256 values reproduce guard_coverage_summary.json",
+    "row-wise Boolean counts reproduce overall latency, thermal, and joint coverage",
+    "coverage evaluation used the committed frozen V2 fit/margin artifacts without modification"
+  ],
+  "tuning_performed": false
+}
