@@ -7,8 +7,8 @@ This guide separates software verification, development reconstruction, Raspberr
 Reference software versions are pinned in `requirements-lock.txt`.
 
 ```bash
-git clone https://github.com/Nuonan-Ouyang-PhD/tnsm-major-revision-reproducibility.git
-cd tnsm-major-revision-reproducibility
+git clone https://github.com/Nuonan-Ouyang-PhD/fssql-edge-ids-reproducibility.git
+cd fssql-edge-ids-reproducibility
 python3 -m venv .venv
 source .venv/bin/activate
 python -m pip install --upgrade pip
