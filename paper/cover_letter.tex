@@ -1,5 +1,5 @@
-\documentclass[11pt]{letter}
-\usepackage[margin=1in]{geometry}
+\documentclass[10pt]{letter}
+\usepackage[margin=0.82in]{geometry}
 \usepackage[hidelinks]{hyperref}
 \signature{Nuonan Ouyang\\Corresponding Author}
 \address{College of Science and Engineering\\James Cook University\\Australia\\nuonan.ouyang@my.jcu.edu.au}
@@ -9,9 +9,9 @@
 
 Please find enclosed the major revision of manuscript TSUSC-2026-07-0200, ``Shielded Q-learning for Thermally-Safe, Energy-Aware Multi-Model Intrusion Detection Scheduling on Lightweight Edge Devices.''
 
-We have revised the manuscript extensively in response to the Associate Editor and reviewers. The revision retains the submitted FSSQL-R method and operating constraints, but replaces the earlier replay-centered deployment evidence with new hardware experiments. The revised study now includes independent calibration on Raspberry Pi 3B+ and Raspberry Pi 4B 8GB, online closed-loop execution, a conventional threshold controller, matched-seed statistical tests, Q-learning stability analysis, controller and switching overhead, direct POWER-Z KM003C DC input-energy measurements, and an independent one-time evaluation on the official UNSW-NB15 test set using fixed thresholds.
+We have revised the manuscript extensively in response to the Associate Editor and reviewers. The revision retains the submitted FSSQL-R method and operating constraints, but replaces the earlier replay-centered deployment evidence with new hardware experiments. The empirical implementation was rebuilt from the submitted method definitions and frozen before evaluation; the revised tables are replacement evidence rather than a claim of numerical reproduction of the earlier replay tables. The study now includes independent calibration on Raspberry Pi 3B+ and Raspberry Pi 4B 8GB, online closed-loop execution, a no-training Threshold controller, matched-seed statistics, Q-learning stability analysis, controller/switching overhead, direct POWER-Z KM003C DC input-energy measurement, and one-time fixed-threshold evaluation on the official UNSW-NB15 test set.
 
-The new evidence also led us to narrow several claims. We no longer present shielding as universally necessary, Q-learning as universally superior, or the guard as an unconditional complete-pipeline safety guarantee. We report adverse results transparently, including the stronger Safe-Greedy result on the Pi 3B+ stationary binding regime and the absence of a consistent physical-energy advantage for FSSQL-R. We believe these revisions materially strengthen the technical validity and deployment relevance of the paper.
+The new evidence led us to narrow several claims. We no longer present shielding as universally necessary, Q-learning as universally superior, or the guard as an unconditional complete-pipeline safety guarantee. We retain adverse results, including the stronger Safe-Greedy result on Pi 3B+, the strong Threshold baseline on Pi 4B, and the absence of a consistent physical-energy advantage for FSSQL-R. We also corrected the submitted protocol's use, as described, of test-set detector statistics in the scheduler objective: the revised reward uses validation-partition TPR/FPR only, and the official test set remained sealed until all development and hardware decisions were frozen. Recent 2024--2025 TSUSC, TMC, and TIFS work has also been added to strengthen the positioning.
 
 A detailed point-by-point response is provided as a separate Summary of Changes document, and supplemental material contains additional calibration, statistical, energy, and official-test details.
 

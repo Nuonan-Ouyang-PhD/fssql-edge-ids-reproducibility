@@ -2,6 +2,8 @@
 
 Technical reproduction package for manuscript **TSUSC-2026-07-0200**, titled **“Shielded Q-learning for Thermally-Safe, Energy-Aware Multi-Model Intrusion Detection Scheduling on Lightweight Edge Devices.”** It contains the device-calibrated shield, scheduling policies, Raspberry Pi runners, POWER-Z acquisition, statistical analysis, and frozen result summaries. The manuscript is supporting documentation under `paper/`; the repository's primary purpose is executable and auditable experiment reproduction.
 
+The `paper/` directory contains the complete 15 September 2026 revision package: manuscript, supplement, response to reviewers, cover letter, bibliography, figures, and compiled PDFs.
+
 The repository includes the actual Python implementations, portable detector/preprocessor artifacts, risk proxy, Pi3B+/Pi4B guard artifacts, seed-specific Q tables, protocol/configuration freezes, calibration evidence, run-level Pi4B metrics, paired-seed results, and official-test summaries. It does not redistribute the licensed UNSW-NB15 CSV files, private credentials, or the large machine-specific raw run archive.
 
 For the complete command sequence and expected outputs, start with [REPRODUCE.md](REPRODUCE.md).

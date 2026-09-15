@@ -84,16 +84,19 @@ The Pi 4B online evaluation contains 60 policy-condition-seed cells and 36,000 w
 Load & Metric & Mean diff. & 95\% bootstrap CI & Paired $t$ $p$ & Exact Wilcoxon $p$ & $d_z$ \\
 \midrule
 B0 & F1 & 0.1209 & [0.0664, 0.1535] & 0.0114 & 0.0625 & 1.984 \\
+B0 & FPR & -0.7064 & [-0.9061, -0.3924] & 0.0111 & 0.0625 & -1.995 \\
 B0 & Cum. reward & 129.4 & [72.0, 162.6] & 0.0106 & 0.0625 & 2.026 \\
 B0 & P99 E2E ms & 0.323 & [0.091, 0.548] & 0.0562 & 0.1250 & 1.191 \\
 B0 & Total energy J & -0.471 & [-13.829, 12.078] & 0.9516 & 1.0000 & -0.029 \\
 \midrule
 B1 & F1 & 0.1172 & [0.0596, 0.1515] & 0.0152 & 0.0625 & 1.821 \\
+B1 & FPR & -0.6940 & [-0.8986, -0.3503] & 0.0151 & 0.0625 & -1.824 \\
 B1 & Cum. reward & 124.8 & [64.0, 159.4] & 0.0147 & 0.0625 & 1.838 \\
 B1 & P99 E2E ms & -0.129 & [-0.560, 0.300] & 0.6341 & 0.6250 & -0.230 \\
 B1 & Total energy J & -3.427 & [-7.088, -0.695] & 0.1360 & 0.0625 & -0.833 \\
 \midrule
 B2 & F1 & 0.1141 & [0.0602, 0.1489] & 0.0136 & 0.0625 & 1.882 \\
+B2 & FPR & -0.6891 & [-0.8999, -0.3574] & 0.0131 & 0.0625 & -1.904 \\
 B2 & Cum. reward & 122.0 & [65.2, 157.8] & 0.0126 & 0.0625 & 1.923 \\
 B2 & P99 E2E ms & 0.033 & [-0.506, 0.700] & 0.9281 & 0.8125 & 0.043 \\
 B2 & Total energy J & -1.210 & [-11.564, 10.608] & 0.8533 & 0.6250 & -0.088 \\
@@ -101,9 +104,28 @@ B2 & Total energy J & -1.210 & [-11.564, 10.608] & 0.8533 & 0.6250 & -0.088 \\
 \end{tabular}
 \end{table*}
 
-The Pi 4B guard is nonbinding in the accepted online conditions: the mean safe-set size is four for every policy/condition. Mean controller time across all conditions is 3.919 ms for FSSQL-R, 3.885 ms for Safe-Greedy, 4.277 ms for Static-Light, and 3.946 ms for Threshold. Mean selected-detector inference is 0.415, 0.426, 0.648, and 0.299 ms, respectively. This confirms that controller work is a material part of online cost.
+\begin{table*}[h]
+\caption{FSSQL-R seed-level Pi 4B behavior. Seed 5102 is a repeated high-FPR mode across all three background conditions.}
+\centering\scriptsize
+\setlength{\tabcolsep}{5pt}
+\begin{tabular}{lrrrrrr}
+\toprule
+Seed & B0 FPR & B1 FPR & B2 FPR & B0 F1 & B1 F1 & B2 F1 \\
+\midrule
+5101 & 0.2233 & 0.1869 & 0.1818 & 0.9436 & 0.9560 & 0.9511 \\
+\textbf{5102} & \textbf{0.9144} & \textbf{0.9780} & \textbf{0.9476} & \textbf{0.8285} & \textbf{0.8245} & \textbf{0.7967} \\
+5103 & 0.0674 & 0.0444 & 0.0378 & 0.9421 & 0.9624 & 0.9631 \\
+5104 & 0.1917 & 0.1931 & 0.1882 & 0.9565 & 0.9533 & 0.9641 \\
+5105 & 0.0714 & 0.1276 & 0.1990 & 0.9467 & 0.9394 & 0.9357 \\
+\bottomrule
+\end{tabular}
+\end{table*}
 
-The detector-selection confusion counts show why the Safe-Greedy comparison must be interpreted carefully: Safe-Greedy has FPR $=1.0000$ and TN $=0$ in all 15 Pi 4B cells, i.e., it is an all-positive lower-bound controller under the frozen action-utility rule. Mean FPR for FSSQL-R is 0.2936, 0.3060, and 0.3109 for B0, B1, and B2, respectively, whereas Threshold has 0.0726, 0.0581, and 0.0490. Thus the FSSQL-R--Safe-Greedy F1 difference partly represents recovery from a degenerate all-positive point, while Threshold recovers more F1 with substantially fewer false positives.
+For seed 5102, FSSQL-R selects FISVDD in 582/600, 592/600, and 588/600 windows under B0/B1/B2, respectively (97.0--98.7\%). The other four seeds have mean FPR 0.1384, 0.1380, and 0.1517 across B0/B1/B2. Thus the aggregate mean and SD summarize a bimodal seed pattern poorly; the main paper therefore reports FPR as median [min,max]. With only five seeds, the observed one-of-five collapse is not interpreted as a population failure probability.
+
+Safe-Greedy selects FISVDD in all 15 Pi 4B formal runs and therefore yields FPR=1.0000 and TN=0 throughout. This explains why the FSSQL-R-minus-Safe-Greedy FPR differences are large and negative. Against the stronger Threshold controller, the FSSQL-R-minus-Threshold mean FPR differences are +0.2211, +0.2479, and +0.2619 for B0/B1/B2, with bootstrap 95\% CIs [+0.0249,+0.5384], [+0.0323,+0.5928], and [+0.0581,+0.5896]. The corresponding F1 mean differences are -0.0256, -0.0261, and -0.0406, and their bootstrap intervals cross zero. With only five pairs, these FPR differences do not reach 0.05 under the paired $t$ or Wilcoxon tests; they are reported as directional evidence rather than a universal significance result.
+
+The Pi 4B guard is nonbinding in the accepted online conditions: the mean safe-set size is four for every policy/condition. Mean controller time across all conditions is 3.919 ms for FSSQL-R, 3.885 ms for Safe-Greedy, 4.277 ms for Static-Light, and 3.946 ms for Threshold. Mean selected-detector inference is 0.415, 0.426, 0.648, and 0.299 ms, respectively. This confirms that controller work is a material part of online cost.
 
 \section{One-shot Official Test}
 After model, preprocessing, threshold, and scheduling choices were fixed, all 82,332 rows of the official UNSW-NB15 test were evaluated once. No retraining or threshold selection followed test access.
