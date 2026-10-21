@@ -1,0 +1,100 @@
+{
+  "status": "PI4B8_TRUE_N16_DETERMINISTIC_REPRODUCTION_PASS",
+  "source_commit": "8d905db4514b8487cf989ac80798dc4ff5acbc12",
+  "command": "python3 scripts/train_pi4b8_q_true_n16.py --config configs/pi4b8_true_n16_q_v2.json --output <external-temporary-directory> --execute-training",
+  "exit_code": 0,
+  "config_sha256": "ee0c1896ed8629f3c131c0663f75bc74bb7075e4e08bb709346b792091714db1",
+  "trainer_sha256": "33d88622addb1fab890738937d1ca68b131c7054192bb34f815a7e0c5b8132fd",
+  "worker_sha256": "277ad5e1d07b46599b0f6b43cfd063a371d126d83fd6a831e26a3ea2016d4c0f",
+  "difference_count": 0,
+  "all_artifacts_byte_identical": true,
+  "manifest": {
+    "sha256": "961c7234957fe15231c6b7fc6e1168aad233cacee595a2419360a76f55fa0c98",
+    "raw_bytes_equal": true,
+    "semantic_equal": true,
+    "all_input_bindings_match": true,
+    "all_table_bindings_match": true,
+    "checkpoint_binding_matches": true
+  },
+  "checkpoints": {
+    "sha256": "51649e40be9be717fd3eba8da22ed3baadfe00a003f6cd6d6c660500415e601d",
+    "rows": 300,
+    "raw_bytes_equal": true,
+    "semantic_equal": true
+  },
+  "seeds": {
+    "5101": {
+      "table_sha256": "96e9d436f4584f6b7618d8a11a4dfadb2687a65c5c5aeaefa8f404d762b2eb5e",
+      "raw_bytes_equal": true,
+      "q_values_equal": true,
+      "q_values_shape": [1280, 4],
+      "q_values_mismatch_count": 0,
+      "q_values_max_abs_difference": 0.0,
+      "visits_equal": true,
+      "visits_mismatch_count": 0,
+      "visits_max_abs_difference": 0,
+      "visits_sum": 30000,
+      "metadata_equal": true
+    },
+    "5102": {
+      "table_sha256": "c582a78a05f147e587e1b06c5d39edef56549792795005e569bd4231f691210e",
+      "raw_bytes_equal": true,
+      "q_values_equal": true,
+      "q_values_shape": [1280, 4],
+      "q_values_mismatch_count": 0,
+      "q_values_max_abs_difference": 0.0,
+      "visits_equal": true,
+      "visits_mismatch_count": 0,
+      "visits_max_abs_difference": 0,
+      "visits_sum": 30000,
+      "metadata_equal": true
+    },
+    "5103": {
+      "table_sha256": "65118079372a6e6a90b29553cbc2308baefd70e514d6a5c81815206cfd9a7cc9",
+      "raw_bytes_equal": true,
+      "q_values_equal": true,
+      "q_values_shape": [1280, 4],
+      "q_values_mismatch_count": 0,
+      "q_values_max_abs_difference": 0.0,
+      "visits_equal": true,
+      "visits_mismatch_count": 0,
+      "visits_max_abs_difference": 0,
+      "visits_sum": 30000,
+      "metadata_equal": true
+    },
+    "5104": {
+      "table_sha256": "1492d3fb3b68cad754d5f80670fefcb9448023ab244143842a3c8b99aae9c740",
+      "raw_bytes_equal": true,
+      "q_values_equal": true,
+      "q_values_shape": [1280, 4],
+      "q_values_mismatch_count": 0,
+      "q_values_max_abs_difference": 0.0,
+      "visits_equal": true,
+      "visits_mismatch_count": 0,
+      "visits_max_abs_difference": 0,
+      "visits_sum": 30000,
+      "metadata_equal": true
+    },
+    "5105": {
+      "table_sha256": "569e5dd0a77a13b9dc26f5e40c35a8da61d33c4b171a0c8107ca009aa55fa9c1",
+      "raw_bytes_equal": true,
+      "q_values_equal": true,
+      "q_values_shape": [1280, 4],
+      "q_values_mismatch_count": 0,
+      "q_values_max_abs_difference": 0.0,
+      "visits_equal": true,
+      "visits_mismatch_count": 0,
+      "visits_max_abs_difference": 0,
+      "visits_sum": 30000,
+      "metadata_equal": true
+    }
+  },
+  "file_access_audit": {
+    "official_test_paths": [],
+    "label_value_paths": [],
+    "ground_truth_labels_used": false,
+    "official_test_used": false
+  },
+  "repository_modified_by_reproduction": false,
+  "interpretation": "Development-only Q-training reproducibility evidence; not online Pi4B commissioning or formal-result evidence."
+}

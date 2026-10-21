@@ -1,0 +1,79 @@
+{
+  "status": "PI4B8_TRUE_N16_Q_TRAINING_COMPLETE",
+  "config_sha256": "ee0c1896ed8629f3c131c0663f75bc74bb7075e4e08bb709346b792091714db1",
+  "trainer_sha256": "33d88622addb1fab890738937d1ca68b131c7054192bb34f815a7e0c5b8132fd",
+  "worker_semantics_sha256": "277ad5e1d07b46599b0f6b43cfd063a371d126d83fd6a831e26a3ea2016d4c0f",
+  "official_test_access": "not used",
+  "ground_truth_label_access": "not used",
+  "training_condition": "n16/B0",
+  "records_per_window": 16,
+  "risk_aggregation": "mean_of_16_frozen_proxy_probabilities",
+  "initial_temperature_C": 36.998,
+  "input_sha256": {
+    "runtime_config": "6c1a7e093dac8866da3c6f506523b5d67a71ff4128623d11d25a32d120428190",
+    "input_freeze_manifest": "0d9a1675799e11b97dd2ccf0ddcac14ee7d01996970bb1b4a09c426dedd0b142",
+    "scheduler_risk_features_base": "fee72cdd9445e8ebd4ecb12e888848b52269bd0fe81ef259ecf25525bf711dcd",
+    "scheduler_backlog": "ec99b6565e80a623db4b78f652b0694af5a9f884154b68ae519521392f614a4e",
+    "scheduler_batch_indices_seed_5101": "d0b423b9a2f7867166a02ab284e825813705c9c288c1d451de9be6a0dcca767c",
+    "scheduler_batch_indices_seed_5102": "e1f037b5ffe429898c5ecd2e4d8297fefcf4ff6dcaf7f0e035e65e7ed33a6efb",
+    "scheduler_batch_indices_seed_5103": "53b3a1d59db14857668edfc840b6dba720976c693c81180d2e15c906738ddb68",
+    "scheduler_batch_indices_seed_5104": "9f01478e0866761646f93081eeead10ef602480931a80d742d03fdf7795e5028",
+    "scheduler_batch_indices_seed_5105": "5c7f86b17084373043f5d3a26419b4aa2e39cd73d94767d2b5aa7585ed8335be",
+    "risk_proxy": "eff41b7f4bd7b6303ba32d39b19be6e896d9b8c2de8d3a32f850000ea3c712c2",
+    "validation_metrics": "7b2db09489ebc2c2e02c7604b0a7749a3a218d8d0b6abf547123f963affa1755",
+    "fit_raw": "2bdd3499aa9fd6e9702e01c1101f73f493614d37f1d49a3a5fc11ddac1350079",
+    "latency_predictor": "47f9126b40d49e2b085bab34ea595e3a1c339cb97f5d61b644863f8d78cf273c",
+    "thermal_predictor": "ba65dfec91c76ee86ad18ebc6f6b99e9c4881c7b46e20cd9cebf086b37d2a6e5",
+    "guard_margins": "bedc7b4ce2be5efce82dea220a9d311052aeea9a80d1022680c38c65c16c523a"
+  },
+  "runs": [
+    {
+      "policy": "FSSQL-R",
+      "seed": 5101,
+      "visited_states": 26,
+      "visited_state_actions": 91,
+      "table": "tables/fssql_r_seed_5101.npz",
+      "table_sha256": "96e9d436f4584f6b7618d8a11a4dfadb2687a65c5c5aeaefa8f404d762b2eb5e"
+    },
+    {
+      "policy": "FSSQL-R",
+      "seed": 5102,
+      "visited_states": 26,
+      "visited_state_actions": 85,
+      "table": "tables/fssql_r_seed_5102.npz",
+      "table_sha256": "c582a78a05f147e587e1b06c5d39edef56549792795005e569bd4231f691210e"
+    },
+    {
+      "policy": "FSSQL-R",
+      "seed": 5103,
+      "visited_states": 25,
+      "visited_state_actions": 97,
+      "table": "tables/fssql_r_seed_5103.npz",
+      "table_sha256": "65118079372a6e6a90b29553cbc2308baefd70e514d6a5c81815206cfd9a7cc9"
+    },
+    {
+      "policy": "FSSQL-R",
+      "seed": 5104,
+      "visited_states": 26,
+      "visited_state_actions": 88,
+      "table": "tables/fssql_r_seed_5104.npz",
+      "table_sha256": "1492d3fb3b68cad754d5f80670fefcb9448023ab244143842a3c8b99aae9c740"
+    },
+    {
+      "policy": "FSSQL-R",
+      "seed": 5105,
+      "visited_states": 26,
+      "visited_state_actions": 94,
+      "table": "tables/fssql_r_seed_5105.npz",
+      "table_sha256": "569e5dd0a77a13b9dc26f5e40c35a8da61d33c4b171a0c8107ca009aa55fa9c1"
+    }
+  ],
+  "artifact_sha256": {
+    "checkpoints.csv": "51649e40be9be717fd3eba8da22ed3baadfe00a003f6cd6d6c660500415e601d",
+    "tables/fssql_r_seed_5101.npz": "96e9d436f4584f6b7618d8a11a4dfadb2687a65c5c5aeaefa8f404d762b2eb5e",
+    "tables/fssql_r_seed_5102.npz": "c582a78a05f147e587e1b06c5d39edef56549792795005e569bd4231f691210e",
+    "tables/fssql_r_seed_5103.npz": "65118079372a6e6a90b29553cbc2308baefd70e514d6a5c81815206cfd9a7cc9",
+    "tables/fssql_r_seed_5104.npz": "1492d3fb3b68cad754d5f80670fefcb9448023ab244143842a3c8b99aae9c740",
+    "tables/fssql_r_seed_5105.npz": "569e5dd0a77a13b9dc26f5e40c35a8da61d33c4b171a0c8107ca009aa55fa9c1"
+  }
+}
