@@ -276,6 +276,9 @@ class RuntimeConfigurationGateTests(unittest.TestCase):
             def set(self):
                 pass
 
+            def wait(self, timeout=None):
+                return True
+
         class FakeProcess:
             pid = 4312
 

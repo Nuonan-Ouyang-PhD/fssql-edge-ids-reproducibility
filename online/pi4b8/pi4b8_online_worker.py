@@ -64,11 +64,14 @@ NO_PREVIOUS_ACTION = len(ACTIONS)
 SUPPORTED_POLICIES = {"FSSQL-R", "Safe-Greedy", "Threshold", "Static-Light"}
 
 
-def busy_worker(stop: Any, duty_cycle: float, period_s: float, cpu: int) -> None:
+def busy_worker(
+    stop: Any, ready: Any, duty_cycle: float, period_s: float, cpu: int
+) -> None:
     """Run the frozen pinned-CPU background load used by Pi4B calibration."""
     if not hasattr(os, "sched_setaffinity"):
         raise RuntimeError("CPU-affinity control is unavailable on this host")
     os.sched_setaffinity(0, {cpu})
+    ready.set()
     busy_s = period_s * duty_cycle
     idle_s = period_s - busy_s
     while not stop.is_set():
@@ -85,6 +88,7 @@ class BackgroundLoad:
     def __init__(self, workload: dict[str, Any]):
         self.workload = workload
         self.stop_event: Any = None
+        self.ready_event: Any = None
         self.process: mp.Process | None = None
         self._affinity: list[int] = []
 
@@ -93,10 +97,12 @@ class BackgroundLoad:
             return
         context = mp.get_context("spawn")
         self.stop_event = context.Event()
+        self.ready_event = context.Event()
         self.process = context.Process(
             target=busy_worker,
             args=(
                 self.stop_event,
+                self.ready_event,
                 float(self.workload["background_duty"]),
                 float(self.workload["period_ms"]) / 1000.0,
                 int(self.workload["pinned_cpu"]),
@@ -104,7 +110,9 @@ class BackgroundLoad:
             daemon=True,
         )
         self.process.start()
-        time.sleep(0.05)
+        if not self.ready_event.wait(timeout=2.0):
+            self.stop()
+            raise RuntimeError("background-load affinity setup timed out")
         if not self.process.is_alive():
             self.stop()
             raise RuntimeError("background-load process failed to start")
