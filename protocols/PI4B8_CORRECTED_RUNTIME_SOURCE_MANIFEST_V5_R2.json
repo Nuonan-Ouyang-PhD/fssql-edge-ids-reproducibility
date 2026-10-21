@@ -1,0 +1,523 @@
+{
+  "artifacts": [
+    {
+      "authority": "source_commit",
+      "package_path": "pi4b8_online_worker.py",
+      "role": "worker",
+      "sha256": "277ad5e1d07b46599b0f6b43cfd063a371d126d83fd6a831e26a3ea2016d4c0f",
+      "source_path": "online/pi4b8/pi4b8_online_worker.py"
+    },
+    {
+      "authority": "source_commit",
+      "package_path": "runtime/corrected_v5_contract.py",
+      "role": "runtime_contract",
+      "sha256": "ab0e80918c33ec1f5ce1e6a7e67cdd961be9753da919a8c2b7aabebde9ae7d3e",
+      "source_path": "online/pi4b8/corrected_v5_contract.py"
+    },
+    {
+      "authority": "source_commit",
+      "package_path": "runtime/action_pool_numpy.py",
+      "role": "runtime_helper:action_pool_numpy",
+      "sha256": "c774f77443a6f6d49434cda06885cdca8c2756af574ea5efc938e7b8015cfd87",
+      "source_path": "runtime/action_pool_numpy.py"
+    },
+    {
+      "authority": "source_commit",
+      "package_path": "runtime/preprocessor_numpy.py",
+      "role": "runtime_helper:preprocessor_numpy",
+      "sha256": "07bd20e0291c92bb9909d78c0ffb7f5b6ad32b1b0e90cc4dc7bd615f660d7019",
+      "source_path": "runtime/preprocessor_numpy.py"
+    },
+    {
+      "authority": "source_commit",
+      "package_path": "runtime/risk_proxy_numpy.py",
+      "role": "runtime_helper:risk_proxy_numpy",
+      "sha256": "261cef0c2e9b359a5075615b09300bad4fc2b747688b11fbb581da691c0599c2",
+      "source_path": "runtime/risk_proxy_numpy.py"
+    },
+    {
+      "authority": "source_commit",
+      "package_path": "config/pi4b8_corrected_runtime_v5.json",
+      "role": "runtime_config",
+      "sha256": "6c1a7e093dac8866da3c6f506523b5d67a71ff4128623d11d25a32d120428190",
+      "source_path": "configs/pi4b8_corrected_runtime_v5.json"
+    },
+    {
+      "authority": "source_commit",
+      "package_path": "config/PI4B8_RUNTIME_DEPENDENCIES_V1.json",
+      "role": "runtime_dependencies",
+      "sha256": "a5cc1c7d849f560baa19e4b91bfd13fd36356095323f2f48a1e8d80f4c2c5260",
+      "source_path": "configs/PI4B8_RUNTIME_DEPENDENCIES_V1.json"
+    },
+    {
+      "authority": "source_commit",
+      "package_path": "config/MODEL_HYPERPARAMETERS.json",
+      "role": "model_hyperparameters",
+      "sha256": "3e61a35b7273dc7aa98fed8eb4f8425f8f7c126983eac3f337240b6b3f8d133c",
+      "source_path": "models/MODEL_HYPERPARAMETERS.json"
+    },
+    {
+      "authority": "source_commit",
+      "package_path": "config/VALIDATION_METRICS.csv",
+      "role": "validation_metrics",
+      "sha256": "7b2db09489ebc2c2e02c7604b0a7749a3a218d8d0b6abf547123f963affa1755",
+      "source_path": "models/VALIDATION_METRICS.csv"
+    },
+    {
+      "authority": "source_commit",
+      "package_path": "config/pi4b8_true_n16_q_v2.json",
+      "role": "q_config",
+      "sha256": "ee0c1896ed8629f3c131c0663f75bc74bb7075e4e08bb709346b792091714db1",
+      "source_path": "configs/pi4b8_true_n16_q_v2.json"
+    },
+    {
+      "authority": "source_commit",
+      "package_path": "q_tables/Q_TABLE_MANIFEST.json",
+      "role": "q_manifest",
+      "sha256": "961c7234957fe15231c6b7fc6e1168aad233cacee595a2419360a76f55fa0c98",
+      "source_path": "q_training/pi4b8_true_n16_v2/Q_TABLE_MANIFEST.json"
+    },
+    {
+      "authority": "source_commit",
+      "package_path": "preprocessing/preprocessor_portable.npz",
+      "role": "preprocessor",
+      "sha256": "77d7ed29880adf3e3e1bcbbb59d5d705653b7c07fdcd88690041a45534b897be",
+      "source_path": "preprocessing/preprocessor_portable.npz"
+    },
+    {
+      "authority": "source_commit",
+      "package_path": "risk_proxy/risk_proxy.npz",
+      "role": "risk_proxy",
+      "sha256": "eff41b7f4bd7b6303ba32d39b19be6e896d9b8c2de8d3a32f850000ea3c712c2",
+      "source_path": "risk_proxy/risk_proxy.npz"
+    },
+    {
+      "authority": "source_commit",
+      "package_path": "guard/latency_predictor.csv",
+      "role": "guard:latency_predictor",
+      "sha256": "47f9126b40d49e2b085bab34ea595e3a1c339cb97f5d61b644863f8d78cf273c",
+      "source_path": "calibration/pi4b8/frozen_guard_fit_margin_v1_run2/latency_predictor.csv"
+    },
+    {
+      "authority": "source_commit",
+      "package_path": "guard/thermal_predictor.json",
+      "role": "guard:thermal_predictor",
+      "sha256": "ba65dfec91c76ee86ad18ebc6f6b99e9c4881c7b46e20cd9cebf086b37d2a6e5",
+      "source_path": "calibration/pi4b8/frozen_guard_fit_margin_v1_run2/thermal_predictor.json"
+    },
+    {
+      "authority": "source_commit",
+      "package_path": "guard/guard_margins.json",
+      "role": "guard:margins",
+      "sha256": "bedc7b4ce2be5efce82dea220a9d311052aeea9a80d1022680c38c65c16c523a",
+      "source_path": "calibration/pi4b8/frozen_guard_fit_margin_v1_run2/guard_margins.json"
+    },
+    {
+      "authority": "source_commit",
+      "package_path": "powerz/powerz_hid_capture.py",
+      "role": "powerz:capture",
+      "sha256": "b4e7a5c00803171d867009780ddfe2bfb5bc441d5a80930e2789e184e9e30721",
+      "source_path": "online/pi4b8/powerz_hid_capture.py"
+    },
+    {
+      "authority": "source_commit",
+      "package_path": "powerz/POWER_Z_HID_ACQUISITION_V1.md",
+      "role": "powerz:specification",
+      "sha256": "b909dd951a60ffa03550696d2ed93ca1dfd22f7fee6b14b2e9cfd62e375ec683",
+      "source_path": "protocols/POWER_Z_HID_ACQUISITION_V1.md"
+    },
+    {
+      "authority": "source_commit",
+      "package_path": "models/fisvdd_revision.npz",
+      "role": "model:fisvdd_revision",
+      "sha256": "0dd092d97498fdf45713e4d14ac6cbdef1b1ca01da04133e7f4b891880c9dc0a",
+      "source_path": "models/artifacts/fisvdd_revision.npz"
+    },
+    {
+      "authority": "source_commit",
+      "package_path": "models/lucid_revision.npz",
+      "role": "model:lucid_revision",
+      "sha256": "9d81b5cbd284bd25528bc6ecd8a88f80933f95c4ef5cbc06b9c15ffaa9e78eb9",
+      "source_path": "models/artifacts/lucid_revision.npz"
+    },
+    {
+      "authority": "source_commit",
+      "package_path": "models/tinydl_revision.npz",
+      "role": "model:tinydl_revision",
+      "sha256": "b97413e60db93333ee9b9bb88fe4257a3cf8d5d6a556a8f2f7372c36ddb2e047",
+      "source_path": "models/artifacts/tinydl_revision.npz"
+    },
+    {
+      "authority": "source_commit",
+      "package_path": "models/oi_svdd_as_elm_revision.npz",
+      "role": "model:oi_svdd_as_elm_revision",
+      "sha256": "8d8530e2ed82a0644b0e8fef577e5fdff2379d12f831aa32df4b8eeb5a253896",
+      "source_path": "models/artifacts/oi_svdd_as_elm_revision.npz"
+    },
+    {
+      "authority": "source_commit",
+      "package_path": "q_tables/fssql_r_seed_5101.npz",
+      "role": "q_table:5101",
+      "sha256": "96e9d436f4584f6b7618d8a11a4dfadb2687a65c5c5aeaefa8f404d762b2eb5e",
+      "source_path": "q_training/pi4b8_true_n16_v2/tables/fssql_r_seed_5101.npz"
+    },
+    {
+      "authority": "source_commit",
+      "package_path": "q_tables/fssql_r_seed_5102.npz",
+      "role": "q_table:5102",
+      "sha256": "c582a78a05f147e587e1b06c5d39edef56549792795005e569bd4231f691210e",
+      "source_path": "q_training/pi4b8_true_n16_v2/tables/fssql_r_seed_5102.npz"
+    },
+    {
+      "authority": "source_commit",
+      "package_path": "q_tables/fssql_r_seed_5103.npz",
+      "role": "q_table:5103",
+      "sha256": "65118079372a6e6a90b29553cbc2308baefd70e514d6a5c81815206cfd9a7cc9",
+      "source_path": "q_training/pi4b8_true_n16_v2/tables/fssql_r_seed_5103.npz"
+    },
+    {
+      "authority": "source_commit",
+      "package_path": "q_tables/fssql_r_seed_5104.npz",
+      "role": "q_table:5104",
+      "sha256": "1492d3fb3b68cad754d5f80670fefcb9448023ab244143842a3c8b99aae9c740",
+      "source_path": "q_training/pi4b8_true_n16_v2/tables/fssql_r_seed_5104.npz"
+    },
+    {
+      "authority": "source_commit",
+      "package_path": "q_tables/fssql_r_seed_5105.npz",
+      "role": "q_table:5105",
+      "sha256": "569e5dd0a77a13b9dc26f5e40c35a8da61d33c4b171a0c8107ca009aa55fa9c1",
+      "source_path": "q_training/pi4b8_true_n16_v2/tables/fssql_r_seed_5105.npz"
+    },
+    {
+      "authority": "protocols/PI4B8_TRUE_N16_INPUT_FREEZE_V1.json",
+      "package_path": "inputs/base/raw_features.csv",
+      "role": "base:raw_features",
+      "sha256": "1f764959e7c01ad67a235f01adecfe74f1c8df4af48a4b96e03d3eea96d7b399",
+      "source_path": "device_calibration/inputs/scheduler_train_6000_raw_features.csv"
+    },
+    {
+      "authority": "protocols/PI4B8_TRUE_N16_INPUT_FREEZE_V1.json",
+      "package_path": "inputs/base/features.npy",
+      "role": "base:features",
+      "sha256": "4cbb6849d269129a01038693aa6a981017b55d8949da81074aece2e1100e823d",
+      "source_path": "device_calibration/inputs/scheduler_train_6000_features.npy"
+    },
+    {
+      "authority": "protocols/PI4B8_TRUE_N16_INPUT_FREEZE_V1.json",
+      "package_path": "inputs/base/risk_features.npy",
+      "role": "base:risk_features",
+      "sha256": "fee72cdd9445e8ebd4ecb12e888848b52269bd0fe81ef259ecf25525bf711dcd",
+      "source_path": "device_calibration/inputs/scheduler_train_6000_risk_features.npy"
+    },
+    {
+      "authority": "protocols/PI4B8_TRUE_N16_INPUT_FREEZE_V1.json",
+      "package_path": "inputs/base/backlog.npy",
+      "role": "base:backlog",
+      "sha256": "511e7bd1c36ef4f62eb0d87fb3b8b5ab897505eddd05f0e10d20ddebb80284fd",
+      "source_path": "device_calibration/inputs/pi4b8_true_n16_v1/evaluation_backlog_zero.npy"
+    },
+    {
+      "authority": "protocols/PI4B8_TRUE_N16_INPUT_FREEZE_V1.json",
+      "package_path": "scoring/base/labels.npy",
+      "role": "base:labels",
+      "sha256": "285cb5fa12c69c77e9f0bc9f17ea49ff484ea4c6412dd8eb447ee6be2fbe8fd4",
+      "source_path": "device_calibration/inputs/scheduler_train_6000_labels.npy"
+    },
+    {
+      "authority": "protocols/PI4B8_TRUE_N16_INPUT_FREEZE_V1.json",
+      "package_path": "inputs/batches/seed_5101.npy",
+      "role": "batch_indices:5101",
+      "sha256": "52cae4919ac0b3525f10bc3b6e5bafb011463c912516c510ed7191977156f0e8",
+      "source_path": "device_calibration/inputs/pi4b8_true_n16_v1/evaluation_batch_indices_seed_5101.npy"
+    },
+    {
+      "authority": "protocols/PI4B8_TRUE_N16_INPUT_FREEZE_V1.json",
+      "package_path": "inputs/batches/seed_5102.npy",
+      "role": "batch_indices:5102",
+      "sha256": "bc7e87d909cbb37aa4143459b717af2e04fa4e1e8a629e436e19ebb3bae5f38b",
+      "source_path": "device_calibration/inputs/pi4b8_true_n16_v1/evaluation_batch_indices_seed_5102.npy"
+    },
+    {
+      "authority": "protocols/PI4B8_TRUE_N16_INPUT_FREEZE_V1.json",
+      "package_path": "inputs/batches/seed_5103.npy",
+      "role": "batch_indices:5103",
+      "sha256": "53a11cf824f9a72b41e221ddc62b560395a9390efffda290d2d7ea74ba296242",
+      "source_path": "device_calibration/inputs/pi4b8_true_n16_v1/evaluation_batch_indices_seed_5103.npy"
+    },
+    {
+      "authority": "protocols/PI4B8_TRUE_N16_INPUT_FREEZE_V1.json",
+      "package_path": "inputs/batches/seed_5104.npy",
+      "role": "batch_indices:5104",
+      "sha256": "84261cd1a20145db39f7bf6c372cd4972d1ba066e1b9f38a3a7f14dcc725ef87",
+      "source_path": "device_calibration/inputs/pi4b8_true_n16_v1/evaluation_batch_indices_seed_5104.npy"
+    },
+    {
+      "authority": "protocols/PI4B8_TRUE_N16_INPUT_FREEZE_V1.json",
+      "package_path": "inputs/batches/seed_5105.npy",
+      "role": "batch_indices:5105",
+      "sha256": "95fa224e7ddae1a73a7ac03fe811e39911142ed8844de850d4d021aed5e78feb",
+      "source_path": "device_calibration/inputs/pi4b8_true_n16_v1/evaluation_batch_indices_seed_5105.npy"
+    },
+    {
+      "authority": "protocols/PI4B8_CORRECTED_V5_COMMISSIONING_PREREGISTRATION.json",
+      "package_path": "inputs/commissioning/seed_5099.npy",
+      "role": "commissioning_batch_indices:5099",
+      "sha256": "34fd6b30b30a03b07eacb8f95c5b8946bd0b8c9e8d49d6e72f27ed59a0eb7e07",
+      "source_path": "device_calibration/inputs/pi4b8_true_n16_v1/commissioning_batch_indices_seed_5099.npy"
+    }
+  ],
+  "base_records": 6000,
+  "cells": [
+    {
+      "condition": "n16/B0",
+      "runtime": {
+        "backlog": "base:backlog",
+        "batch_indices": "batch_indices:5101",
+        "features": "base:features",
+        "raw_features": "base:raw_features",
+        "risk_features": "base:risk_features"
+      },
+      "scoring": {
+        "labels": "base:labels"
+      },
+      "seed": 5101
+    },
+    {
+      "condition": "n16/B0",
+      "runtime": {
+        "backlog": "base:backlog",
+        "batch_indices": "batch_indices:5102",
+        "features": "base:features",
+        "raw_features": "base:raw_features",
+        "risk_features": "base:risk_features"
+      },
+      "scoring": {
+        "labels": "base:labels"
+      },
+      "seed": 5102
+    },
+    {
+      "condition": "n16/B0",
+      "runtime": {
+        "backlog": "base:backlog",
+        "batch_indices": "batch_indices:5103",
+        "features": "base:features",
+        "raw_features": "base:raw_features",
+        "risk_features": "base:risk_features"
+      },
+      "scoring": {
+        "labels": "base:labels"
+      },
+      "seed": 5103
+    },
+    {
+      "condition": "n16/B0",
+      "runtime": {
+        "backlog": "base:backlog",
+        "batch_indices": "batch_indices:5104",
+        "features": "base:features",
+        "raw_features": "base:raw_features",
+        "risk_features": "base:risk_features"
+      },
+      "scoring": {
+        "labels": "base:labels"
+      },
+      "seed": 5104
+    },
+    {
+      "condition": "n16/B0",
+      "runtime": {
+        "backlog": "base:backlog",
+        "batch_indices": "batch_indices:5105",
+        "features": "base:features",
+        "raw_features": "base:raw_features",
+        "risk_features": "base:risk_features"
+      },
+      "scoring": {
+        "labels": "base:labels"
+      },
+      "seed": 5105
+    },
+    {
+      "condition": "n16/B1",
+      "runtime": {
+        "backlog": "base:backlog",
+        "batch_indices": "batch_indices:5101",
+        "features": "base:features",
+        "raw_features": "base:raw_features",
+        "risk_features": "base:risk_features"
+      },
+      "scoring": {
+        "labels": "base:labels"
+      },
+      "seed": 5101
+    },
+    {
+      "condition": "n16/B1",
+      "runtime": {
+        "backlog": "base:backlog",
+        "batch_indices": "batch_indices:5102",
+        "features": "base:features",
+        "raw_features": "base:raw_features",
+        "risk_features": "base:risk_features"
+      },
+      "scoring": {
+        "labels": "base:labels"
+      },
+      "seed": 5102
+    },
+    {
+      "condition": "n16/B1",
+      "runtime": {
+        "backlog": "base:backlog",
+        "batch_indices": "batch_indices:5103",
+        "features": "base:features",
+        "raw_features": "base:raw_features",
+        "risk_features": "base:risk_features"
+      },
+      "scoring": {
+        "labels": "base:labels"
+      },
+      "seed": 5103
+    },
+    {
+      "condition": "n16/B1",
+      "runtime": {
+        "backlog": "base:backlog",
+        "batch_indices": "batch_indices:5104",
+        "features": "base:features",
+        "raw_features": "base:raw_features",
+        "risk_features": "base:risk_features"
+      },
+      "scoring": {
+        "labels": "base:labels"
+      },
+      "seed": 5104
+    },
+    {
+      "condition": "n16/B1",
+      "runtime": {
+        "backlog": "base:backlog",
+        "batch_indices": "batch_indices:5105",
+        "features": "base:features",
+        "raw_features": "base:raw_features",
+        "risk_features": "base:risk_features"
+      },
+      "scoring": {
+        "labels": "base:labels"
+      },
+      "seed": 5105
+    },
+    {
+      "condition": "n16/B2",
+      "runtime": {
+        "backlog": "base:backlog",
+        "batch_indices": "batch_indices:5101",
+        "features": "base:features",
+        "raw_features": "base:raw_features",
+        "risk_features": "base:risk_features"
+      },
+      "scoring": {
+        "labels": "base:labels"
+      },
+      "seed": 5101
+    },
+    {
+      "condition": "n16/B2",
+      "runtime": {
+        "backlog": "base:backlog",
+        "batch_indices": "batch_indices:5102",
+        "features": "base:features",
+        "raw_features": "base:raw_features",
+        "risk_features": "base:risk_features"
+      },
+      "scoring": {
+        "labels": "base:labels"
+      },
+      "seed": 5102
+    },
+    {
+      "condition": "n16/B2",
+      "runtime": {
+        "backlog": "base:backlog",
+        "batch_indices": "batch_indices:5103",
+        "features": "base:features",
+        "raw_features": "base:raw_features",
+        "risk_features": "base:risk_features"
+      },
+      "scoring": {
+        "labels": "base:labels"
+      },
+      "seed": 5103
+    },
+    {
+      "condition": "n16/B2",
+      "runtime": {
+        "backlog": "base:backlog",
+        "batch_indices": "batch_indices:5104",
+        "features": "base:features",
+        "raw_features": "base:raw_features",
+        "risk_features": "base:risk_features"
+      },
+      "scoring": {
+        "labels": "base:labels"
+      },
+      "seed": 5104
+    },
+    {
+      "condition": "n16/B2",
+      "runtime": {
+        "backlog": "base:backlog",
+        "batch_indices": "batch_indices:5105",
+        "features": "base:features",
+        "raw_features": "base:raw_features",
+        "risk_features": "base:risk_features"
+      },
+      "scoring": {
+        "labels": "base:labels"
+      },
+      "seed": 5105
+    }
+  ],
+  "commissioning_cell": {
+    "condition": "n16/B0",
+    "policy": "Static-Light",
+    "runtime": {
+      "backlog": "base:backlog",
+      "batch_indices": "commissioning_batch_indices:5099",
+      "features": "base:features",
+      "raw_features": "base:raw_features",
+      "risk_features": "base:risk_features"
+    },
+    "scientific_use": "COMMISSIONING_ONLY_EXCLUDED_FROM_FORMAL_STATISTICS",
+    "scoring": {
+      "labels": "base:labels"
+    },
+    "seed": 5099
+  },
+  "commissioning_cell_required": true,
+  "commissioning_preregistration_sha256": "1a4edbb0548dec87717974e3affa9c4d82126b99e5dd9847c192ff05879f3354",
+  "conditions": [
+    "n16/B0",
+    "n16/B1",
+    "n16/B2"
+  ],
+  "execution_authorized": false,
+  "input_freeze_manifest_sha256": "0d9a1675799e11b97dd2ccf0ddcac14ee7d01996970bb1b4a09c426dedd0b142",
+  "official_test_access": "forbidden",
+  "q_manifest_sha256": "961c7234957fe15231c6b7fc6e1168aad233cacee595a2419360a76f55fa0c98",
+  "records_per_window": 16,
+  "runtime_dependencies_required": true,
+  "schema_version": "PI4B8_CORRECTED_RUNTIME_V5_SOURCE_MANIFEST_1",
+  "seeds": [
+    5101,
+    5102,
+    5103,
+    5104,
+    5105
+  ],
+  "source_commit": "75595edd0c8598d549d01849cd5b071c9fa70643",
+  "status": "FROZEN_BEFORE_CORRECTED_PI4B8_V5_MATERIALIZATION",
+  "windows_per_run": 600
+}
