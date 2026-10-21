@@ -20,16 +20,22 @@ def sigmoid(values: np.ndarray) -> np.ndarray:
 
 
 class NumpyActionModel:
-    def __init__(self, artifact: str | Path):
+    def __init__(self, artifact: str | Path, decision_threshold: float | None = None):
         self.path = Path(artifact)
         self.parameters = dict(np.load(self.path, allow_pickle=False))
         self.kind = self.path.stem
+        self.decision_threshold = decision_threshold
 
     @property
     def threshold(self) -> float:
-        # Some frozen probability artifacts intentionally omit a serialized
-        # threshold; the preregistered decision threshold is 0.5 in that case.
-        return float(self.parameters.get("threshold", 0.5))
+        if self.decision_threshold is not None:
+            return float(self.decision_threshold)
+        if "threshold" not in self.parameters:
+            raise RuntimeError(
+                f"{self.path.name} has no serialized decision threshold; "
+                "bind the frozen validation threshold explicitly"
+            )
+        return float(self.parameters["threshold"])
 
     def predict_proba(self, features: np.ndarray) -> np.ndarray:
         features = np.asarray(features, dtype=np.float32)

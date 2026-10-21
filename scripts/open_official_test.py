@@ -18,6 +18,8 @@ ROOT = Path(__file__).resolve().parents[1]
 sys.path.insert(0, str(ROOT))
 from runtime.preprocessor_numpy import PortablePreprocessor  # noqa: E402
 
+OPEN_LOCK = ROOT / "results/official_test/OFFICIAL_TEST_OPENED_ONCE.json"
+
 
 def sha256(path: Path) -> str:
     return hashlib.sha256(path.read_bytes()).hexdigest()
@@ -28,6 +30,10 @@ def utc_now() -> str:
 
 
 def main() -> None:
+    if OPEN_LOCK.exists():
+        raise RuntimeError(
+            "official test was already opened; matched-trace generation is permanently locked"
+        )
     parser = argparse.ArgumentParser()
     parser.add_argument("--policy-config", type=Path, required=True)
     parser.add_argument("--source-commit", required=True)
