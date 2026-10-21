@@ -75,23 +75,27 @@ aggregate. The official test is locked and must not be opened again.
 - formal authorization, POWER-Z samples, ACK boundaries, rolls, hashes and
   energy integration now fail closed in the validation code.
 
-## Remaining protocol decisions
+## Corrected Q completion and remaining execution gates
 
-The corrected worker is intentionally not executable as a formal campaign yet.
-The following must be frozen before building a new runtime package:
+The corrected protocol, deterministic true-`n=16` inputs, explicit zero-backlog
+semantics, Threshold settings, reward/state semantics and five seed-specific Q
+tables are frozen. The Q manifest is
+`q_training/pi4b8_true_n16_v2/Q_TABLE_MANIFEST.json` with status
+`PI4B8_TRUE_N16_Q_TRAINING_COMPLETE`; an independent rerun reproduced all Q
+artifacts byte for byte. These are development-only training artifacts, not
+corrected online results.
 
-- deterministic 16-record batching and input hashes;
-- a measured/frozen backlog source and dynamics;
-- Pi4B Threshold `p_hi` and explicit light/heavy roles;
-- reward energy/state semantics for each condition;
-- a new true-`n=16` Q-training protocol and tables, or an explicit decision to
-  evaluate the old tables only as a legacy single-record transfer baseline;
-- a corrected package, launcher/schema contract, commissioning result and
-  final execution manifest.
+The authoritative V5 source manifest and runtime package now pass local and
+remote inventory/hash checks, and one remote 16-record smoke path passes from
+preprocessing through post-prediction scoring. The remaining gates are a new
+commissioning run with POWER-Z/ACK validation, a final execution manifest and
+formal authorization, followed by the complete corrected matrix and its
+independent validation.
 
-The detailed decision boundary is recorded in
-`protocols/PI4B8_CORRECTED_RUNTIME_DECISION_DRAFT.md`. That file is a draft and
-does not authorize retraining or hardware execution.
+The frozen scientific boundary is recorded in
+`protocols/PI4B8_CORRECTED_TRUE_N16_PROTOCOL_V1.md`. It authorizes the corrected
+development semantics and Q training only; it is not hardware/formal execution
+authorization.
 
 ## Verification
 

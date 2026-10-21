@@ -88,7 +88,11 @@ def validate_cell_payloads(package_root: Path, manifest: dict[str, Any]) -> None
         package_root / by_role["preprocessor"]["package_path"]
     )
     checked_bases: set[tuple[str, str, str]] = set()
-    for cell in manifest["cells"]:
+    cells = list(manifest["cells"])
+    commissioning = manifest.get("commissioning_cell")
+    if isinstance(commissioning, dict):
+        cells.append(commissioning)
+    for cell in cells:
         runtime = cell["runtime"]
         scoring = cell["scoring"]
         raw_path = package_root / by_role[runtime["raw_features"]]["package_path"]
@@ -145,6 +149,18 @@ def validate_shared_payloads(package_root: Path, manifest: dict[str, Any]) -> No
 
     def path(role: str) -> Path:
         return package_root / by_role[role]["package_path"]
+
+    if manifest.get("runtime_dependencies_required") is True:
+        dependencies = load_json(path("runtime_dependencies"))
+        if (
+            dependencies.get("status")
+            != "FROZEN_BEFORE_CORRECTED_PI4B8_COMMISSIONING"
+            or dependencies.get("official_test_access") != "forbidden"
+            or dependencies.get("pi_worker", {}).get("cpu_governor_required")
+            != "performance"
+            or dependencies.get("powerz_device", {}).get("serial") != "075356"
+        ):
+            raise ContractError("corrected runtime dependency manifest is incomplete")
 
     # Loadability only; thresholds remain bound to model_hyperparameters and
     # are deliberately not supplied or selected by the package builder.
@@ -253,6 +269,15 @@ def build(source_manifest_path: Path, output: Path, repository_root: Path = ROOT
             "official_test_access": "forbidden",
             "source_manifest_sha256": sha256(frozen_source_copy),
             "source_commit": source["source_commit"],
+            "runtime_dependencies_required": source.get(
+                "runtime_dependencies_required", False
+            ),
+            "commissioning_cell_required": source.get(
+                "commissioning_cell_required", False
+            ),
+            "commissioning_preregistration_sha256": source.get(
+                "commissioning_preregistration_sha256"
+            ),
             "base_records": source["base_records"],
             "windows_per_run": source["windows_per_run"],
             "records_per_window": source["records_per_window"],
@@ -260,6 +285,7 @@ def build(source_manifest_path: Path, output: Path, repository_root: Path = ROOT
             "seeds": source["seeds"],
             "artifacts": packaged_artifacts,
             "cells": source["cells"],
+            "commissioning_cell": source.get("commissioning_cell"),
             "execution_authorized": False,
         }
         package_manifest_path = staging / PACKAGE_MANIFEST_NAME

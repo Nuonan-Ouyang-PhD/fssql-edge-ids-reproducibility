@@ -1,0 +1,18 @@
+{
+  "status": "FROZEN_BEFORE_CORRECTED_PI4B8_COMMISSIONING",
+  "official_test_access": "forbidden",
+  "scientific_use": "COMMISSIONING_ONLY_EXCLUDED_FROM_FORMAL_STATISTICS",
+  "run_id_prefix": "pi4b8_corrected_v5_commissioning",
+  "policy": "Static-Light",
+  "condition": "n16/B0",
+  "seed": 5099,
+  "windows": 600,
+  "records_per_window": 16,
+  "formal_seed": false,
+  "batch_rule": "order=default_rng(seed).permutation(6000); index[w,j]=order[(16*w+j)%6000]",
+  "batch_indices": {
+    "path": "device_calibration/inputs/pi4b8_true_n16_v1/commissioning_batch_indices_seed_5099.npy",
+    "sha256": "34fd6b30b30a03b07eacb8f95c5b8946bd0b8c9e8d49d6e72f27ed59a0eb7e07"
+  },
+  "purpose": "Exercise the complete corrected worker, ACK, POWER-Z, scoring and evidence path without consuming any formal matched seed. Formal Q-table lineage is separately validated by the hash-bound remote smoke and formal gate."
+}

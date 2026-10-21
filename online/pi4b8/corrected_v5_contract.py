@@ -35,6 +35,9 @@ ACTIONS = (
 POLICIES = ("FSSQL-R", "Safe-Greedy", "Threshold", "Static-Light")
 CONDITIONS = ("n16/B0", "n16/B1", "n16/B2")
 SEEDS = (5101, 5102, 5103, 5104, 5105)
+COMMISSIONING_POLICY = "Static-Light"
+COMMISSIONING_CONDITION = "n16/B0"
+COMMISSIONING_SEED = 5099
 BASE_RECORDS = 6000
 RUNTIME_INPUT_KEYS = (
     "raw_features",
@@ -73,6 +76,10 @@ FIXED_PACKAGE_PATHS = {
     "runtime_helper:action_pool_numpy": "runtime/action_pool_numpy.py",
     "runtime_helper:preprocessor_numpy": "runtime/preprocessor_numpy.py",
     "runtime_helper:risk_proxy_numpy": "runtime/risk_proxy_numpy.py",
+    "runtime_dependencies": "config/PI4B8_RUNTIME_DEPENDENCIES_V1.json",
+    f"commissioning_batch_indices:{COMMISSIONING_SEED}": (
+        f"inputs/commissioning/seed_{COMMISSIONING_SEED}.npy"
+    ),
     "validation_metrics": "config/VALIDATION_METRICS.csv",
     "preprocessor": "preprocessing/preprocessor_portable.npz",
     "risk_proxy": "risk_proxy/risk_proxy.npz",
@@ -236,6 +243,65 @@ def _validate_cells(document: Mapping[str, Any], artifacts: Mapping[str, Mapping
         raise ContractError(f"cell matrix mismatch: missing={missing}, extra={extra}")
 
 
+def _validate_commissioning_cell(
+    document: Mapping[str, Any], artifacts: Mapping[str, Mapping[str, Any]]
+) -> None:
+    required = document.get("commissioning_cell_required") is True
+    cell = document.get("commissioning_cell")
+    if not required:
+        if cell is not None:
+            raise ContractError("commissioning cell is present but not required")
+        return
+    if not isinstance(cell, dict):
+        raise ContractError("required commissioning cell is missing")
+    try:
+        seed = int(cell.get("seed", -1))
+    except (TypeError, ValueError) as error:
+        raise ContractError("commissioning seed is invalid") from error
+    if (
+        cell.get("policy") != COMMISSIONING_POLICY
+        or cell.get("condition") != COMMISSIONING_CONDITION
+        or seed != COMMISSIONING_SEED
+        or cell.get("scientific_use")
+        != "COMMISSIONING_ONLY_EXCLUDED_FROM_FORMAL_STATISTICS"
+    ):
+        raise ContractError("commissioning identity differs from the frozen protocol")
+    _hash(
+        document.get("commissioning_preregistration_sha256"),
+        "commissioning_preregistration_sha256",
+    )
+    if COMMISSIONING_SEED in SEEDS:
+        raise ContractError("commissioning must not consume a formal matched seed")
+    runtime = cell.get("runtime")
+    scoring = cell.get("scoring")
+    if not isinstance(runtime, dict) or set(runtime) != set(RUNTIME_INPUT_KEYS):
+        raise ContractError("commissioning runtime roles are incomplete")
+    if not isinstance(scoring, dict) or set(scoring) != set(SCORING_INPUT_KEYS):
+        raise ContractError("commissioning scoring roles are incomplete")
+    for name in RUNTIME_INPUT_KEYS:
+        role = runtime[name]
+        if not isinstance(role, str) or role not in artifacts:
+            raise ContractError(f"commissioning has unknown runtime role {role!r}")
+        path = str(artifacts[role]["package_path"])
+        if path.startswith("scoring/") or "label" in role.lower() or "label" in path.lower():
+            raise ContractError(f"commissioning leaks scoring data into runtime role {role}")
+    label_role = scoring["labels"]
+    if not isinstance(label_role, str) or label_role not in artifacts:
+        raise ContractError(f"commissioning has unknown scoring role {label_role!r}")
+    label_path = str(artifacts[label_role]["package_path"])
+    if not label_path.startswith("scoring/") or label_role in runtime.values():
+        raise ContractError("commissioning labels are not physically isolated")
+    formal_reference = document["cells"][0]
+    for name in ("raw_features", "features", "risk_features", "backlog"):
+        if runtime[name] != formal_reference["runtime"][name]:
+            raise ContractError(f"commissioning {name} must use the formal frozen base")
+    if label_role != formal_reference["scoring"]["labels"]:
+        raise ContractError("commissioning must use the frozen scoring-label base")
+    formal_batches = {cell["runtime"]["batch_indices"] for cell in document["cells"]}
+    if runtime["batch_indices"] in formal_batches:
+        raise ContractError("commissioning must use a distinct non-formal batch schedule")
+
+
 def validate_source_manifest(document: Mapping[str, Any]) -> dict[str, dict[str, Any]]:
     if document.get("schema_version") != SOURCE_SCHEMA:
         raise ContractError("corrected source-manifest schema mismatch")
@@ -255,7 +321,10 @@ def validate_source_manifest(document: Mapping[str, Any]) -> dict[str, dict[str,
     if not isinstance(commit, str) or not re.fullmatch(r"[0-9a-f]{40}", commit):
         raise ContractError("source_commit must be a full 40-character Git commit")
     artifacts = _artifact_index(document, source=True)
+    if document.get("runtime_dependencies_required") is True and "runtime_dependencies" not in artifacts:
+        raise ContractError("corrected source manifest requires runtime dependencies")
     _validate_cells(document, artifacts)
+    _validate_commissioning_cell(document, artifacts)
     return artifacts
 
 
@@ -278,7 +347,10 @@ def validate_package_manifest(document: Mapping[str, Any]) -> dict[str, dict[str
     if document.get("conditions") != list(CONDITIONS) or document.get("seeds") != list(SEEDS):
         raise ContractError("materialized package cell order mismatch")
     artifacts = _artifact_index(document, source=False)
+    if document.get("runtime_dependencies_required") is True and "runtime_dependencies" not in artifacts:
+        raise ContractError("corrected package requires runtime dependencies")
     _validate_cells(document, artifacts)
+    _validate_commissioning_cell(document, artifacts)
     return artifacts
 
 
@@ -295,7 +367,36 @@ def validate_materialized_package(package_root: Path, manifest_path: Path) -> di
     if sha256(source_manifest_path) != document["source_manifest_sha256"]:
         raise ContractError("materialized source-manifest hash mismatch")
     source_document = load_json(source_manifest_path)
-    validate_source_manifest(source_document)
+    source_artifacts = validate_source_manifest(source_document)
+    shared_fields = (
+        "source_commit",
+        "runtime_dependencies_required",
+        "commissioning_cell_required",
+        "commissioning_preregistration_sha256",
+        "base_records",
+        "windows_per_run",
+        "records_per_window",
+        "conditions",
+        "seeds",
+        "cells",
+        "commissioning_cell",
+    )
+    drifted = [
+        field
+        for field in shared_fields
+        if document.get(field) != source_document.get(field)
+    ]
+    if drifted:
+        raise ContractError(f"package/source manifest field drift: {drifted}")
+    if set(artifacts) != set(source_artifacts):
+        raise ContractError("package/source manifest artifact-role drift")
+    for role, record in artifacts.items():
+        source_record = source_artifacts[role]
+        if (
+            record["package_path"] != source_record["package_path"]
+            or record["sha256"] != source_record["sha256"]
+        ):
+            raise ContractError(f"package/source manifest artifact drift: {role}")
     expected_files = {PACKAGE_MANIFEST_NAME, SOURCE_MANIFEST_NAME}
     for role, record in artifacts.items():
         relative = str(record["package_path"])
@@ -324,11 +425,18 @@ def validate_materialized_package(package_root: Path, manifest_path: Path) -> di
     return document
 
 
-def find_cell(document: Mapping[str, Any], condition: str, seed: int) -> dict[str, Any]:
+def find_cell(
+    document: Mapping[str, Any], condition: str, seed: int, policy: str | None = None
+) -> dict[str, Any]:
+    candidates = list(document.get("cells", []))
+    commissioning = document.get("commissioning_cell")
+    if isinstance(commissioning, dict):
+        candidates.append(commissioning)
     matching = [
         cell
-        for cell in document.get("cells", [])
+        for cell in candidates
         if cell.get("condition") == condition and int(cell.get("seed", -1)) == seed
+        and ("policy" not in cell or policy == cell.get("policy"))
     ]
     if len(matching) != 1:
         raise ContractError(f"no unique corrected cell binding for {condition}/{seed}")
@@ -347,7 +455,7 @@ def validate_worker_cli_binding(
     """Require every worker CLI path to equal its hash-validated manifest role."""
     document = validate_materialized_package(package_root, manifest_path)
     artifacts = _artifact_index(document, source=False)
-    cell = find_cell(document, condition, seed)
+    cell = find_cell(document, condition, seed, policy)
     root = package_root.resolve()
 
     def expected(role: str) -> Path:
@@ -406,7 +514,7 @@ def build_worker_argv(
         raise ContractError(f"unsupported corrected policy: {policy}")
     document = validate_materialized_package(package_root, manifest_path)
     artifacts = _artifact_index(document, source=False)
-    cell = find_cell(document, condition, seed)
+    cell = find_cell(document, condition, seed, policy)
 
     root = package_root.resolve()
     execution_root = root if execution_root is None else Path(execution_root)

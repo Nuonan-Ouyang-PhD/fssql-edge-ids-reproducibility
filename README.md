@@ -40,8 +40,11 @@ The repair branch makes thresholds/configuration authoritative, enforces true
 joint guard, masks Q selection correctly, separates label-only scoring from
 the label-free reward, records independent timings, and fails closed without
 an executable background-load specification. It also rejects the legacy
-single-record Q tables for a corrected true-`n=16` run. No corrected Pi 4B
-formal result has been generated yet.
+single-record Q tables for a corrected true-`n=16` run. Five seed-specific
+corrected Q tables (`5101–5105`) have been trained from development-only inputs,
+independently reproduced byte for byte, and hash-frozen. A corrected V5 runtime
+package has passed local and remote hash/smoke gates, but no corrected Pi 4B
+commissioning or formal result has been generated yet.
 
 This audit does not by itself invalidate the Pi 3B campaign, Pi 4B independent
 fit/margin/coverage observations, or the already saved one-shot official-test
@@ -112,8 +115,8 @@ are excluded from current policy, robustness and energy claims. In particular,
 the apparent Safe-Greedy all-positive behavior and Threshold/FSSQL-R rankings
 were produced by incorrect controller implementations; they are not valid
 baseline comparisons. See
-[`protocols/PI4B8_CORRECTED_RUNTIME_DECISION_DRAFT.md`](protocols/PI4B8_CORRECTED_RUNTIME_DECISION_DRAFT.md)
-for the repair boundary and unresolved preregistration decisions.
+[`protocols/PI4B8_CORRECTED_TRUE_N16_PROTOCOL_V1.md`](protocols/PI4B8_CORRECTED_TRUE_N16_PROTOCOL_V1.md)
+for the frozen corrected semantics and remaining execution gates.
 
 ### Guard calibration and learning stability
 
@@ -208,7 +211,7 @@ or a normalized proxy.
   orchestration/replacement tooling, label-leakage utilities, and direct KM003C
   HID capture.
 - `device_calibration/`: fit/margin/coverage collection and guard fitting/evaluation code.
-- `models/`, `preprocessing/`, `risk_proxy/`, `q_training/`: frozen portable runtime artifacts and lineage records.
+- `models/`, `preprocessing/`, `risk_proxy/`, `q_training/`: frozen portable runtime artifacts, legacy lineage and corrected development-only true-`n=16` Q artifacts.
 - `configs/` and `protocols/`: scientific parameters, run matrices, preregistration, commissioning, POWER-Z, and final validation records.
 - `calibration/`: accepted Pi3B+ and Pi4B device-specific calibration evidence.
 - `results/pi3b/`: V3 campaign completion, aggregate results, validation, and violation forensic record.

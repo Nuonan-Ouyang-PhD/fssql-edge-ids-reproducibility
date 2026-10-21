@@ -4,10 +4,11 @@ This guide separates software verification, development reconstruction, Raspberr
 
 > **Audit notice (21 October 2026).** The historical Pi4B V4 online package
 > does not implement the declared true-`n=16` policies and load conditions.
-> Its results are provenance only. The corrected worker is intentionally
-> fail-closed until a new repair protocol, true-`n=16` input package and
-> compatible Q lineage are frozen. Do not use the historical command or data
-> as a valid Pi4B reproduction.
+> Its results are provenance only. The corrected protocol, true-`n=16` input
+> lineage and five corrected Q tables are frozen, and the V5 runtime package
+> has passed local/remote hash and smoke gates. Commissioning, final
+> authorization and the corrected formal matrix have not run. Do not use the
+> historical command or data as a valid Pi4B reproduction.
 
 ## 1. Environment
 
@@ -85,8 +86,10 @@ The checked-in seed-specific tables have `q_values` shape `1280 × 4`. They
 were trained with one record per window, `n1/B0` predictor inputs and zero
 backlog despite the old Pi4B config label. They may be inspected as legacy
 single-record lineage, but the corrected worker rejects them for a true-`n=16`
-FSSQL-R run. A new development-only Q protocol and tables are required if the
-corrected experiment retains true-`n=16` or nonzero-backlog semantics.
+FSSQL-R run. Corrected development-only tables are under
+`q_training/pi4b8_true_n16_v2/` and are bound to
+`configs/pi4b8_true_n16_q_v2.json`. Their completion is Q-training evidence,
+not commissioning or online-result evidence.
 
 ## 5. Device-specific guard calibration
 
@@ -156,14 +159,30 @@ features/risk features
   → reward and per-window evidence
 ```
 
-The corrected interface additionally requires a hash-bound asset root,
-runtime/Q configurations and manifest, the model-threshold source, 9,600 raw
-and transformed development records, a separately frozen backlog source, and
-the scoring-only label sidecar. It refuses the 600-row V4 inputs, missing B1/B2
-load process definitions, and legacy single-record Q tables. Because the
-scientific decisions listed in
-`protocols/PI4B8_CORRECTED_RUNTIME_DECISION_DRAFT.md` are not yet frozen, this
-guide deliberately provides no executable formal command.
+The corrected interface requires a hash-bound asset root, runtime/Q
+configurations and manifest, the model-threshold source, a shared 6,000-row
+development base with deterministic `600 × 16` seed schedules, explicit zero
+backlog, and a physically separate scoring-only label sidecar. It refuses the
+600-row V4 inputs, missing B1/B2 load process definitions, and legacy
+single-record Q tables. The scientific semantics are frozen in
+`protocols/PI4B8_CORRECTED_TRUE_N16_PROTOCOL_V1.md`.
+
+After restoring the hash-bound development inputs, reproduce the corrected
+Q/package gates with:
+
+```bash
+python3 scripts/train_pi4b8_q_true_n16.py \
+  --config configs/pi4b8_true_n16_q_v2.json \
+  --output <new-q-output> \
+  --execute-training
+python3 build_pi4b8_corrected_runtime_v5.py \
+  --source-manifest protocols/PI4B8_CORRECTED_RUNTIME_SOURCE_MANIFEST_V5.json \
+  --output <new-v5-package-directory>
+```
+
+There is still no formal execution command in this guide: a corrected
+commissioning validation, final execution manifest and final authorization
+gate must pass first.
 
 The label file is opened only after every action and detector prediction has
 been produced. B1/B2 require the exact pinned-CPU load lifecycle and

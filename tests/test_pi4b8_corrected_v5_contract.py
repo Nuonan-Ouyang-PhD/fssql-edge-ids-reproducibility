@@ -40,6 +40,9 @@ def make_package(root: Path):
     for seed in contract.SEEDS:
         role_paths[f"q_table:{seed}"] = f"q_tables/fssql_r_seed_{seed}.npz"
         role_paths[f"batch_indices:{seed}"] = f"inputs/batches/seed_{seed}.npy"
+    role_paths[
+        f"commissioning_batch_indices:{contract.COMMISSIONING_SEED}"
+    ] = f"inputs/commissioning/seed_{contract.COMMISSIONING_SEED}.npy"
 
     artifacts = []
     for role, relative in role_paths.items():
@@ -83,6 +86,24 @@ def make_package(root: Path):
         "seeds": list(contract.SEEDS),
         "artifacts": artifacts,
         "cells": cells,
+        "commissioning_cell_required": True,
+        "commissioning_preregistration_sha256": "f" * 64,
+        "commissioning_cell": {
+            "scientific_use": "COMMISSIONING_ONLY_EXCLUDED_FROM_FORMAL_STATISTICS",
+            "policy": contract.COMMISSIONING_POLICY,
+            "condition": contract.COMMISSIONING_CONDITION,
+            "seed": contract.COMMISSIONING_SEED,
+            "runtime": {
+                "raw_features": "base:raw_features",
+                "features": "base:features",
+                "risk_features": "base:risk_features",
+                "backlog": "base:backlog",
+                "batch_indices": (
+                    f"commissioning_batch_indices:{contract.COMMISSIONING_SEED}"
+                ),
+            },
+            "scoring": {"labels": "base:labels"},
+        },
     }
     source = {
         **shared,
@@ -128,6 +149,12 @@ class PackageContractTests(unittest.TestCase):
                 ),
                 60,
             )
+            self.assertEqual(
+                {run["seed"] for run in plan["runs"]}, set(contract.SEEDS)
+            )
+            self.assertTrue(
+                all(run["seed"] != contract.COMMISSIONING_SEED for run in plan["runs"])
+            )
             self.assertTrue(
                 all("formal_runtime_v4" not in run["worker_shell_command"] for run in plan["runs"])
             )
@@ -172,6 +199,69 @@ class PackageContractTests(unittest.TestCase):
             self.assertNotIn("--q-config", command)
             self.assertNotIn("--q-manifest", command)
 
+    def test_commissioning_is_hash_bound_and_not_a_formal_cell(self):
+        with tempfile.TemporaryDirectory() as directory:
+            root = Path(directory)
+            package, manifest_path, manifest = make_package(root)
+            command = contract.build_worker_argv(
+                package,
+                manifest_path,
+                run_id="commissioning-1",
+                policy=contract.COMMISSIONING_POLICY,
+                condition=contract.COMMISSIONING_CONDITION,
+                seed=contract.COMMISSIONING_SEED,
+                output=root / "runs/commissioning-1",
+            )
+            self.assertIn(
+                str(
+                    (
+                        package
+                        / f"inputs/commissioning/seed_{contract.COMMISSIONING_SEED}.npy"
+                    ).resolve()
+                ),
+                command,
+            )
+            self.assertEqual(len(manifest["cells"]), 15)
+            with self.assertRaisesRegex(contract.ContractError, "no unique corrected cell"):
+                contract.build_worker_argv(
+                    package,
+                    manifest_path,
+                    run_id="bad-commissioning",
+                    policy="Threshold",
+                    condition=contract.COMMISSIONING_CONDITION,
+                    seed=contract.COMMISSIONING_SEED,
+                    output=root / "runs/bad-commissioning",
+                )
+
+    def test_commissioning_requires_prereg_hash_and_distinct_batch(self):
+        with tempfile.TemporaryDirectory() as directory:
+            _, _, manifest = make_package(Path(directory))
+            manifest.pop("commissioning_preregistration_sha256")
+            with self.assertRaisesRegex(
+                contract.ContractError, "commissioning_preregistration_sha256"
+            ):
+                contract.validate_package_manifest(manifest)
+
+            _, _, manifest = make_package(Path(directory) / "alias")
+            manifest["commissioning_cell"]["runtime"][
+                "batch_indices"
+            ] = "batch_indices:5101"
+            with self.assertRaisesRegex(contract.ContractError, "distinct"):
+                contract.validate_package_manifest(manifest)
+
+            _, _, manifest = make_package(Path(directory) / "label-leak")
+            manifest["commissioning_cell"]["runtime"]["risk_features"] = "base:labels"
+            with self.assertRaisesRegex(contract.ContractError, "leaks scoring"):
+                contract.validate_package_manifest(manifest)
+
+    def test_package_must_match_frozen_source_manifest(self):
+        with tempfile.TemporaryDirectory() as directory:
+            package, manifest_path, manifest = make_package(Path(directory))
+            manifest["commissioning_preregistration_sha256"] = "e" * 64
+            manifest_path.write_text(json.dumps(manifest, sort_keys=True))
+            with self.assertRaisesRegex(contract.ContractError, "package/source"):
+                contract.validate_materialized_package(package, manifest_path)
+
     def test_hash_change_and_cross_condition_batch_change_fail_closed(self):
         with tempfile.TemporaryDirectory() as directory:
             root = Path(directory)
@@ -197,6 +287,22 @@ class PackageContractTests(unittest.TestCase):
             manifest["cells"][0]["runtime"]["risk_features"] = "base:labels"
             with self.assertRaisesRegex(contract.ContractError, "leaks scoring"):
                 contract.validate_package_manifest(manifest)
+
+    def test_required_runtime_dependency_manifest_fails_closed(self):
+        with tempfile.TemporaryDirectory() as directory:
+            _, _, manifest = make_package(Path(directory))
+            manifest["runtime_dependencies_required"] = True
+            with self.assertRaisesRegex(contract.ContractError, "requires runtime dependencies"):
+                contract.validate_package_manifest(manifest)
+            manifest["artifacts"].append(
+                {
+                    "role": "runtime_dependencies",
+                    "package_path": "config/PI4B8_RUNTIME_DEPENDENCIES_V1.json",
+                    "bytes": 1,
+                    "sha256": "0" * 64,
+                }
+            )
+            contract.validate_package_manifest(manifest)
 
 
 class EvidenceContractTests(unittest.TestCase):

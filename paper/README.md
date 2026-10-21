@@ -11,6 +11,8 @@ results, Pi4B device calibration and saved one-shot official-test aggregate
 have separate evidence boundaries and are not automatically invalidated by
 the V4 worker findings.
 
-No manuscript value should be changed to a favorable replacement until the
-repair decisions are frozen and a technically valid corrected campaign is
-completed. The official test must not be opened again.
+The corrected protocol and Q artifacts are frozen, but they are
+development-only and do not replace V4 evidence. Do not update the manuscript
+with corrected Pi4B values until commissioning, final authorization, the
+complete corrected matrix and independent validation all pass. The official
+test must not be opened again.

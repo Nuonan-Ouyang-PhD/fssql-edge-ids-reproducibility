@@ -1,0 +1,28 @@
+{
+  "status": "FROZEN_BEFORE_CORRECTED_PI4B8_COMMISSIONING",
+  "official_test_access": "forbidden",
+  "pi_worker": {
+    "python_implementation": "cpython",
+    "python_version": "3.13.5",
+    "numpy_version": "2.2.4",
+    "system": "Linux",
+    "machine": "aarch64",
+    "cpu_governor_required": "performance",
+    "minimum_frequency_mhz": 1350.0
+  },
+  "mac_orchestrator_and_powerz": {
+    "python_implementation": "cpython",
+    "python_version": "3.9.6",
+    "numpy_version": "2.0.2",
+    "hidapi_version": "0.15.0",
+    "system": "Darwin",
+    "machine": "arm64",
+    "python_executable": ".venv/bin/python"
+  },
+  "powerz_device": {
+    "vendor_id_hex": "0x5fc9",
+    "product_id_hex": "0x0063",
+    "serial": "075356"
+  },
+  "scope": "Minimal corrected Pi4B worker and Mac POWER-Z/orchestration runtime; distinct from the full development requirements lock."
+}

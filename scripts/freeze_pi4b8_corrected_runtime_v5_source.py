@@ -16,6 +16,9 @@ if str(ROOT) not in sys.path:
     sys.path.insert(0, str(ROOT))
 
 from online.pi4b8.corrected_v5_contract import (
+    COMMISSIONING_CONDITION,
+    COMMISSIONING_POLICY,
+    COMMISSIONING_SEED,
     CONDITIONS,
     SEEDS,
     SOURCE_SCHEMA,
@@ -27,6 +30,9 @@ from online.pi4b8.corrected_v5_contract import (
 
 INPUT_FREEZE = ROOT / "protocols/PI4B8_TRUE_N16_INPUT_FREEZE_V1.json"
 Q_MANIFEST = ROOT / "q_training/pi4b8_true_n16_v2/Q_TABLE_MANIFEST.json"
+COMMISSIONING_PREREG = (
+    ROOT / "protocols/PI4B8_CORRECTED_V5_COMMISSIONING_PREREGISTRATION.json"
+)
 
 
 SHARED_SPECS = (
@@ -55,6 +61,11 @@ SHARED_SPECS = (
         "runtime_config",
         "configs/pi4b8_corrected_runtime_v5.json",
         "config/pi4b8_corrected_runtime_v5.json",
+    ),
+    (
+        "runtime_dependencies",
+        "configs/PI4B8_RUNTIME_DEPENDENCIES_V1.json",
+        "config/PI4B8_RUNTIME_DEPENDENCIES_V1.json",
     ),
     (
         "model_hyperparameters",
@@ -167,6 +178,15 @@ INPUT_SPECS = (
     for seed in SEEDS
 )
 
+COMMISSIONING_INPUT_SPEC = (
+    f"commissioning_batch_indices:{COMMISSIONING_SEED}",
+    (
+        "device_calibration/inputs/pi4b8_true_n16_v1/"
+        f"commissioning_batch_indices_seed_{COMMISSIONING_SEED}.npy"
+    ),
+    f"inputs/commissioning/seed_{COMMISSIONING_SEED}.npy",
+)
+
 
 def sha256_bytes(value: bytes) -> str:
     return hashlib.sha256(value).hexdigest()
@@ -217,12 +237,34 @@ def main() -> None:
     commit = git("rev-parse", "HEAD").decode().strip()
     input_freeze = load_json(INPUT_FREEZE)
     q_manifest = load_json(Q_MANIFEST)
+    commissioning_prereg = load_json(COMMISSIONING_PREREG)
     if input_freeze.get("status") != "FROZEN_BEFORE_PI4B8_TRUE_N16_Q_TRAINING":
         raise SystemExit("true-n16 input manifest is not frozen")
     if q_manifest.get("status") != "PI4B8_TRUE_N16_Q_TRAINING_COMPLETE":
         raise SystemExit("corrected Q manifest is not complete")
+    if (
+        commissioning_prereg.get("status")
+        != "FROZEN_BEFORE_CORRECTED_PI4B8_COMMISSIONING"
+        or commissioning_prereg.get("official_test_access") != "forbidden"
+        or commissioning_prereg.get("policy") != COMMISSIONING_POLICY
+        or commissioning_prereg.get("condition") != COMMISSIONING_CONDITION
+        or int(commissioning_prereg.get("seed", -1)) != COMMISSIONING_SEED
+        or commissioning_prereg.get("windows") != 600
+        or commissioning_prereg.get("records_per_window") != 16
+        or commissioning_prereg.get("formal_seed") is not False
+        or commissioning_prereg.get("batch_rule")
+        != "order=default_rng(seed).permutation(6000); index[w,j]=order[(16*w+j)%6000]"
+        or commissioning_prereg.get("batch_indices", {}).get("path")
+        != COMMISSIONING_INPUT_SPEC[1]
+        or commissioning_prereg.get("scientific_use")
+        != "COMMISSIONING_ONLY_EXCLUDED_FROM_FORMAL_STATISTICS"
+    ):
+        raise SystemExit("corrected commissioning preregistration is inconsistent")
 
     expected_inputs = expected_input_hashes(input_freeze)
+    expected_inputs[COMMISSIONING_INPUT_SPEC[0]] = commissioning_prereg[
+        "batch_indices"
+    ]["sha256"]
     expected_q = {
         f"q_table:{row['seed']}": row["table_sha256"]
         for row in q_manifest.get("runs", [])
@@ -232,9 +274,10 @@ def main() -> None:
         raise SystemExit("corrected Q manifest does not bind five unique seeds")
 
     artifacts = []
-    input_roles = {role for role, _, _ in INPUT_SPECS}
+    all_input_specs = INPUT_SPECS + (COMMISSIONING_INPUT_SPEC,)
+    input_roles = {role for role, _, _ in all_input_specs}
     for role, source_path, package_path in (
-        SHARED_SPECS + MODEL_SPECS + Q_SPECS + INPUT_SPECS
+        SHARED_SPECS + MODEL_SPECS + Q_SPECS + all_input_specs
     ):
         path = ROOT / source_path
         if not path.is_file() or path.is_symlink():
@@ -255,7 +298,9 @@ def main() -> None:
                 "package_path": package_path,
                 "sha256": digest,
                 "authority": (
-                    "protocols/PI4B8_TRUE_N16_INPUT_FREEZE_V1.json"
+                    "protocols/PI4B8_CORRECTED_V5_COMMISSIONING_PREREGISTRATION.json"
+                    if role == COMMISSIONING_INPUT_SPEC[0]
+                    else "protocols/PI4B8_TRUE_N16_INPUT_FREEZE_V1.json"
                     if role in input_roles
                     else "source_commit"
                 ),
@@ -285,6 +330,8 @@ def main() -> None:
         "status": SOURCE_STATUS,
         "official_test_access": "forbidden",
         "execution_authorized": False,
+        "runtime_dependencies_required": True,
+        "commissioning_cell_required": True,
         "source_commit": commit,
         "base_records": 6000,
         "windows_per_run": 600,
@@ -293,8 +340,25 @@ def main() -> None:
         "seeds": list(SEEDS),
         "input_freeze_manifest_sha256": sha256_bytes(INPUT_FREEZE.read_bytes()),
         "q_manifest_sha256": sha256_bytes(Q_MANIFEST.read_bytes()),
+        "commissioning_preregistration_sha256": sha256_bytes(
+            COMMISSIONING_PREREG.read_bytes()
+        ),
         "artifacts": artifacts,
         "cells": cells,
+        "commissioning_cell": {
+            "scientific_use": "COMMISSIONING_ONLY_EXCLUDED_FROM_FORMAL_STATISTICS",
+            "policy": COMMISSIONING_POLICY,
+            "condition": COMMISSIONING_CONDITION,
+            "seed": COMMISSIONING_SEED,
+            "runtime": {
+                "raw_features": "base:raw_features",
+                "features": "base:features",
+                "risk_features": "base:risk_features",
+                "backlog": "base:backlog",
+                "batch_indices": COMMISSIONING_INPUT_SPEC[0],
+            },
+            "scoring": {"labels": "base:labels"},
+        },
     }
     validate_source_manifest(document)
     output.parent.mkdir(parents=True, exist_ok=True)
