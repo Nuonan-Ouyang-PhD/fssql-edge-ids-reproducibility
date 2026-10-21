@@ -29,7 +29,7 @@ from online.pi4b8.corrected_v5_contract import (
 
 
 INPUT_FREEZE = ROOT / "protocols/PI4B8_TRUE_N16_INPUT_FREEZE_V1.json"
-Q_MANIFEST = ROOT / "q_training/pi4b8_true_n16_v2/Q_TABLE_MANIFEST.json"
+Q_MANIFEST = ROOT / "q_training/pi4b8_true_n16_v3/Q_TABLE_MANIFEST.json"
 COMMISSIONING_PREREG = (
     ROOT / "protocols/PI4B8_CORRECTED_V5_COMMISSIONING_PREREGISTRATION.json"
 )
@@ -84,8 +84,18 @@ SHARED_SPECS = (
     ),
     (
         "q_manifest",
-        "q_training/pi4b8_true_n16_v2/Q_TABLE_MANIFEST.json",
+        "q_training/pi4b8_true_n16_v3/Q_TABLE_MANIFEST.json",
         "q_tables/Q_TABLE_MANIFEST.json",
+    ),
+    (
+        "q_lineage:independent_validation",
+        "q_training/pi4b8_true_n16_v3/INDEPENDENT_VALIDATION.json",
+        "q_tables/INDEPENDENT_VALIDATION.json",
+    ),
+    (
+        "q_lineage:worker_hash_erratum",
+        "protocols/PI4B8_Q_WORKER_HASH_ERRATUM_V1.md",
+        "q_tables/PI4B8_Q_WORKER_HASH_ERRATUM_V1.md",
     ),
     (
         "preprocessor",
@@ -142,7 +152,7 @@ MODEL_SPECS = tuple(
 Q_SPECS = tuple(
     (
         f"q_table:{seed}",
-        f"q_training/pi4b8_true_n16_v2/tables/fssql_r_seed_{seed}.npz",
+        f"q_training/pi4b8_true_n16_v3/tables/fssql_r_seed_{seed}.npz",
         f"q_tables/fssql_r_seed_{seed}.npz",
     )
     for seed in SEEDS

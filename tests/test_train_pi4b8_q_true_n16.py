@@ -306,6 +306,46 @@ class TrueN16ProtocolTests(unittest.TestCase):
                     "n16/B0",
                 )
 
+    def test_current_worker_rejects_old_full_file_hash_and_accepts_reproduction(self):
+        root = Path(__file__).resolve().parents[1]
+        config_path = root / "configs/pi4b8_true_n16_q_v2.json"
+        runtime_path = root / "configs/pi4b8_corrected_runtime_v5.json"
+        table_path = (
+            root / "q_training/pi4b8_true_n16_v3/tables/fssql_r_seed_5101.npz"
+        )
+        config = json.loads(config_path.read_text())
+        runtime = json.loads(runtime_path.read_text())
+        old_manifest = json.loads(
+            (
+                root / "q_training/pi4b8_true_n16_v2/Q_TABLE_MANIFEST.json"
+            ).read_text()
+        )
+        new_manifest = json.loads(
+            (
+                root / "q_training/pi4b8_true_n16_v3/Q_TABLE_MANIFEST.json"
+            ).read_text()
+        )
+
+        with self.assertRaisesRegex(RuntimeError, "worker-semantics hash mismatch"):
+            worker.validate_fssql_q_lineage(
+                runtime,
+                config,
+                config_path,
+                old_manifest,
+                table_path,
+                5101,
+                "n16/B0",
+            )
+        worker.validate_fssql_q_lineage(
+            runtime,
+            config,
+            config_path,
+            new_manifest,
+            table_path,
+            5101,
+            "n16/B0",
+        )
+
 
 if __name__ == "__main__":
     unittest.main()

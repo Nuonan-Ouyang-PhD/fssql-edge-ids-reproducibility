@@ -29,6 +29,14 @@ The audit does not by itself invalidate Pi3B results, Pi4B independent
 fit/margin/coverage observations, or the saved one-shot official-test
 aggregate. The official test is locked and must not be opened again.
 
+The historical official-test evaluator did not read
+`models/MODEL_HYPERPARAMETERS.json`; it embedded `0.05`, `0.05`, `0.315`, and
+`0.065`. Those values match the frozen validation thresholds exactly, so this
+audit does not identify a numerical threshold mismatch and the saved aggregate
+has not been regenerated. The path by which the historical root-level outputs
+were copied into `results/official_test/` is incompletely documented. This is a
+provenance limitation, not permission to reopen the test or change its outputs.
+
 ## Confirmed V4 implementation defects
 
 1. LUCID and TinyDL fell back to an implicit 0.5 threshold online instead of
@@ -79,18 +87,29 @@ aggregate. The official test is locked and must not be opened again.
 
 The corrected protocol, deterministic true-`n=16` inputs, explicit zero-backlog
 semantics, Threshold settings, reward/state semantics and five seed-specific Q
-tables are frozen. The Q manifest is
-`q_training/pi4b8_true_n16_v2/Q_TABLE_MANIFEST.json` with status
-`PI4B8_TRUE_N16_Q_TRAINING_COMPLETE`; an independent rerun reproduced all Q
-artifacts byte for byte. These are development-only training artifacts, not
+tables are frozen. The original manifest is
+`q_training/pi4b8_true_n16_v2/Q_TABLE_MANIFEST.json`; the current-worker
+reproduction is `q_training/pi4b8_true_n16_v3/Q_TABLE_MANIFEST.json`. Both have
+status `PI4B8_TRUE_N16_Q_TRAINING_COMPLETE`, and the five tables plus checkpoint
+CSV are byte-identical. These are development-only training artifacts, not
 corrected online results.
 
-The authoritative V5 source manifest and runtime package now pass local and
-remote inventory/hash checks, and one remote 16-record smoke path passes from
-preprocessing through post-prediction scoring. The remaining gates are a new
-commissioning run with POWER-Z/ACK validation, a final execution manifest and
-formal authorization, followed by the complete corrected matrix and its
-independent validation.
+The current source freeze is
+`protocols/PI4B8_CORRECTED_RUNTIME_SOURCE_MANIFEST_V5_R3.json` (SHA-256
+`684dcdb79204f24dc4e75b64535af22847f0642d011638837594a477179dd6d7`).
+Its materialized package manifest has SHA-256
+`e1573990988ca606b7dbd844e55390c7b429b3bd03e2914915104f7c7706e2c3`.
+The R3 package passes the local gate and exact remote inventory/hash validation
+at `/home/pi/tsusc_major_revision/pi4b8_formal_runtime_v5_r3`. Its remote smoke
+then stopped before inference because the Q manifest still bound the complete
+pre-hardening worker file. The check was not bypassed and the R3 package remains
+unchanged. A deterministic training reproduction with the hardened worker
+produced the same five Q tables and checkpoint CSV byte for byte; only the
+worker hash in the new Q manifest changed. That additive lineage repair is
+recorded in `protocols/PI4B8_Q_WORKER_HASH_ERRATUM_V1.md` and
+`q_training/pi4b8_true_n16_v3/`. A new package revision must pass local, remote
+hash and smoke gates before the remaining 600-window commissioning,
+POWER-Z/ACK validation, final authorization and corrected formal matrix.
 
 The frozen scientific boundary is recorded in
 `protocols/PI4B8_CORRECTED_TRUE_N16_PROTOCOL_V1.md`. It authorizes the corrected

@@ -43,8 +43,14 @@ an executable background-load specification. It also rejects the legacy
 single-record Q tables for a corrected true-`n=16` run. Five seed-specific
 corrected Q tables (`5101–5105`) have been trained from development-only inputs,
 independently reproduced byte for byte, and hash-frozen. A corrected V5 runtime
-package has passed local and remote hash/smoke gates, but no corrected Pi 4B
-commissioning or formal result has been generated yet.
+R3 package passed the local package and remote inventory/hash gates, but its
+remote smoke stopped before inference because the Q manifest bound the complete
+pre-hardening worker file. The check was not bypassed. Re-executing the frozen
+development-only training with the hardened worker reproduced all five Q tables
+and the checkpoint CSV byte for byte; a new manifest changes only that worker
+hash binding. A new package revision, remote smoke, corrected commissioning and
+corrected formal matrix are still required; no corrected Pi 4B result has been
+generated.
 
 This audit does not by itself invalidate the Pi 3B campaign, Pi 4B independent
 fit/margin/coverage observations, or the already saved one-shot official-test
@@ -81,7 +87,7 @@ The currently usable policy evidence supports a deliberately conditional conclus
 
 ## Data, detectors, and controllers
 
-The primary benchmark is UNSW-NB15. The scheduler-development workload uses the frozen labeled development lineage for online deployment comparisons; it is not an independent generalization estimate. The official UNSW-NB15 test was opened once, after all development choices were frozen, and evaluated with fixed preprocessing and thresholds. Supplementary material documents TON-IoT, CICIoT2023, and N-BaIoT usage where applicable.
+The primary benchmark is UNSW-NB15. The scheduler-development workload uses the frozen labeled development lineage for online deployment comparisons; it is not an independent generalization estimate. The official UNSW-NB15 test was opened once, after all development choices were frozen, and evaluated with fixed preprocessing and threshold values. A later audit found that the historical evaluator embedded those four threshold constants rather than reading `models/MODEL_HYPERPARAMETERS.json`; the constants nevertheless match the frozen values exactly (`0.05`, `0.05`, `0.315`, and `0.065` in action order). The old output-generation/copy lineage is incomplete, so the saved aggregate is retained unchanged and must not be presented as having a fully replayable public provenance. It has not been regenerated. Supplementary material documents TON-IoT, CICIoT2023, and N-BaIoT usage where applicable.
 
 **Detector actions:** FISVDD, LUCID, TinyDL, and OI-SVDD+AS-ELM.
 
@@ -129,7 +135,11 @@ for the frozen corrected semantics and remaining execution gates.
 
 ### One-shot official detector test
 
-All 82,332 official UNSW-NB15 test rows were evaluated exactly once with frozen preprocessing and thresholds.
+The saved one-shot aggregate covers all 82,332 official UNSW-NB15 test rows.
+The numerical threshold values used match the frozen validation thresholds, but
+the historical evaluator hard-coded them and the path from its root-level
+outputs to the checked-in result directory is not fully documented. The output
+files below remain unchanged; the test was not reopened to repair provenance.
 
 | Detector | F1 | Precision | Recall | FPR | AUROC | PR-AUC |
 |---|---:|---:|---:|---:|---:|---:|

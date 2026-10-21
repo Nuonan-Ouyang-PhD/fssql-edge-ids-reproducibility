@@ -5,9 +5,13 @@ This guide separates software verification, development reconstruction, Raspberr
 > **Audit notice (21 October 2026).** The historical Pi4B V4 online package
 > does not implement the declared true-`n=16` policies and load conditions.
 > Its results are provenance only. The corrected protocol, true-`n=16` input
-> lineage and five corrected Q tables are frozen, and the V5 runtime package
-> has passed local/remote hash and smoke gates. Commissioning, final
-> authorization and the corrected formal matrix have not run. Do not use the
+> lineage and five corrected Q tables are frozen. V5 R3 passed local and remote
+> inventory/hash gates, but its remote smoke stopped before inference on a
+> stale complete-worker hash in the Q manifest. The check was not bypassed.
+> The same frozen Q training reproduced all tables byte for byte under the
+> hardened worker, and the additive lineage is in
+> `q_training/pi4b8_true_n16_v3/`. A new package revision, commissioning, final
+> authorization and corrected formal matrix are still required. Do not use the
 > historical command or data as a valid Pi4B reproduction.
 
 ## 1. Environment
@@ -86,10 +90,13 @@ The checked-in seed-specific tables have `q_values` shape `1280 × 4`. They
 were trained with one record per window, `n1/B0` predictor inputs and zero
 backlog despite the old Pi4B config label. They may be inspected as legacy
 single-record lineage, but the corrected worker rejects them for a true-`n=16`
-FSSQL-R run. Corrected development-only tables are under
+FSSQL-R run. Corrected development-only tables were first frozen under
 `q_training/pi4b8_true_n16_v2/` and are bound to
-`configs/pi4b8_true_n16_q_v2.json`. Their completion is Q-training evidence,
-not commissioning or online-result evidence.
+`configs/pi4b8_true_n16_q_v2.json`. After worker evidence hardening changed the
+complete-file hash, the same training was deterministically reproduced under
+`q_training/pi4b8_true_n16_v3/`; every table and checkpoint byte is identical,
+and only the Q manifest's worker hash differs. Their completion is Q-training
+lineage evidence, not commissioning or online-result evidence.
 
 ## 5. Device-specific guard calibration
 
@@ -176,7 +183,7 @@ python3 scripts/train_pi4b8_q_true_n16.py \
   --output <new-q-output> \
   --execute-training
 python3 build_pi4b8_corrected_runtime_v5.py \
-  --source-manifest protocols/PI4B8_CORRECTED_RUNTIME_SOURCE_MANIFEST_V5.json \
+  --source-manifest protocols/PI4B8_CORRECTED_RUNTIME_SOURCE_MANIFEST_V5_R3.json \
   --output <new-v5-package-directory>
 ```
 
@@ -233,10 +240,14 @@ The statistical unit is the matched seed/run, never a pooled window. With five P
 
 ## 10. One-shot official-test evaluator
 
-`run_official_test_once.py` is retained for audit. It loads thresholds from
-`models/MODEL_HYPERPARAMETERS.json`, writes only below
-`results/official_test/`, and refuses to run while the immutable one-shot lock
-exists.
+`run_official_test_once.py` is the repaired, non-executed evaluator retained
+for code audit. It loads thresholds from `models/MODEL_HYPERPARAMETERS.json`,
+writes only below `results/official_test/`, and refuses to run while the
+immutable one-shot lock exists. It must not be confused with the historical
+one-shot implementation, which embedded the same numerical threshold values
+and wrote root-level outputs. The subsequent copy path into
+`results/official_test/` is incompletely documented; the existing aggregate is
+therefore preserved with that provenance limitation rather than regenerated.
 
 The official test has already been opened once and the empirical phase is
 closed. Do not execute it again in this artifact or use its saved results to
