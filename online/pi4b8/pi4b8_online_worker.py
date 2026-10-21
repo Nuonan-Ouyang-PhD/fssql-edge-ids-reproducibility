@@ -86,6 +86,7 @@ class BackgroundLoad:
         self.workload = workload
         self.stop_event: Any = None
         self.process: mp.Process | None = None
+        self._affinity: list[int] = []
 
     def start(self) -> None:
         if int(self.workload["busy_cpu_count"]) == 0:
@@ -107,6 +108,14 @@ class BackgroundLoad:
         if not self.process.is_alive():
             self.stop()
             raise RuntimeError("background-load process failed to start")
+        expected_cpu = int(self.workload["pinned_cpu"])
+        self._affinity = process_affinity(self.process.pid)
+        if self._affinity != [expected_cpu]:
+            self.stop()
+            raise RuntimeError(
+                "background-load CPU-affinity mismatch: "
+                f"observed={self._affinity}; expected={[expected_cpu]}"
+            )
 
     def stop(self) -> None:
         if self.stop_event is not None:
@@ -124,6 +133,23 @@ class BackgroundLoad:
     @property
     def alive(self) -> bool:
         return self.process is not None and self.process.is_alive()
+
+    @property
+    def affinity(self) -> list[int]:
+        return list(self._affinity)
+
+
+def process_affinity(pid: int | None) -> list[int]:
+    """Return the observed CPU affinity used as per-run load evidence."""
+    if pid is None or not hasattr(os, "sched_getaffinity"):
+        raise RuntimeError("background-load CPU-affinity evidence is unavailable")
+    try:
+        affinity = sorted(int(cpu) for cpu in os.sched_getaffinity(pid))
+    except (OSError, TypeError, ValueError) as error:
+        raise RuntimeError("background-load CPU-affinity evidence is unavailable") from error
+    if not affinity:
+        raise RuntimeError("background-load CPU affinity is empty")
+    return affinity
 
 
 def sha256(path: Path) -> str:
@@ -473,6 +499,42 @@ def masked_argmax(q_row: Sequence[float], safe_idx: Sequence[int]) -> int:
     ):
         raise RuntimeError("invalid Q row or safe-set index")
     return max(candidates, key=lambda index: (float(values[index]), -index))
+
+
+def q_selection_evidence(
+    policy: str,
+    q_row: Sequence[float] | None,
+    safe_idx: Sequence[int],
+    selected_action_index: int,
+) -> dict[str, Any]:
+    """Return the complete masked-Q basis needed to reproduce an FSSQL choice."""
+    empty = {
+        "q_values_for_state": "",
+        "q_masked_candidate_indices": "",
+        "q_masked_candidate_values": "",
+        "q_masked_argmax_index": "",
+        "q_masked_argmax_rule": "",
+    }
+    if policy != "FSSQL-R":
+        return empty
+    if q_row is None:
+        raise RuntimeError("FSSQL-R Q evidence requires a Q row")
+    values = np.asarray(q_row, dtype=np.float64)
+    candidates = sorted(set(int(index) for index in safe_idx)) or [
+        STATIC_LIGHT_ACTION_INDEX
+    ]
+    reproduced = masked_argmax(values, candidates)
+    if selected_action_index != reproduced:
+        raise RuntimeError("FSSQL-R action is not reproducible from masked Q values")
+    return {
+        "q_values_for_state": json.dumps([float(value) for value in values]),
+        "q_masked_candidate_indices": json.dumps(candidates),
+        "q_masked_candidate_values": json.dumps(
+            [float(values[index]) for index in candidates]
+        ),
+        "q_masked_argmax_index": reproduced,
+        "q_masked_argmax_rule": "maximum_Q_then_lowest_action_index",
+    }
 
 
 def threshold_action(
@@ -1250,6 +1312,13 @@ def main() -> None:
                 "records_per_window": n_records,
                 "background": background,
                 "background_load_pid": background_load.pid,
+                "background_load_alive": int(
+                    int(workload["busy_cpu_count"]) == 0 or background_load.alive
+                ),
+                "background_cpu_affinity": background_load.affinity,
+                "background_pinned_cpu": workload.get("pinned_cpu"),
+                "background_duty": background_duty,
+                "background_period_ms": workload.get("period_ms"),
             },
             sort_keys=True,
         ),
@@ -1380,8 +1449,12 @@ def main() -> None:
         policy_selection_ms = (time.perf_counter_ns() - step) / 1e6
 
         switched = previous_action != NO_PREVIOUS_ACTION and previous_action != action_index
+        q_evidence = q_selection_evidence(
+            args.policy, q_row, safe_idx, action_index
+        )
         step = time.perf_counter_ns()
         selected_action = ACTIONS[action_index]
+        selected_threshold = float(thresholds[selected_action])
         selected_model = models[selected_action]
         model_binding_ms = (time.perf_counter_ns() - step) / 1e6
         switching_overhead_ms = model_binding_ms if switched else 0.0
@@ -1450,12 +1523,20 @@ def main() -> None:
                 "condition": args.condition,
                 "seed": args.seed,
                 "records_processed": n_records,
+                "batch_indices": json.dumps(
+                    [int(index) for index in batch_indices[window_id].tolist()]
+                ),
+                "state_id": state,
                 "selected_action": selected_action,
+                "selected_action_index": action_index,
                 "previous_action": "" if previous_action == NO_PREVIOUS_ACTION else ACTIONS[previous_action],
+                "previous_action_index": previous_action,
                 "switched": int(switched),
                 "safe_set_mask": "".join("1" if index in safe_idx else "0" for index in range(len(ACTIONS))),
                 "safe_set_size": len(safe_idx),
+                "safe_action_indices": json.dumps([int(index) for index in safe_idx]),
                 "fallback": int(not safe_idx and args.policy in {"FSSQL-R", "Safe-Greedy"}),
+                **q_evidence,
                 "predicted_latency_by_action_ms": json.dumps(
                     dict(zip(ACTIONS, latency_predictions.tolist()))
                 ),
@@ -1499,6 +1580,7 @@ def main() -> None:
                 "throttled": end_throttle_text,
                 "undervoltage": int(bool((throttle_value | end_throttle_value) & 1)),
                 "risk": risk,
+                "energy_state": energy,
                 "backlog_records": backlog,
                 "threshold_queue_load_records": threshold_queue_load,
                 "background_load_pid": "" if background_load.pid is None else background_load.pid,
@@ -1506,8 +1588,10 @@ def main() -> None:
                     int(workload["busy_cpu_count"]) == 0 or background_load.alive
                 ),
                 "background_pinned_cpu": workload.get("pinned_cpu", ""),
+                "background_cpu_affinity": json.dumps(background_load.affinity),
                 "background_duty": background_duty,
                 "background_period_ms": workload.get("period_ms", ""),
+                "selected_decision_threshold": selected_threshold,
                 "prediction_scores": json.dumps(probabilities.tolist()),
                 "prediction_bits": "",
                 "labels_scoring_only": "",
@@ -1516,6 +1600,7 @@ def main() -> None:
                 "fn": "",
                 "tn": "",
                 "reward": reward["total"],
+                "reward_total": reward["total"],
                 "reward_security": reward["security"],
                 "reward_energy": reward["energy"],
                 "reward_backlog": reward["backlog"],

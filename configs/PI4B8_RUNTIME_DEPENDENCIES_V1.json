@@ -10,6 +10,19 @@
     "cpu_governor_required": "performance",
     "minimum_frequency_mhz": 1350.0
   },
+  "device_identity": {
+    "hostname": "pi4b8g",
+    "model": "Raspberry Pi 4 Model B Rev 1.5",
+    "cpu_serial": "100000005368e39d",
+    "mem_total_kib": 8007464,
+    "boot_id_semantics": "record_each_attempt_not_fixed_across_reboots",
+    "cooling_attestation": "Active cooling fan runs continuously and is unchanged from the accepted Pi4B calibration."
+  },
+  "cooldown": {
+    "idle_samples": 30,
+    "idle_interval_s": 1.0,
+    "maximum_start_above_idle_median_c": 2.0
+  },
   "mac_orchestrator_and_powerz": {
     "python_implementation": "cpython",
     "python_version": "3.9.6",

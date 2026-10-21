@@ -65,6 +65,7 @@ REQUIRED_SHARED_ROLES = {
     "guard:thermal_predictor",
     "guard:margins",
     "powerz:capture",
+    "powerz:validator",
     "powerz:specification",
     *{f"model:{action}" for action in ACTIONS},
     *{f"q_table:{seed}" for seed in SEEDS},
@@ -86,6 +87,7 @@ FIXED_PACKAGE_PATHS = {
     "guard:latency_predictor": "guard/latency_predictor.csv",
     "guard:thermal_predictor": "guard/thermal_predictor.json",
     "guard:margins": "guard/guard_margins.json",
+    "powerz:validator": "powerz/powerz_evidence_validator.py",
     **{f"model:{action}": f"models/{action}.npz" for action in ACTIONS},
     **{f"q_table:{seed}": f"q_tables/fssql_r_seed_{seed}.npz" for seed in SEEDS},
 }
@@ -610,9 +612,58 @@ def _json_vector(row: Mapping[str, str], field: str, length: int) -> np.ndarray:
     return value
 
 
+def _json_action_map(row: Mapping[str, str], field: str) -> dict[str, float]:
+    try:
+        value = json.loads(row[field])
+        if not isinstance(value, dict) or set(value) != set(ACTIONS):
+            raise ValueError
+        result = {action: float(value[action]) for action in ACTIONS}
+    except (KeyError, TypeError, ValueError, json.JSONDecodeError) as error:
+        raise ContractError(f"invalid per-action field {field}") from error
+    if not all(math.isfinite(item) for item in result.values()):
+        raise ContractError(f"non-finite per-action field {field}")
+    return result
+
+
+def _state_id_from_evidence(
+    config: Mapping[str, Any],
+    *,
+    risk: float,
+    temperature: float,
+    energy: float,
+    backlog: float,
+    previous_action: int,
+) -> int:
+    state = config["state"]
+    components = (
+        int(np.digitize(risk, state["risk_bin_upper_edges"])),
+        int(np.digitize(temperature, state["temperature_C_upper_edges"])),
+        int(np.digitize(energy, state["energy_residual_upper_edges"])),
+        int(np.digitize(backlog, state["backlog_upper_edges"])),
+        previous_action,
+    )
+    cardinalities = (4, 4, 4, 4, 5)
+    if any(not 0 <= value < size for value, size in zip(components, cardinalities)):
+        raise ContractError(f"state evidence is outside frozen bins: {components}")
+    result = 0
+    for value, size in zip(components, cardinalities):
+        result = result * size + value
+    return result
+
+
+def _close(observed: float, expected: float, field: str) -> None:
+    if not math.isclose(observed, expected, rel_tol=1e-10, abs_tol=1e-10):
+        raise ContractError(
+            f"{field} is not independently reproducible: "
+            f"observed={observed}, expected={expected}"
+        )
+
+
 def validate_worker_output(
     path: Path,
     *,
+    package_root: Path,
+    package_manifest_path: Path,
     run_id: str,
     policy: str,
     condition: str,
@@ -623,7 +674,80 @@ def validate_worker_output(
     expected_q_table_sha256: str,
     minimum_frequency_mhz: float = 1350.0,
 ) -> dict[str, Any]:
-    """Validate the corrected 600 x 16 output schema and independent scoring."""
+    """Validate the corrected 600 x 16 output against hash-bound run inputs."""
+    package_document = validate_materialized_package(
+        package_root, package_manifest_path
+    )
+    if sha256(package_manifest_path) != expected_package_manifest_sha256:
+        raise ContractError("worker output uses an unexpected package manifest")
+    artifacts = _artifact_index(package_document, source=False)
+    cell = find_cell(package_document, condition, seed, policy)
+    root = package_root.resolve()
+
+    def artifact_path(role: str) -> Path:
+        return root / str(artifacts[role]["package_path"])
+
+    runtime_config = load_json(artifact_path("runtime_config"))
+    thresholds_document = load_json(artifact_path("model_hyperparameters"))
+    margins = load_json(artifact_path("guard:margins"))
+    batch_indices = np.load(
+        artifact_path(cell["runtime"]["batch_indices"]), allow_pickle=False
+    )
+    if batch_indices.shape != (600, 16):
+        raise ContractError("hash-bound batch schedule is not 600 x 16")
+    if not np.issubdtype(batch_indices.dtype, np.integer):
+        raise ContractError("hash-bound batch schedule is not integer-valued")
+    action_order = tuple(runtime_config.get("action_order", []))
+    if action_order != ACTIONS:
+        raise ContractError("runtime action order differs from the evidence contract")
+    state_config = runtime_config.get("state", {})
+    if int(state_config.get("number_of_states", -1)) != 1280:
+        raise ContractError("runtime state-space size differs from the evidence contract")
+    model_names = {
+        "fisvdd_revision": "FISVDD",
+        "lucid_revision": "LUCID",
+        "tinydl_revision": "TinyDL",
+        "oi_svdd_as_elm_revision": "OI-SVDD+AS-ELM",
+    }
+    try:
+        thresholds = {
+            action: float(
+                thresholds_document["actions"][model][
+                    "decision_threshold_selected_on_validation"
+                ]
+            )
+            for action, model in model_names.items()
+        }
+        latency_cap = float(runtime_config["constraints"]["latency_cap_ms"])
+        thermal_cap = float(runtime_config["constraints"]["thermal_cap_c"])
+        latency_buffer = float(margins["fixed_latency_buffer_ms"])
+        latency_margins = {
+            action: float(margins["epsilon_tau_ms_by_action"][action])
+            for action in ACTIONS
+        }
+        thermal_margin = float(margins["epsilon_T_C_shared"]) + float(
+            margins["fixed_thermal_buffer_c"]
+        )
+        reward_config = runtime_config["reward"]
+        quality = runtime_config["validation_action_quality"]
+        energy_cost = runtime_config["normalized_energy_cost_by_condition"][condition]
+        energy_decrement = runtime_config["energy_state_decrement_by_condition"][condition]
+        workload = runtime_config["workloads"][condition]
+    except (KeyError, TypeError, ValueError) as error:
+        raise ContractError("hash-bound runtime evidence configuration is incomplete") from error
+    frozen_q_values: np.ndarray | None = None
+    if policy == "FSSQL-R":
+        frozen_q_hash = str(artifacts[f"q_table:{seed}"]["sha256"])
+        if expected_q_table_sha256 != frozen_q_hash:
+            raise ContractError("expected Q-table hash differs from the package binding")
+        with np.load(artifact_path(f"q_table:{seed}"), allow_pickle=False) as q_artifact:
+            if "q_values" not in q_artifact.files:
+                raise ContractError("hash-bound Q artifact has no q_values")
+            frozen_q_values = np.asarray(q_artifact["q_values"], dtype=np.float64)
+        if frozen_q_values.shape != (1280, len(ACTIONS)) or not np.isfinite(
+            frozen_q_values
+        ).all():
+            raise ContractError("hash-bound Q artifact has invalid q_values")
     if not path.is_file():
         raise ContractError(f"missing corrected worker output: {path}")
     with path.open(newline="", encoding="utf-8") as stream:
@@ -632,7 +756,9 @@ def validate_worker_output(
         raise ContractError(f"expected 600 corrected windows, found {len(rows)}")
     if [int(row.get("window_id", -1)) for row in rows] != list(range(600)):
         raise ContractError("corrected window IDs are incomplete or out of order")
-    for row in rows:
+    prior_selected = len(ACTIONS)
+    expected_energy = float(runtime_config["energy_state_initialization"])
+    for window_id, row in enumerate(rows):
         if (
             row.get("run_id") != run_id
             or row.get("policy") != policy
@@ -642,6 +768,13 @@ def validate_worker_output(
             raise ContractError("corrected output identity mismatch")
         if int(row.get("records_processed", 0)) != 16:
             raise ContractError("corrected output did not process 16 records per window")
+        observed_batch = _json_vector(row, "batch_indices", 16)
+        if not np.issubdtype(observed_batch.dtype, np.integer) or not np.array_equal(
+            observed_batch.astype(np.int64), batch_indices[window_id].astype(np.int64)
+        ):
+            raise ContractError(
+                f"window {window_id} batch indices differ from the hash-bound schedule"
+            )
         for field in CORRECTED_TIMING_FIELDS:
             try:
                 value = float(row[field])
@@ -649,6 +782,210 @@ def validate_worker_output(
                 raise ContractError(f"invalid corrected timing field: {field}") from error
             if not math.isfinite(value) or value < 0:
                 raise ContractError(f"invalid corrected timing value: {field}={value}")
+        try:
+            selected_index = int(row["selected_action_index"])
+            previous_index = int(row["previous_action_index"])
+            switched = int(row["switched"])
+            safe_size = int(row["safe_set_size"])
+            fallback = int(row["fallback"])
+            state_id = int(row["state_id"])
+            risk = float(row["risk"])
+            temperature = float(row["temperature_start_C"])
+            energy_state = float(row["energy_state"])
+            backlog = float(row["backlog_records"])
+        except (KeyError, TypeError, ValueError) as error:
+            raise ContractError("invalid action/state evidence") from error
+        if selected_index not in range(len(ACTIONS)) or row.get("selected_action") != ACTIONS[selected_index]:
+            raise ContractError("selected action name/index mismatch")
+        expected_previous_name = "" if prior_selected == len(ACTIONS) else ACTIONS[prior_selected]
+        if previous_index != prior_selected or row.get("previous_action", "") != expected_previous_name:
+            raise ContractError("previous-action transition evidence mismatch")
+        expected_switched = int(prior_selected != len(ACTIONS) and prior_selected != selected_index)
+        if switched != expected_switched:
+            raise ContractError("switch transition evidence mismatch")
+        if switched == 0 and float(row["switching_overhead_ms"]) != 0.0:
+            raise ContractError("non-switching window reports switching overhead")
+        if not all(
+            math.isfinite(value)
+            for value in (risk, temperature, energy_state, backlog)
+        ) or not (0.0 <= risk <= 1.0 and 0.0 <= energy_state <= 1.0 and temperature >= 0.0 and backlog >= 0.0):
+            raise ContractError("invalid state evidence values")
+        _close(energy_state, expected_energy, "energy_state")
+        try:
+            expected_state = _state_id_from_evidence(
+                runtime_config,
+                risk=risk,
+                temperature=temperature,
+                energy=energy_state,
+                backlog=backlog,
+                previous_action=previous_index,
+            )
+        except (KeyError, TypeError, ValueError) as error:
+            raise ContractError("frozen state definition is invalid") from error
+        if state_id != expected_state or not 0 <= state_id < 1280:
+            raise ContractError("state_id is not independently reproducible")
+
+        safe_indices_raw = _json_vector(row, "safe_action_indices", safe_size)
+        if safe_size and not np.issubdtype(safe_indices_raw.dtype, np.integer):
+            raise ContractError("safe-action indices must be integers")
+        safe_indices = [int(value) for value in safe_indices_raw]
+        if safe_indices != sorted(set(safe_indices)) or any(
+            index not in range(len(ACTIONS)) for index in safe_indices
+        ):
+            raise ContractError("safe-action indices are invalid or noncanonical")
+        expected_mask = "".join(
+            "1" if index in safe_indices else "0" for index in range(len(ACTIONS))
+        )
+        if row.get("safe_set_mask") != expected_mask or safe_size != len(safe_indices):
+            raise ContractError("safe-set mask/indices/size mismatch")
+        latency_predictions = _json_action_map(
+            row, "predicted_latency_by_action_ms"
+        )
+        thermal_predictions = _json_action_map(
+            row, "predicted_thermal_by_action_C"
+        )
+        latency_headroom = _json_action_map(row, "latency_headroom_by_action_ms")
+        thermal_headroom = _json_action_map(row, "thermal_headroom_by_action_C")
+        expected_safe: list[int] = []
+        for action_index, action in enumerate(ACTIONS):
+            expected_latency_headroom = latency_cap - (
+                latency_predictions[action]
+                + latency_margins[action]
+                + latency_buffer
+            )
+            expected_thermal_headroom = thermal_cap - (
+                thermal_predictions[action] + thermal_margin
+            )
+            _close(
+                latency_headroom[action],
+                expected_latency_headroom,
+                f"latency headroom for {action}",
+            )
+            _close(
+                thermal_headroom[action],
+                expected_thermal_headroom,
+                f"thermal headroom for {action}",
+            )
+            if expected_latency_headroom >= 0.0 and expected_thermal_headroom >= 0.0:
+                expected_safe.append(action_index)
+        if safe_indices != expected_safe:
+            raise ContractError("safe set differs from guarded predictions and margins")
+        if policy in {"FSSQL-R", "Safe-Greedy"}:
+            if safe_indices:
+                if fallback != 0 or selected_index not in safe_indices:
+                    raise ContractError("shielded policy selected an action outside the safe set")
+                shielded_candidates = safe_indices
+            else:
+                if fallback != 1 or selected_index != 0:
+                    raise ContractError("empty safe set did not use the frozen Static-Light fallback")
+                shielded_candidates = [0]
+        else:
+            if fallback != 0:
+                raise ContractError("unshielded policy reported a shield fallback")
+            shielded_candidates = []
+
+        q_fields = (
+            "q_values_for_state",
+            "q_masked_candidate_indices",
+            "q_masked_candidate_values",
+            "q_masked_argmax_index",
+            "q_masked_argmax_rule",
+        )
+        if policy == "FSSQL-R":
+            q_values = _json_vector(row, q_fields[0], len(ACTIONS)).astype(np.float64)
+            assert frozen_q_values is not None
+            if not np.array_equal(q_values, frozen_q_values[state_id]):
+                raise ContractError("logged Q row differs from the hash-bound Q table")
+            candidates = _json_vector(row, q_fields[1], len(shielded_candidates))
+            candidate_values = _json_vector(row, q_fields[2], len(shielded_candidates)).astype(
+                np.float64
+            )
+            if not np.issubdtype(candidates.dtype, np.integer):
+                raise ContractError("masked-Q candidate indices must be integers")
+            candidate_indices = [int(value) for value in candidates]
+            if candidate_indices != shielded_candidates or not np.allclose(
+                candidate_values,
+                q_values[candidate_indices],
+                rtol=0.0,
+                atol=0.0,
+            ):
+                raise ContractError("masked-Q candidate evidence mismatch")
+            expected_argmax = max(
+                candidate_indices, key=lambda index: (float(q_values[index]), -index)
+            )
+            if (
+                int(row[q_fields[3]]) != expected_argmax
+                or selected_index != expected_argmax
+                or row[q_fields[4]] != "maximum_Q_then_lowest_action_index"
+            ):
+                raise ContractError("FSSQL-R masked argmax evidence mismatch")
+        elif any(row.get(field, "") != "" for field in q_fields):
+            raise ContractError("non-FSSQL policy contains Q-selection evidence")
+
+        if policy == "Safe-Greedy":
+            def candidate_reward(index: int) -> float:
+                action = ACTIONS[index]
+                candidate_security = risk * float(quality[action]["tpr"]) - (
+                    1.0 - risk
+                ) * float(quality[action]["fpr"])
+                candidate_energy = -float(reward_config["energy_weight"]) * float(
+                    energy_cost[action]
+                )
+                candidate_backlog = -float(reward_config["backlog_weight"]) * min(
+                    backlog / float(reward_config["backlog_normalizer"]), 1.0
+                )
+                candidate_switch = -float(reward_config["switch_weight"]) * int(
+                    previous_index != len(ACTIONS) and previous_index != index
+                )
+                return (
+                    candidate_security
+                    + candidate_energy
+                    + candidate_backlog
+                    + candidate_switch
+                )
+
+            expected_greedy = max(
+                shielded_candidates,
+                key=lambda index: (candidate_reward(index), -index),
+            )
+            if selected_index != expected_greedy:
+                raise ContractError("Safe-Greedy action is not the frozen deterministic argmax")
+        elif policy == "Static-Light":
+            if selected_index != 0:
+                raise ContractError("Static-Light did not select frozen action index 0")
+        elif policy == "Threshold":
+            try:
+                queue_load = float(row["threshold_queue_load_records"])
+                threshold_config = runtime_config["threshold_controller"]
+                light_index = ACTIONS.index(str(threshold_config["light_action"]))
+                heavy_index = ACTIONS.index(str(threshold_config["heavy_action"]))
+                t_hi = float(threshold_config["T_hi_C"])
+                t_lo = float(threshold_config["T_lo_C"])
+                q_hi = float(threshold_config["q_hi_records"])
+                q_lo = float(threshold_config["q_lo_records"])
+                p_hi = float(threshold_config["p_hi"])
+            except (KeyError, TypeError, ValueError) as error:
+                raise ContractError("frozen Threshold-controller evidence is invalid") from error
+            if not all(
+                math.isfinite(value)
+                for value in (queue_load, t_hi, t_lo, q_hi, q_lo, p_hi)
+            ):
+                raise ContractError("frozen Threshold-controller evidence is non-finite")
+            if temperature >= t_hi or queue_load >= q_hi:
+                expected_threshold_action = light_index
+            elif temperature <= t_lo and queue_load <= q_lo and risk >= p_hi:
+                expected_threshold_action = heavy_index
+            else:
+                expected_threshold_action = (
+                    previous_index
+                    if previous_index != len(ACTIONS)
+                    else light_index
+                )
+            if selected_index != expected_threshold_action:
+                raise ContractError(
+                    "Threshold action is not reproducible from the frozen hysteresis rule"
+                )
+
         scores = _json_vector(row, "prediction_scores", 16).astype(np.float64)
         predictions = _json_vector(row, "prediction_bits", 16).astype(np.float64)
         labels = _json_vector(row, "labels_scoring_only", 16).astype(np.float64)
@@ -659,6 +996,10 @@ def validate_worker_output(
             or not np.isin(labels, [0, 1]).all()
         ):
             raise ContractError("invalid corrected prediction/label values")
+        threshold = float(row.get("selected_decision_threshold", math.nan))
+        _close(threshold, thresholds[ACTIONS[selected_index]], "decision threshold")
+        if not np.array_equal(predictions.astype(np.int8), (scores >= threshold).astype(np.int8)):
+            raise ContractError("prediction bits differ from scores and frozen threshold")
         pred = predictions.astype(bool)
         truth = labels.astype(np.int8)
         expected = (
@@ -670,6 +1011,62 @@ def validate_worker_output(
         observed = tuple(int(row[name]) for name in ("tp", "fp", "fn", "tn"))
         if observed != expected or sum(observed) != 16:
             raise ContractError("corrected confusion counts are not independently reproducible")
+        security = risk * float(quality[ACTIONS[selected_index]]["tpr"]) - (
+            1.0 - risk
+        ) * float(quality[ACTIONS[selected_index]]["fpr"])
+        energy_component = -float(reward_config["energy_weight"]) * float(
+            energy_cost[ACTIONS[selected_index]]
+        )
+        backlog_component = -float(reward_config["backlog_weight"]) * min(
+            backlog / float(reward_config["backlog_normalizer"]), 1.0
+        )
+        switch_component = -float(reward_config["switch_weight"]) * switched
+        expected_components = {
+            "reward_security": security,
+            "reward_energy": energy_component,
+            "reward_backlog": backlog_component,
+            "reward_switch": switch_component,
+        }
+        for field, expected_value in expected_components.items():
+            _close(float(row.get(field, math.nan)), expected_value, field)
+        expected_reward = sum(expected_components.values())
+        _close(float(row.get("reward_total", math.nan)), expected_reward, "reward_total")
+        _close(float(row.get("reward", math.nan)), expected_reward, "reward")
+
+        try:
+            load_pid = row["background_load_pid"]
+            load_alive = int(row["background_load_alive"])
+            pinned_cpu = row["background_pinned_cpu"]
+            affinity = json.loads(row["background_cpu_affinity"])
+            duty = float(row["background_duty"])
+            period = row["background_period_ms"]
+        except (KeyError, TypeError, ValueError, json.JSONDecodeError) as error:
+            raise ContractError("invalid background-load evidence") from error
+        if condition == "n16/B0":
+            if (
+                load_pid != ""
+                or load_alive != 1
+                or affinity != []
+                or pinned_cpu != ""
+                or duty != float(workload["background_duty"])
+                or period != ""
+            ):
+                raise ContractError("B0 contains background-load process evidence")
+        else:
+            expected_duty = float(workload["background_duty"])
+            try:
+                positive_pid = int(load_pid) > 0
+            except ValueError:
+                positive_pid = False
+            if (
+                not positive_pid
+                or load_alive != 1
+                or affinity != [3]
+                or int(pinned_cpu) != int(workload["pinned_cpu"])
+                or duty != expected_duty
+                or float(period) != float(workload["period_ms"])
+            ):
+                raise ContractError(f"{condition} background-load evidence mismatch")
         for field in ("throttled_start", "throttled_end"):
             try:
                 value = int(row[field].split("=", 1)[1], 16)
@@ -683,6 +1080,11 @@ def validate_worker_output(
         )
         if not math.isfinite(frequency) or frequency < minimum_frequency_mhz:
             raise ContractError("corrected frequency invariant failed")
+        prior_selected = selected_index
+        expected_energy = max(
+            0.0,
+            expected_energy - float(energy_decrement[ACTIONS[selected_index]]),
+        )
     observed_hash = sha256(path)
     if (
         start_ack.get("event") != "RUN_START_ACK"
@@ -704,7 +1106,12 @@ def validate_worker_output(
         or end_ack.get("raw_artifact_sha256") != observed_hash
     ):
         raise ContractError("corrected RUN_END_ACK/output binding mismatch")
-    return {"windows": 600, "records": 9600, "sha256": observed_hash}
+    return {
+        "windows": 600,
+        "records": 9600,
+        "sha256": observed_hash,
+        "first_window_temperature_start_C": float(rows[0]["temperature_start_C"]),
+    }
 
 
 def validate_power_boundary(

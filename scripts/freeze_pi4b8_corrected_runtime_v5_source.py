@@ -114,6 +114,11 @@ SHARED_SPECS = (
         "powerz/powerz_hid_capture.py",
     ),
     (
+        "powerz:validator",
+        "online/pi4b8/powerz_evidence_validator.py",
+        "powerz/powerz_evidence_validator.py",
+    ),
+    (
         "powerz:specification",
         "protocols/POWER_Z_HID_ACQUISITION_V1.md",
         "powerz/POWER_Z_HID_ACQUISITION_V1.md",

@@ -265,6 +265,71 @@ class RuntimeConfigurationGateTests(unittest.TestCase):
         with self.assertRaisesRegex(RuntimeError, "frozen 0.5"):
             worker.validate_background_load("n16/B2", workload)
 
+    def test_background_process_affinity_is_observed_from_the_os(self):
+        with mock.patch.object(
+            worker.os, "sched_getaffinity", return_value={3}, create=True
+        ):
+            self.assertEqual(worker.process_affinity(4312), [3])
+
+    def test_background_load_fails_closed_when_observed_affinity_is_not_cpu3(self):
+        class FakeEvent:
+            def set(self):
+                pass
+
+        class FakeProcess:
+            pid = 4312
+
+            def __init__(self, **_kwargs):
+                self.running = False
+
+            def start(self):
+                self.running = True
+
+            def is_alive(self):
+                return self.running
+
+            def join(self, timeout=None):
+                self.running = False
+
+            def terminate(self):
+                self.running = False
+
+        class FakeContext:
+            def Event(self):
+                return FakeEvent()
+
+            def Process(self, **kwargs):
+                return FakeProcess(**kwargs)
+
+        workload = {
+            "busy_cpu_count": 1,
+            "background_duty": 0.5,
+            "period_ms": 100.0,
+            "pinned_cpu": 3,
+        }
+        with (
+            mock.patch.object(worker.mp, "get_context", return_value=FakeContext()),
+            mock.patch.object(worker.time, "sleep"),
+            mock.patch.object(
+                worker.os, "sched_getaffinity", return_value={3}, create=True
+            ),
+        ):
+            load = worker.BackgroundLoad(workload)
+            load.start()
+            self.assertEqual(load.pid, 4312)
+            self.assertTrue(load.alive)
+            self.assertEqual(load.affinity, [3])
+            load.stop()
+        with (
+            mock.patch.object(worker.mp, "get_context", return_value=FakeContext()),
+            mock.patch.object(worker.time, "sleep"),
+            mock.patch.object(
+                worker.os, "sched_getaffinity", return_value={2}, create=True
+            ),
+        ):
+            with self.assertRaisesRegex(RuntimeError, "CPU-affinity mismatch"):
+                worker.BackgroundLoad(workload).start()
+
     def test_state_metadata_must_match_numeric_action_encoding(self):
         state = corrected_state_config()
         worker.validate_state_definition(state)
@@ -585,6 +650,32 @@ class PolicySelectionTests(unittest.TestCase):
         )
         self.assertEqual(action, 2)
 
+    def test_fssql_q_evidence_reproduces_masked_selection(self):
+        evidence = worker.q_selection_evidence(
+            "FSSQL-R",
+            np.asarray([10.0, 1.0, 9.0, 0.0]),
+            [1, 2],
+            2,
+        )
+        self.assertEqual(
+            json.loads(evidence["q_values_for_state"]), [10.0, 1.0, 9.0, 0.0]
+        )
+        self.assertEqual(json.loads(evidence["q_masked_candidate_indices"]), [1, 2])
+        self.assertEqual(
+            json.loads(evidence["q_masked_candidate_values"]), [1.0, 9.0]
+        )
+        self.assertEqual(evidence["q_masked_argmax_index"], 2)
+        self.assertEqual(
+            evidence["q_masked_argmax_rule"],
+            "maximum_Q_then_lowest_action_index",
+        )
+
+    def test_fssql_q_evidence_rejects_an_unreproducible_selected_action(self):
+        with self.assertRaisesRegex(RuntimeError, "not reproducible"):
+            worker.q_selection_evidence(
+                "FSSQL-R", np.asarray([10.0, 1.0, 9.0, 0.0]), [1, 2], 1
+            )
+
     def test_safe_greedy_rejects_out_of_range_safe_index(self):
         with self.assertRaisesRegex(RuntimeError, "invalid action index"):
             worker.select_policy_action(
@@ -902,6 +993,50 @@ class ScoringAndRewardTests(unittest.TestCase):
             float(timing_row["guard_total_ms"]),
             float(timing_row["admissible_set_ms"]),
         )
+        self.assertEqual(
+            json.loads(timing_row["batch_indices"]), batch_indices[0].tolist()
+        )
+        self.assertEqual(len(json.loads(timing_row["batch_indices"])), 16)
+        self.assertEqual(
+            int(timing_row["state_id"]),
+            worker.state_id(
+                runtime_config, 0.75, 40.0, 1.0, 0.0, worker.NO_PREVIOUS_ACTION
+            ),
+        )
+        self.assertEqual(int(timing_row["selected_action_index"]), 0)
+        self.assertEqual(
+            int(timing_row["previous_action_index"]), worker.NO_PREVIOUS_ACTION
+        )
+        self.assertEqual(int(timing_row["switched"]), 0)
+        safe_indices = json.loads(timing_row["safe_action_indices"])
+        self.assertEqual(
+            timing_row["safe_set_mask"],
+            "".join("1" if index in safe_indices else "0" for index in range(4)),
+        )
+        self.assertEqual(int(timing_row["safe_set_size"]), len(safe_indices))
+        self.assertEqual(timing_row["q_values_for_state"], "")
+        self.assertEqual(timing_row["q_masked_candidate_indices"], "")
+        self.assertAlmostEqual(float(timing_row["selected_decision_threshold"]), 0.05)
+        self.assertEqual(len(json.loads(timing_row["prediction_scores"])), 16)
+        self.assertEqual(len(json.loads(timing_row["prediction_bits"])), 16)
+        self.assertEqual(len(json.loads(timing_row["labels_scoring_only"])), 16)
+        self.assertEqual(
+            sum(int(timing_row[name]) for name in ("tp", "fp", "fn", "tn")),
+            16,
+        )
+        reward_sum = sum(
+            float(timing_row[name])
+            for name in (
+                "reward_security",
+                "reward_energy",
+                "reward_backlog",
+                "reward_switch",
+            )
+        )
+        self.assertAlmostEqual(float(timing_row["reward"]), reward_sum)
+        self.assertAlmostEqual(float(timing_row["reward_total"]), reward_sum)
+        self.assertEqual(json.loads(timing_row["background_cpu_affinity"]), [])
+        self.assertEqual(int(timing_row["background_load_alive"]), 1)
 
 
 if __name__ == "__main__":

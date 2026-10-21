@@ -159,6 +159,19 @@ def validate_shared_payloads(package_root: Path, manifest: dict[str, Any]) -> No
             or dependencies.get("pi_worker", {}).get("cpu_governor_required")
             != "performance"
             or dependencies.get("powerz_device", {}).get("serial") != "075356"
+            or dependencies.get("device_identity", {}).get("hostname") != "pi4b8g"
+            or dependencies.get("device_identity", {}).get("model")
+            != "Raspberry Pi 4 Model B Rev 1.5"
+            or dependencies.get("device_identity", {}).get("cpu_serial")
+            != "100000005368e39d"
+            or dependencies.get("device_identity", {}).get("mem_total_kib")
+            != 8007464
+            or dependencies.get("cooldown")
+            != {
+                "idle_samples": 30,
+                "idle_interval_s": 1.0,
+                "maximum_start_above_idle_median_c": 2.0,
+            }
         ):
             raise ContractError("corrected runtime dependency manifest is incomplete")
 

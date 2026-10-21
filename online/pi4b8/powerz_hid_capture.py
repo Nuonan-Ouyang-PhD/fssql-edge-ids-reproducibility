@@ -1,25 +1,167 @@
 #!/usr/bin/env python3
-"""Direct HID KM003C capture used by the accepted TNSM measurement path."""
+"""Stream timestamped POWER-Z KM003C samples to an audit-preserving CSV."""
 from __future__ import annotations
-import argparse, csv, datetime, struct, time
+
+import argparse
+import csv
+import datetime
+import json
+import signal
+import struct
+import time
 from pathlib import Path
-import hid
+from typing import Callable, Protocol
+
+
+VID = 0x5FC9
+PID = 0x0063
+SERIAL = "075356"
+SCHEMA = (
+    "timestamp_utc",
+    "sample_monotonic",
+    "voltage_V",
+    "current_A",
+    "power_W",
+    "raw_hex",
+)
+
+
+class HidDevice(Protocol):
+    def open(self, vendor_id: int, product_id: int, serial: str) -> None: ...
+
+    def write(self, data: bytes) -> int: ...
+
+    def read(self, size: int, timeout_ms: int) -> list[int] | bytes: ...
+
+    def close(self) -> None: ...
+
 
 def request(sequence: int) -> bytes:
-    return bytes(1) + struct.pack('<I', 12 | ((sequence % 256) << 8) | (1 << 17)) + bytes(60)
+    return (
+        bytes(1)
+        + struct.pack("<I", 12 | ((sequence % 256) << 8) | (1 << 17))
+        + bytes(60)
+    )
+
+
+def _default_device_factory() -> HidDevice:
+    import hid
+
+    return hid.device()
+
+
+def capture(
+    output: Path,
+    *,
+    seconds: float = 20.0,
+    sps: float = 10.0,
+    device_factory: Callable[[], HidDevice] = _default_device_factory,
+    monotonic: Callable[[], float] = time.monotonic,
+    utc_now: Callable[[], datetime.datetime] = lambda: datetime.datetime.now(
+        datetime.timezone.utc
+    ),
+    sleep: Callable[[float], None] = time.sleep,
+    stop_requested: Callable[[], bool] = lambda: False,
+    emit: Callable[[str], None] = lambda line: print(line, flush=True),
+) -> int:
+    """Capture samples, flushing every row so interruption preserves raw evidence."""
+    if seconds <= 0 or sps <= 0:
+        raise ValueError("seconds and sps must be positive")
+
+    output.parent.mkdir(parents=True, exist_ok=True)
+    device = device_factory()
+    device.open(VID, PID, SERIAL)
+    period = 1.0 / sps
+    end = monotonic() + seconds
+    rows = 0
+
+    try:
+        with output.open("x", newline="", encoding="utf-8") as stream:
+            writer = csv.writer(stream)
+            writer.writerow(SCHEMA)
+            stream.flush()
+            emit(
+                json.dumps(
+                    {
+                        "event": "POWERZ_READY",
+                        "serial": SERIAL,
+                        "output": str(output),
+                    },
+                    sort_keys=True,
+                )
+            )
+
+            try:
+                while not stop_requested() and monotonic() < end:
+                    sample_time = monotonic()
+                    timestamp_utc = utc_now().astimezone(
+                        datetime.timezone.utc
+                    ).isoformat()
+                    device.write(request(rows))
+                    raw = bytes(device.read(64, 1000))
+                    if len(raw) != 64:
+                        raise RuntimeError("KM003C HID reply length")
+                    microvolts, microamps = struct.unpack_from("<ii", raw, 16)
+                    voltage = microvolts / 1e6
+                    current = -microamps / 1e6
+                    writer.writerow(
+                        (
+                            timestamp_utc,
+                            sample_time,
+                            voltage,
+                            current,
+                            voltage * current,
+                            raw.hex(),
+                        )
+                    )
+                    stream.flush()
+                    rows += 1
+                    sleep(max(0.0, period - (monotonic() - sample_time)))
+            except KeyboardInterrupt:
+                pass
+            finally:
+                stream.flush()
+    finally:
+        device.close()
+
+    emit(
+        json.dumps(
+            {
+                "event": "POWERZ_CAPTURE_END",
+                "serial": SERIAL,
+                "captured_rows": rows,
+                "output": str(output),
+            },
+            sort_keys=True,
+        )
+    )
+    return rows
+
 
 def main() -> None:
-    p = argparse.ArgumentParser(); p.add_argument('--output', type=Path, required=True); p.add_argument('--seconds', type=float, default=20.0); p.add_argument('--sps', type=float, default=10.0); a = p.parse_args()
-    d = hid.device(); d.open(0x5FC9, 0x0063, '075356'); rows = []; period = 1.0 / a.sps; end = time.monotonic() + a.seconds; seq = 0
+    parser = argparse.ArgumentParser()
+    parser.add_argument("--output", type=Path, required=True)
+    parser.add_argument("--seconds", type=float, default=20.0)
+    parser.add_argument("--sps", type=float, default=10.0)
+    args = parser.parse_args()
+
+    stopping = False
+
+    def request_stop(_signum: int, _frame: object) -> None:
+        nonlocal stopping
+        stopping = True
+
+    previous = signal.signal(signal.SIGTERM, request_stop)
     try:
-        while time.monotonic() < end:
-            t0 = time.monotonic(); utc = datetime.datetime.now(datetime.timezone.utc).isoformat(); d.write(request(seq)); raw = bytes(d.read(64, 1000));
-            if len(raw) != 64: raise RuntimeError('KM003C HID reply length')
-            uv, ua = struct.unpack_from('<ii', raw, 16); volts = uv / 1e6; amps = -ua / 1e6; rows.append([utc, t0, volts, amps, volts * amps, raw.hex()]); seq += 1
-            time.sleep(max(0.0, period - (time.monotonic() - t0)))
-    finally: d.close()
-    a.output.parent.mkdir(parents=True, exist_ok=True)
-    with a.output.open('w', newline='') as f:
-        w = csv.writer(f); w.writerow(['timestamp_utc','sample_monotonic','voltage_V','current_A','power_W','raw_hex']); w.writerows(rows)
-    print(f'captured_rows={len(rows)} output={a.output}')
-if __name__ == '__main__': main()
+        capture(
+            args.output,
+            seconds=args.seconds,
+            sps=args.sps,
+            stop_requested=lambda: stopping,
+        )
+    finally:
+        signal.signal(signal.SIGTERM, previous)
+
+
+if __name__ == "__main__":
+    main()
