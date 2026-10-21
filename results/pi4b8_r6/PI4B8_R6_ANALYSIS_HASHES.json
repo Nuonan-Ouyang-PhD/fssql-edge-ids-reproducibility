@@ -1,0 +1,19 @@
+{
+  "files": [
+    {
+      "path": "PI4B8_R6_PAIRED_FSSQL_R_VS_SAFE_GREEDY.csv",
+      "sha256": "185d2fb8adf78dcf85b6f43804116e94ab773e68f5b5513a7b6cd654aa402a02",
+      "bytes": 17993
+    },
+    {
+      "path": "PI4B8_R6_RUN_LEVEL_METRICS.csv",
+      "sha256": "905a7d6ed276057ae7da5145e810bb1da73161e1724a9fbaea9703763d90d111",
+      "bytes": 49149
+    },
+    {
+      "path": "PI4B8_R6_STATISTICAL_SUMMARY.md",
+      "sha256": "e8da3edf70ea0869b036589a15f9e8b687a7e2dd40767fd934ac6d0bf29e74be",
+      "bytes": 1218
+    }
+  ]
+}
