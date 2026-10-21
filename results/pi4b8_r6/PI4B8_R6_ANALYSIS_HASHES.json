@@ -1,9 +1,14 @@
 {
   "files": [
     {
+      "path": "PI4B8_R6_PAIRED_ALL_POLICY_CONTRASTS.csv",
+      "sha256": "02450c34326990fe0afee67ce2adeebd2f6e9dcb9096d556c99232980efafdb1",
+      "bytes": 106227
+    },
+    {
       "path": "PI4B8_R6_PAIRED_FSSQL_R_VS_SAFE_GREEDY.csv",
-      "sha256": "185d2fb8adf78dcf85b6f43804116e94ab773e68f5b5513a7b6cd654aa402a02",
-      "bytes": 17993
+      "sha256": "a937d37b38698400412fb61decca421229f3b469585f6695e7a31cc9dc490d8f",
+      "bytes": 17976
     },
     {
       "path": "PI4B8_R6_RUN_LEVEL_METRICS.csv",

@@ -35,7 +35,7 @@ def paired(a,b):
  for mask in range(total):
   s=np.array([1 if mask>>i&1 else -1 for i in range(n)]); exceed += abs(float((d*s).mean())) >= obs-1e-15
  sd=float(d.std(ddof=1)); boots=[]; rng=np.random.default_rng(20261022)
- for _ in range(20000): boots.append(float(rng.choice(d,n).mean()))
+ for _ in range(2000): boots.append(float(rng.choice(d,n).mean()))
  return {'n_pairs':n,'mean_diff':float(d.mean()),'sd_diff':sd,'ci95_low':float(np.quantile(boots,.025)),'ci95_high':float(np.quantile(boots,.975)),'exact_signflip_p':exceed/total,'cohen_dz':float(d.mean()/sd) if sd else float('nan')}
 metrics=[k for k in fields if k not in ('run_id','cell_run_id','execution_index','policy','condition','seed','replacement','action_composition') and not k.startswith('tp') and not k.startswith('fp') and not k.startswith('fn') and not k.startswith('tn')]
 prow=[]
@@ -48,4 +48,18 @@ for cond in sorted(set(x['condition'] for x in rows)):
   prow.append({'condition':cond,'metric':m,'method_a':'FSSQL-R','method_b':'Safe-Greedy',**paired(a,b)})
 with open(OUT/'PI4B8_R6_PAIRED_FSSQL_R_VS_SAFE_GREEDY.csv','w',newline='') as h:
  w=csv.DictWriter(h,fieldnames=list(prow[0])); w.writeheader(); w.writerows(prow)
+# All policy contrasts use the same matched seeds and condition-level pairing.
+allpairs=[]
+policies=['FSSQL-R','Safe-Greedy','Threshold','Static-Light']
+for cond in sorted(set(x['condition'] for x in rows)):
+ sub=[x for x in rows if x['condition']==cond]; by={p:{x['seed']:x for x in sub if x['policy']==p} for p in policies}
+ for ia,a_name in enumerate(policies):
+  for b_name in policies[ia+1:]:
+   seeds=sorted(set(by.get(a_name,{}))&set(by.get(b_name,{})))
+   for m in metrics:
+    a=[float(by[a_name][s][m]) for s in seeds]; b=[float(by[b_name][s][m]) for s in seeds]
+    if not a or not all(math.isfinite(x) for x in a+b): continue
+    allpairs.append({'condition':cond,'metric':m,'method_a':a_name,'method_b':b_name,**paired(a,b)})
+with open(OUT/'PI4B8_R6_PAIRED_ALL_POLICY_CONTRASTS.csv','w',newline='') as h:
+ w=csv.DictWriter(h,fieldnames=list(allpairs[0])); w.writeheader(); w.writerows(allpairs)
 print('WROTE',len(rows),'runs',len(prow),'paired rows')
