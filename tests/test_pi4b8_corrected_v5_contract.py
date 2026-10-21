@@ -176,6 +176,7 @@ class PackageContractTests(unittest.TestCase):
                 seed=5103,
                 output=output,
             )
+            self.assertEqual(command[:2], ["python3", "-B"])
             self.assertIn("--batch-indices", command)
             self.assertIn(str((package / "inputs/batches/seed_5103.npy").resolve()), command)
             self.assertIn(str((package / "scoring/base/labels.npy").resolve()), command)

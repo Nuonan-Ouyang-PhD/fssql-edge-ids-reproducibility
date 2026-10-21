@@ -209,6 +209,83 @@ def runtime_dependency_contract(
     return path, dependency, str(record["sha256"])
 
 
+def validate_remote_package_preflight(
+    package_root: Path,
+    *,
+    remote_package_root: Path,
+    ssh_target: str,
+) -> dict[str, Any]:
+    """Recompute the immutable remote package inventory before execution."""
+    remote_package_root = Path(remote_package_root)
+    if not remote_package_root.is_absolute():
+        raise ExecutionError("remote package root must be absolute")
+    script = r'''
+import hashlib,json,pathlib,sys
+root=pathlib.Path(sys.argv[1]).resolve()
+manifest_path=root/"PI4B8_CORRECTED_RUNTIME_PACKAGE_MANIFEST_V5.json"
+if not manifest_path.is_file():
+    raise SystemExit("missing remote package manifest")
+document=json.loads(manifest_path.read_text(encoding="utf-8"))
+expected={
+    "PI4B8_CORRECTED_RUNTIME_PACKAGE_MANIFEST_V5.json",
+    "PI4B8_CORRECTED_RUNTIME_SOURCE_MANIFEST_V5.json",
+}
+for record in document.get("artifacts", []):
+    relative=record["package_path"]
+    expected.add(relative)
+    path=root/relative
+    if not path.is_file() or path.is_symlink():
+        raise SystemExit("missing or symlinked remote artifact: "+relative)
+    digest=hashlib.sha256(path.read_bytes()).hexdigest()
+    if digest != record["sha256"] or path.stat().st_size != int(record["bytes"]):
+        raise SystemExit("remote artifact mismatch: "+relative)
+actual={path.relative_to(root).as_posix() for path in root.rglob("*") if path.is_file()}
+if actual != expected:
+    raise SystemExit("remote package inventory mismatch")
+print(json.dumps({
+    "status":"PASS",
+    "remote_package_root":str(root),
+    "package_manifest_sha256":hashlib.sha256(manifest_path.read_bytes()).hexdigest(),
+    "artifacts":len(document["artifacts"]),
+    "files":len(actual),
+},sort_keys=True))
+'''
+    result = subprocess.run(
+        [
+            "ssh",
+            ssh_target,
+            shlex.join(
+                [
+                    "env",
+                    "PYTHONDONTWRITEBYTECODE=1",
+                    "python3",
+                    "-c",
+                    script,
+                    str(remote_package_root),
+                ]
+            ),
+        ],
+        capture_output=True,
+        text=True,
+    )
+    if result.returncode:
+        raise ExecutionError(
+            f"remote package validation failed: {result.stdout}{result.stderr}".strip()
+        )
+    try:
+        observed = json.loads(result.stdout.strip())
+    except json.JSONDecodeError as error:
+        raise ExecutionError("remote package validation returned malformed JSON") from error
+    local_manifest = package_root / PACKAGE_MANIFEST_NAME
+    if (
+        observed.get("status") != "PASS"
+        or observed.get("remote_package_root") != str(remote_package_root)
+        or observed.get("package_manifest_sha256") != sha256(local_manifest)
+    ):
+        raise ExecutionError("remote package differs from the frozen local package")
+    return observed
+
+
 def validate_remote_runtime_preflight(
     package_root: Path,
     package: dict[str, Any],
@@ -352,11 +429,17 @@ def validate_runtime_preflight(
     package_root: Path,
     package: dict[str, Any],
     *,
+    remote_package_root: Path,
     ssh_target: str,
     mac_python: str,
 ) -> dict[str, Any]:
     _, dependency, dependency_sha256 = runtime_dependency_contract(package_root, package)
     validate_commissioning_package_binding(package)
+    remote_package = validate_remote_package_preflight(
+        package_root,
+        remote_package_root=remote_package_root,
+        ssh_target=ssh_target,
+    )
     mac = validate_mac_runtime_preflight(dependency, mac_python=mac_python)
     pi = validate_remote_runtime_preflight(
         package_root, package, ssh_target=ssh_target
@@ -365,6 +448,7 @@ def validate_runtime_preflight(
         "status": "PASS",
         "dependency_manifest": RUNTIME_DEPENDENCY_PATH,
         "dependency_manifest_sha256": dependency_sha256,
+        "remote_package": remote_package,
         "mac_orchestrator_and_powerz": mac,
         "pi_worker": {
             "python_implementation": pi["python_implementation"],
@@ -527,6 +611,15 @@ def validate_formal_authorization(
         or preflight.get("dependency_manifest_sha256") != dependency_sha256
     ):
         raise ExecutionError("corrected commissioning runtime preflight is not valid")
+    remote_package_preflight = preflight.get("remote_package", {})
+    if (
+        remote_package_preflight.get("status") != "PASS"
+        or remote_package_preflight.get("remote_package_root")
+        != plan["remote_package_root"]
+        or remote_package_preflight.get("package_manifest_sha256")
+        != sha256(manifest_path)
+    ):
+        raise ExecutionError("corrected commissioning remote package preflight is stale")
     pi_preflight = preflight.get("pi_worker", {})
     mac_preflight = preflight.get("mac_orchestrator_and_powerz", {})
     for field in (
@@ -848,6 +941,7 @@ def commissioning_run(args: argparse.Namespace) -> None:
     runtime_preflight = validate_runtime_preflight(
         args.package_root,
         package,
+        remote_package_root=args.remote_package_root,
         ssh_target=args.ssh_target,
         mac_python=args.mac_python,
     )
@@ -911,6 +1005,7 @@ def formal_run(args: argparse.Namespace) -> None:
     live_preflight = validate_runtime_preflight(
         args.package_root,
         package,
+        remote_package_root=args.remote_package_root,
         ssh_target=args.ssh_target,
         mac_python=args.mac_python,
     )

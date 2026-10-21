@@ -529,6 +529,7 @@ def build_worker_argv(
     scoring = cell["scoring"]
     command = [
         "python3",
+        "-B",
         role_path("worker"),
         "--asset-root",
         str(execution_root),

@@ -164,6 +164,13 @@ class CorrectedExecutionAuthorizationTests(unittest.TestCase):
         preflight = {
             "status": "PASS",
             "dependency_manifest_sha256": digest(dependency_path),
+            "remote_package": {
+                "status": "PASS",
+                "remote_package_root": "/remote/package-v5",
+                "package_manifest_sha256": digest(manifest_path),
+                "artifacts": 38,
+                "files": 40,
+            },
             "pi_worker": {
                 "python_implementation": "cpython",
                 "python_version": "3.13.5",
@@ -274,6 +281,39 @@ class CorrectedExecutionAuthorizationTests(unittest.TestCase):
 
 
 class CommissioningArtifactTests(unittest.TestCase):
+    def test_remote_package_preflight_requires_local_manifest_hash(self):
+        with tempfile.TemporaryDirectory() as directory:
+            package_root = Path(directory)
+            manifest = package_root / "PI4B8_CORRECTED_RUNTIME_PACKAGE_MANIFEST_V5.json"
+            manifest.write_text("{}\n", encoding="utf-8")
+            observed = {
+                "status": "PASS",
+                "remote_package_root": "/remote/package-v5",
+                "package_manifest_sha256": digest(manifest),
+                "artifacts": 38,
+                "files": 40,
+            }
+            completed = mock.Mock(
+                returncode=0, stdout=json.dumps(observed), stderr=""
+            )
+            with mock.patch.object(execution.subprocess, "run", return_value=completed):
+                receipt = execution.validate_remote_package_preflight(
+                    package_root,
+                    remote_package_root=Path("/remote/package-v5"),
+                    ssh_target="pi@host",
+                )
+            self.assertEqual(receipt["status"], "PASS")
+
+            observed["package_manifest_sha256"] = "0" * 64
+            completed.stdout = json.dumps(observed)
+            with mock.patch.object(execution.subprocess, "run", return_value=completed):
+                with self.assertRaisesRegex(execution.ExecutionError, "differs"):
+                    execution.validate_remote_package_preflight(
+                        package_root,
+                        remote_package_root=Path("/remote/package-v5"),
+                        ssh_target="pi@host",
+                    )
+
     def test_commissioning_rejects_formal_seed(self):
         with self.assertRaisesRegex(execution.ExecutionError, "non-formal cell"):
             execution.validate_commissioning_identity(
