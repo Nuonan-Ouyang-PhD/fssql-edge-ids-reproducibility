@@ -311,7 +311,7 @@ class TrueN16ProtocolTests(unittest.TestCase):
         config_path = root / "configs/pi4b8_true_n16_q_v2.json"
         runtime_path = root / "configs/pi4b8_corrected_runtime_v5.json"
         table_path = (
-            root / "q_training/pi4b8_true_n16_v3/tables/fssql_r_seed_5101.npz"
+            root / "q_training/pi4b8_true_n16_v4/tables/fssql_r_seed_5101.npz"
         )
         config = json.loads(config_path.read_text())
         runtime = json.loads(runtime_path.read_text())
@@ -322,7 +322,7 @@ class TrueN16ProtocolTests(unittest.TestCase):
         )
         new_manifest = json.loads(
             (
-                root / "q_training/pi4b8_true_n16_v3/Q_TABLE_MANIFEST.json"
+                root / "q_training/pi4b8_true_n16_v4/Q_TABLE_MANIFEST.json"
             ).read_text()
         )
 

@@ -273,10 +273,14 @@ class RuntimeConfigurationGateTests(unittest.TestCase):
 
     def test_background_load_fails_closed_when_observed_affinity_is_not_cpu3(self):
         class FakeEvent:
+            def __init__(self):
+                self.waited = False
+
             def set(self):
                 pass
 
             def wait(self, timeout=None):
+                self.waited = True
                 return True
 
         class FakeProcess:
@@ -298,8 +302,13 @@ class RuntimeConfigurationGateTests(unittest.TestCase):
                 self.running = False
 
         class FakeContext:
+            def __init__(self):
+                self.events = []
+
             def Event(self):
-                return FakeEvent()
+                event = FakeEvent()
+                self.events.append(event)
+                return event
 
             def Process(self, **kwargs):
                 return FakeProcess(**kwargs)
@@ -310,11 +319,20 @@ class RuntimeConfigurationGateTests(unittest.TestCase):
             "period_ms": 100.0,
             "pinned_cpu": 3,
         }
+        context = FakeContext()
+
+        def pinned_after_ready(_pid):
+            self.assertTrue(context.events[1].waited)
+            return {3}
+
         with (
-            mock.patch.object(worker.mp, "get_context", return_value=FakeContext()),
+            mock.patch.object(worker.mp, "get_context", return_value=context),
             mock.patch.object(worker.time, "sleep"),
             mock.patch.object(
-                worker.os, "sched_getaffinity", return_value={3}, create=True
+                worker.os,
+                "sched_getaffinity",
+                side_effect=pinned_after_ready,
+                create=True,
             ),
         ):
             load = worker.BackgroundLoad(workload)
@@ -323,8 +341,9 @@ class RuntimeConfigurationGateTests(unittest.TestCase):
             self.assertTrue(load.alive)
             self.assertEqual(load.affinity, [3])
             load.stop()
+        context = FakeContext()
         with (
-            mock.patch.object(worker.mp, "get_context", return_value=FakeContext()),
+            mock.patch.object(worker.mp, "get_context", return_value=context),
             mock.patch.object(worker.time, "sleep"),
             mock.patch.object(
                 worker.os, "sched_getaffinity", return_value={2}, create=True
@@ -332,6 +351,32 @@ class RuntimeConfigurationGateTests(unittest.TestCase):
         ):
             with self.assertRaisesRegex(RuntimeError, "CPU-affinity mismatch"):
                 worker.BackgroundLoad(workload).start()
+
+    def test_background_load_affinity_timeout_cleans_up(self):
+        context = mock.Mock()
+        stop_event = mock.Mock()
+        ready_event = mock.Mock()
+        ready_event.wait.return_value = False
+        process = mock.Mock()
+        process.is_alive.return_value = False
+        context.Event.side_effect = [stop_event, ready_event]
+        context.Process.return_value = process
+        workload = {
+            "busy_cpu_count": 1,
+            "background_duty": 0.5,
+            "period_ms": 100.0,
+            "pinned_cpu": 3,
+        }
+        with (
+            mock.patch.object(worker.mp, "get_context", return_value=context),
+            mock.patch.object(worker.os, "sched_getaffinity", create=True) as affinity,
+        ):
+            with self.assertRaisesRegex(RuntimeError, "affinity setup timed out"):
+                worker.BackgroundLoad(workload).start()
+        ready_event.wait.assert_called_once_with(timeout=2.0)
+        stop_event.set.assert_called_once()
+        process.join.assert_called_once_with(timeout=2.0)
+        affinity.assert_not_called()
 
     def test_state_metadata_must_match_numeric_action_encoding(self):
         state = corrected_state_config()
