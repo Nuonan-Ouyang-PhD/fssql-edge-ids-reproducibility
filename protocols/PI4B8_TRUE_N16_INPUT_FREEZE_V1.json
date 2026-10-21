@@ -1,0 +1,64 @@
+{
+  "status": "FROZEN_BEFORE_PI4B8_TRUE_N16_Q_TRAINING",
+  "official_test_access": "not used",
+  "source_scope": "frozen scheduler_train development rows restored from the official UNSW-NB15 training CSV only",
+  "restoration_manifest_sha256": "c7cd83ee873227da3fe1580687547c6cdcbdb320b45d40088d9639ddd90bd415",
+  "base_rows": 6000,
+  "records_per_window": 16,
+  "training_windows": 6000,
+  "evaluation_windows": 600,
+  "seeds": [
+    5101,
+    5102,
+    5103,
+    5104,
+    5105
+  ],
+  "batch_rule": "order=default_rng(seed).permutation(6000); index[w,j]=order[(16*w+j)%6000]",
+  "matched_conditions": [
+    "n16/B0",
+    "n16/B1",
+    "n16/B2"
+  ],
+  "base_artifacts": {
+    "raw_features": {
+      "path": "device_calibration/inputs/scheduler_train_6000_raw_features.csv",
+      "sha256": "1f764959e7c01ad67a235f01adecfe74f1c8df4af48a4b96e03d3eea96d7b399"
+    },
+    "features": {
+      "path": "device_calibration/inputs/scheduler_train_6000_features.npy",
+      "sha256": "4cbb6849d269129a01038693aa6a981017b55d8949da81074aece2e1100e823d"
+    },
+    "risk_features": {
+      "path": "device_calibration/inputs/scheduler_train_6000_risk_features.npy",
+      "sha256": "fee72cdd9445e8ebd4ecb12e888848b52269bd0fe81ef259ecf25525bf711dcd"
+    },
+    "scoring_labels": {
+      "path": "device_calibration/inputs/scheduler_train_6000_labels.npy",
+      "sha256": "285cb5fa12c69c77e9f0bc9f17ea49ff484ea4c6412dd8eb447ee6be2fbe8fd4",
+      "access": "post-action scoring only"
+    }
+  },
+  "training_backlog": {
+    "path": "device_calibration/inputs/pi4b8_true_n16_v1/training_backlog_zero.npy",
+    "sha256": "ec99b6565e80a623db4b78f652b0694af5a9f884154b68ae519521392f614a4e"
+  },
+  "evaluation_backlog": {
+    "path": "device_calibration/inputs/pi4b8_true_n16_v1/evaluation_backlog_zero.npy",
+    "sha256": "511e7bd1c36ef4f62eb0d87fb3b8b5ab897505eddd05f0e10d20ddebb80284fd"
+  },
+  "training_batch_indices": {
+    "5101": "d0b423b9a2f7867166a02ab284e825813705c9c288c1d451de9be6a0dcca767c",
+    "5102": "e1f037b5ffe429898c5ecd2e4d8297fefcf4ff6dcaf7f0e035e65e7ed33a6efb",
+    "5103": "53b3a1d59db14857668edfc840b6dba720976c693c81180d2e15c906738ddb68",
+    "5104": "9f01478e0866761646f93081eeead10ef602480931a80d742d03fdf7795e5028",
+    "5105": "5c7f86b17084373043f5d3a26419b4aa2e39cd73d94767d2b5aa7585ed8335be"
+  },
+  "evaluation_batch_indices": {
+    "5101": "52cae4919ac0b3525f10bc3b6e5bafb011463c912516c510ed7191977156f0e8",
+    "5102": "bc7e87d909cbb37aa4143459b717af2e04fa4e1e8a629e436e19ebb3bae5f38b",
+    "5103": "53a11cf824f9a72b41e221ddc62b560395a9390efffda290d2d7ea74ba296242",
+    "5104": "84261cd1a20145db39f7bf6c372cd4972d1ba066e1b9f38a3a7f14dcc725ef87",
+    "5105": "95fa224e7ddae1a73a7ac03fe811e39911142ed8844de850d4d021aed5e78feb"
+  }
+}

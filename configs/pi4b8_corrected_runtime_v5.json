@@ -1,0 +1,184 @@
+{
+  "status": "FROZEN_BEFORE_CORRECTED_PI4B8_EXECUTION",
+  "protocol": "protocols/PI4B8_CORRECTED_TRUE_N16_PROTOCOL_V1.md",
+  "repair_basis_commit": "0369ba82c507c624a31efede021d5c0f50b643de",
+  "official_test_access": "forbidden",
+  "scientific_scope": "stationary synchronous scheduler-development deployment comparison; not independent detector generalization",
+  "action_order": [
+    "fisvdd_revision",
+    "lucid_revision",
+    "tinydl_revision",
+    "oi_svdd_as_elm_revision"
+  ],
+  "action_roles": {
+    "light": "fisvdd_revision",
+    "heavy": "tinydl_revision"
+  },
+  "policies": [
+    "FSSQL-R",
+    "Safe-Greedy",
+    "Threshold",
+    "Static-Light"
+  ],
+  "constraints": {
+    "latency_cap_ms": 40.0,
+    "thermal_cap_c": 82.0
+  },
+  "decision_window_ms": 100.0,
+  "minimum_frequency_mhz": 1350.0,
+  "energy_boundary": "mac_start_ack_to_end_ack",
+  "background_load_lifetime": "before_start_ack_through_end_ack",
+  "timing_boundaries": {
+    "controller": "after_preprocessing_through_action_binding",
+    "e2e": "preprocessing_start_through_post_action_telemetry",
+    "switching": "resident_model_action_binding_only"
+  },
+  "workloads": {
+    "n16/B0": {
+      "n_records": 16,
+      "background": "B0",
+      "busy_cpu_count": 0,
+      "background_duty": 0.0,
+      "background_stabilization_seconds": 0.5
+    },
+    "n16/B1": {
+      "n_records": 16,
+      "background": "B1",
+      "busy_cpu_count": 1,
+      "background_duty": 0.5,
+      "pinned_cpu": 3,
+      "period_ms": 100.0,
+      "background_stabilization_seconds": 0.5
+    },
+    "n16/B2": {
+      "n_records": 16,
+      "background": "B2",
+      "busy_cpu_count": 1,
+      "background_duty": 1.0,
+      "pinned_cpu": 3,
+      "period_ms": 100.0,
+      "background_stabilization_seconds": 0.5
+    }
+  },
+  "batching": {
+    "base_rows": 6000,
+    "records_per_window": 16,
+    "rule": "order=default_rng(seed).permutation(6000); index[w,j]=order[(16*w+j)%6000]",
+    "matched_conditions": true
+  },
+  "risk_aggregation": "mean_of_16_frozen_proxy_probabilities",
+  "backlog_source": "frozen_runtime_input_records",
+  "backlog_semantics": "600 explicit zeros; stationary synchronous loop; no backlog-adaptation claim",
+  "energy_state_initialization": 1.0,
+  "energy_state_reset": "once_at_run_start",
+  "threshold_queue_value": "n_records_plus_queued_backlog",
+  "state": {
+    "ordered_components": [
+      "risk_bin",
+      "temperature_bin",
+      "energy_bin",
+      "backlog_bin",
+      "previous_action"
+    ],
+    "risk_bin_upper_edges": [0.25, 0.5, 0.75],
+    "temperature_C_upper_edges": [35.0, 45.0, 55.0],
+    "energy_residual_upper_edges": [0.25, 0.5, 0.75],
+    "backlog_upper_edges": [0.5, 2.0, 8.0],
+    "previous_action_values": [
+      "fisvdd_revision",
+      "lucid_revision",
+      "tinydl_revision",
+      "oi_svdd_as_elm_revision",
+      "none"
+    ],
+    "number_of_states": 1280,
+    "number_of_actions": 4,
+    "number_of_state_action_pairs": 5120
+  },
+  "validation_action_quality": {
+    "fisvdd_revision": {
+      "tpr": 1.0,
+      "fpr": 1.0,
+      "f1": 0.8041794458595415
+    },
+    "lucid_revision": {
+      "tpr": 0.9946132299073476,
+      "fpr": 0.24059817715246457,
+      "f1": 0.9419639213125459
+    },
+    "tinydl_revision": {
+      "tpr": 0.9790993320405085,
+      "fpr": 0.14140341562693526,
+      "f1": 0.9561685920501651
+    },
+    "oi_svdd_as_elm_revision": {
+      "tpr": 0.9953889248006895,
+      "fpr": 0.2017520573400583,
+      "f1": 0.950867587427701
+    }
+  },
+  "validation_action_quality_source": {
+    "path": "models/VALIDATION_METRICS.csv",
+    "sha256": "7b2db09489ebc2c2e02c7604b0a7749a3a218d8d0b6abf547123f963affa1755",
+    "derivation": "TPR=recall; validation prevalence is solved from accuracy/precision/recall; FPR=FP/(1-prevalence)"
+  },
+  "reward": {
+    "security": "risk*validation_TPR - (1-risk)*validation_FPR",
+    "energy_weight": 0.1,
+    "backlog_weight": 0.05,
+    "switch_weight": 0.02,
+    "backlog_normalizer": 256.0,
+    "ground_truth_label_use": "forbidden"
+  },
+  "normalized_energy_cost_by_condition": {
+    "n16/B0": {
+      "fisvdd_revision": 0.3525127703457099,
+      "lucid_revision": 1.0,
+      "tinydl_revision": 0.42625115703297095,
+      "oi_svdd_as_elm_revision": 0.5844038622269349
+    },
+    "n16/B1": {
+      "fisvdd_revision": 0.3525127703457099,
+      "lucid_revision": 1.0,
+      "tinydl_revision": 0.42625115703297095,
+      "oi_svdd_as_elm_revision": 0.5844038622269349
+    },
+    "n16/B2": {
+      "fisvdd_revision": 0.3525127703457099,
+      "lucid_revision": 1.0,
+      "tinydl_revision": 0.42625115703297095,
+      "oi_svdd_as_elm_revision": 0.5844038622269349
+    }
+  },
+  "energy_state_decrement_by_condition": {
+    "n16/B0": {
+      "fisvdd_revision": 0.0003525127703457099,
+      "lucid_revision": 0.001,
+      "tinydl_revision": 0.00042625115703297096,
+      "oi_svdd_as_elm_revision": 0.000584403862226935
+    },
+    "n16/B1": {
+      "fisvdd_revision": 0.0003525127703457099,
+      "lucid_revision": 0.001,
+      "tinydl_revision": 0.00042625115703297096,
+      "oi_svdd_as_elm_revision": 0.000584403862226935
+    },
+    "n16/B2": {
+      "fisvdd_revision": 0.0003525127703457099,
+      "lucid_revision": 0.001,
+      "tinydl_revision": 0.00042625115703297096,
+      "oi_svdd_as_elm_revision": 0.000584403862226935
+    }
+  },
+  "threshold_controller": {
+    "uses_shield": false,
+    "T_hi_C": 80.14945503488127,
+    "T_lo_C": 78.14945503488127,
+    "q_hi_records": 512.0,
+    "q_lo_records": 256.0,
+    "p_hi": 0.7,
+    "light_action": "fisvdd_revision",
+    "heavy_action": "tinydl_revision",
+    "rationale": "Pi4B calibration-derived T/q values plus pre-existing validation-only method default and roles; no V4 or official-test outcome used"
+  }
+}

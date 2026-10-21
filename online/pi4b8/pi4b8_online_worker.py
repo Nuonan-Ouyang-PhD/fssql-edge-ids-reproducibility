@@ -30,10 +30,18 @@ REPO_ROOT = SCRIPT_DIR.parents[1]
 if (SCRIPT_DIR / "runtime").is_dir():
     sys.path.insert(0, str(SCRIPT_DIR / "runtime"))
     from action_pool_numpy import NumpyActionModel  # type: ignore  # noqa: E402
+    from corrected_v5_contract import (  # type: ignore  # noqa: E402
+        sha256 as package_sha256,
+        validate_worker_cli_binding,
+    )
     from preprocessor_numpy import PortablePreprocessor  # type: ignore  # noqa: E402
     from risk_proxy_numpy import RiskProxy  # type: ignore  # noqa: E402
 else:
     sys.path.insert(0, str(REPO_ROOT))
+    from online.pi4b8.corrected_v5_contract import (  # noqa: E402
+        sha256 as package_sha256,
+        validate_worker_cli_binding,
+    )
     from runtime.action_pool_numpy import NumpyActionModel  # noqa: E402
     from runtime.preprocessor_numpy import PortablePreprocessor  # noqa: E402
     from runtime.risk_proxy_numpy import RiskProxy  # noqa: E402
@@ -162,6 +170,47 @@ def load_model_thresholds(path: Path) -> dict[str, float]:
     return thresholds
 
 
+def load_validation_action_quality(path: Path) -> dict[str, dict[str, float]]:
+    """Derive the label-free reward inputs from the frozen validation CSV."""
+    by_name = {name: action for action, name in ACTION_CONFIG_NAMES.items()}
+    quality: dict[str, dict[str, float]] = {}
+    with path.open(newline="", encoding="utf-8") as stream:
+        rows = list(csv.DictReader(stream))
+    for row in rows:
+        name = row.get("action", "")
+        if name not in by_name or by_name[name] in quality:
+            raise RuntimeError(f"unexpected or duplicate validation action: {name!r}")
+        try:
+            accuracy = float(row["accuracy"])
+            precision = float(row["precision"])
+            recall = float(row["recall"])
+            f1 = float(row["f1"])
+        except (KeyError, TypeError, ValueError) as error:
+            raise RuntimeError("validation metrics are incomplete") from error
+        if (
+            not all(math.isfinite(value) for value in (accuracy, precision, recall, f1))
+            or not 0.0 <= accuracy <= 1.0
+            or not 0.0 < precision <= 1.0
+            or not 0.0 <= recall <= 1.0
+            or not 0.0 <= f1 <= 1.0
+        ):
+            raise RuntimeError("validation metrics are outside their valid ranges")
+        coefficient = -1.0 + recall - recall * (1.0 / precision - 1.0)
+        if coefficient == 0.0:
+            raise RuntimeError("validation prevalence is not identifiable")
+        prevalence = (accuracy - 1.0) / coefficient
+        false_positive_fraction = recall * prevalence * (1.0 / precision - 1.0)
+        if not 0.0 < prevalence < 1.0:
+            raise RuntimeError("derived validation prevalence is invalid")
+        fpr = false_positive_fraction / (1.0 - prevalence)
+        if not math.isfinite(fpr) or not 0.0 <= fpr <= 1.0 + 1e-12:
+            raise RuntimeError("derived validation FPR is invalid")
+        quality[by_name[name]] = {"tpr": recall, "fpr": min(fpr, 1.0), "f1": f1}
+    if set(quality) != set(ACTIONS):
+        raise RuntimeError("validation metrics do not contain all four actions")
+    return quality
+
+
 def reshape_window_records(
     values: np.ndarray,
     windows: int,
@@ -178,6 +227,37 @@ def reshape_window_records(
         f"{name} must contain exactly {windows} x {records_per_window} records; "
         f"observed shape={array.shape}"
     )
+
+
+def validate_batch_indices(
+    values: np.ndarray,
+    *,
+    windows: int,
+    records_per_window: int,
+    base_rows: int,
+    seed: int,
+) -> np.ndarray:
+    """Validate the frozen 600 x 16 base-row selection without copying labels."""
+    indices = np.asarray(values)
+    if (
+        indices.shape != (windows, records_per_window)
+        or not np.issubdtype(indices.dtype, np.integer)
+        or np.iscomplexobj(indices)
+    ):
+        raise RuntimeError(
+            f"batch indices must be an integer ({windows}, {records_per_window}) array"
+        )
+    if base_rows <= 0 or int(indices.min()) < 0 or int(indices.max()) >= base_rows:
+        raise RuntimeError("batch indices reference rows outside the frozen base input")
+    if any(len(set(row.tolist())) != records_per_window for row in indices):
+        raise RuntimeError("a true-n16 window repeats a base record")
+    order = np.random.default_rng(seed).permutation(base_rows)
+    expected = order[
+        np.arange(windows * records_per_window, dtype=np.int64) % base_rows
+    ].reshape(windows, records_per_window)
+    if not np.array_equal(indices, expected):
+        raise RuntimeError("batch indices do not reproduce the frozen seed schedule")
+    return indices.astype(np.int64, copy=False)
 
 
 def validate_state_definition(state: dict[str, Any]) -> None:
@@ -469,6 +549,7 @@ def select_policy_action(
     risk: float,
     temperature: float,
     backlog: float,
+    threshold_queue_load: float,
     previous_action: int,
     threshold_config: dict[str, Any],
     q_row: Sequence[float] | None,
@@ -480,7 +561,13 @@ def select_policy_action(
         return STATIC_LIGHT_ACTION_INDEX
     if policy == "Threshold":
         return ACTIONS.index(
-            threshold_action(temperature, backlog, risk, previous_action, threshold_config)
+            threshold_action(
+                temperature,
+                threshold_queue_load,
+                risk,
+                previous_action,
+                threshold_config,
+            )
         )
     candidates = sorted(set(int(index) for index in safe_idx))
     if any(index < 0 or index >= len(ACTIONS) for index in candidates):
@@ -558,7 +645,7 @@ def read_latency_predictor(path: Path) -> dict[tuple[str, str, str], float]:
         return predictor
 
 
-def read_raw_rows(path: Path, windows: int, records_per_window: int) -> list[list[dict[str, str]]]:
+def read_raw_base_rows(path: Path, expected_rows: int) -> list[dict[str, str]]:
     with path.open(newline="", encoding="utf-8") as stream:
         reader = csv.DictReader(stream)
         fieldnames = reader.fieldnames or []
@@ -592,9 +679,15 @@ def read_raw_rows(path: Path, windows: int, records_per_window: int) -> list[lis
         if leaked:
             raise RuntimeError(f"raw runtime input contains scoring/audit columns: {leaked}")
         rows = list(reader)
+    if len(rows) != expected_rows:
+        raise RuntimeError(f"raw base features require {expected_rows} rows; observed {len(rows)}")
+    return rows
+
+
+def read_raw_rows(path: Path, windows: int, records_per_window: int) -> list[list[dict[str, str]]]:
+    """Legacy-shaped helper retained for unit probes; corrected V5 uses base rows + indices."""
     expected = windows * records_per_window
-    if len(rows) != expected:
-        raise RuntimeError(f"raw features require {expected} rows; observed {len(rows)}")
+    rows = read_raw_base_rows(path, expected)
     return [
         rows[start : start + records_per_window]
         for start in range(0, expected, records_per_window)
@@ -673,6 +766,13 @@ def validate_runtime_config(config: dict[str, Any], condition: str, policy: str)
         raise RuntimeError("risk aggregation is not frozen")
     if config.get("backlog_source") != "frozen_runtime_input_records":
         raise RuntimeError("backlog source is not frozen")
+    if (
+        float(config.get("energy_state_initialization", math.nan)) != 1.0
+        or config.get("energy_state_reset") != "once_at_run_start"
+    ):
+        raise RuntimeError("runtime energy-state initialization is not frozen")
+    if config.get("threshold_queue_value") != "n_records_plus_queued_backlog":
+        raise RuntimeError("Threshold queue-load semantics are not frozen")
     state = config.get("state", {})
     validate_state_definition(state)
     quality = config.get("validation_action_quality")
@@ -689,6 +789,12 @@ def validate_runtime_config(config: dict[str, Any], condition: str, policy: str)
     required_reward = {"energy_weight", "backlog_weight", "switch_weight", "backlog_normalizer"}
     if not isinstance(reward, dict) or not required_reward.issubset(reward):
         raise RuntimeError("reward definition is not frozen")
+    if (
+        reward.get("security")
+        != "risk*validation_TPR - (1-risk)*validation_FPR"
+        or reward.get("ground_truth_label_use") != "forbidden"
+    ):
+        raise RuntimeError("reward security/label semantics are not frozen")
     if any(not math.isfinite(float(reward[name])) for name in required_reward):
         raise RuntimeError("reward definition contains non-finite values")
     if (
@@ -731,6 +837,16 @@ def validate_runtime_config(config: dict[str, Any], condition: str, policy: str)
     ):
         raise RuntimeError("Threshold light/heavy roles are not frozen consistently")
     threshold_action(0.0, 0.0, 0.0, NO_PREVIOUS_ACTION, threshold_config)
+    quality_source = config.get("validation_action_quality_source", {})
+    if quality_source != {
+        "path": "models/VALIDATION_METRICS.csv",
+        "sha256": "7b2db09489ebc2c2e02c7604b0a7749a3a218d8d0b6abf547123f963affa1755",
+        "derivation": (
+            "TPR=recall; validation prevalence is solved from "
+            "accuracy/precision/recall; FPR=FP/(1-prevalence)"
+        ),
+    }:
+        raise RuntimeError("validation-quality source lineage is not frozen")
     return workload
 
 
@@ -741,6 +857,7 @@ def validate_fssql_q_lineage(
     q_manifest: dict[str, Any],
     q_table_path: Path,
     seed: int,
+    evaluation_condition: str,
 ) -> None:
     """Reject the legacy single-record Q tables for corrected true-n=16 runs."""
     training = q_config.get("training", {})
@@ -750,6 +867,19 @@ def validate_fssql_q_lineage(
         raise RuntimeError("FSSQL-R Q action order differs from runtime")
     if int(training.get("records_per_window", 0)) != 16:
         raise RuntimeError("FSSQL-R Q lineage is not trained for true n=16 windows")
+    if (
+        q_config.get("status") != "FROZEN_BEFORE_PI4B8_TRUE_N16_Q_TRAINING"
+        or int(training.get("base_records", 0)) != 6000
+        or training.get("condition") != "n16/B0"
+        or training.get("window_order") != "seed_specific_frozen_batch_indices"
+        or training.get("batch_index_rule")
+        != "order=default_rng(seed).permutation(6000);index[w,j]=order[(16*w+j)%6000]"
+        or training.get("ground_truth_label_access") != "forbidden"
+    ):
+        raise RuntimeError("FSSQL-R true-n16 training protocol lineage is incomplete")
+    expected_batch_input = f"scheduler_batch_indices_seed_{seed}"
+    if training.get("batch_index_inputs", {}).get(str(seed)) != expected_batch_input:
+        raise RuntimeError("FSSQL-R Q seed-specific batch-index binding is missing")
     state = q_config.get("state", {})
     try:
         validate_state_definition(state)
@@ -761,6 +891,8 @@ def validate_fssql_q_lineage(
         raise RuntimeError("FSSQL-R Q risk aggregation differs from runtime")
     if dynamics.get("backlog_source") != runtime_config.get("backlog_source"):
         raise RuntimeError("FSSQL-R Q backlog semantics differ from runtime")
+    if dynamics.get("backlog_scope") != "frozen_zero_backlog_no_adaptation_claim":
+        raise RuntimeError("FSSQL-R Q was not frozen as a zero-backlog control")
     if q_config.get("reward") != runtime_config.get("reward"):
         raise RuntimeError("FSSQL-R Q reward differs from runtime")
     if dynamics.get("normalized_energy_cost_by_condition") != runtime_config.get(
@@ -779,8 +911,35 @@ def validate_fssql_q_lineage(
         or evaluation.get("replay_updates") is not False
     ):
         raise RuntimeError("FSSQL-R evaluation must use epsilon=0 with no updates")
+    if evaluation_condition not in evaluation.get("conditions", []):
+        raise RuntimeError("FSSQL-R evaluation condition is outside the frozen Q scope")
+    if evaluation.get("training_to_evaluation_seed_map", {}).get(str(seed)) != seed:
+        raise RuntimeError("FSSQL-R Q seed mapping is not identity")
+    if q_manifest.get("status") != "PI4B8_TRUE_N16_Q_TRAINING_COMPLETE":
+        raise RuntimeError("FSSQL-R Q manifest is not a corrected true-n16 artifact")
+    if (
+        q_manifest.get("training_condition") != "n16/B0"
+        or int(q_manifest.get("records_per_window", 0)) != 16
+        or q_manifest.get("risk_aggregation")
+        != "mean_of_16_frozen_proxy_probabilities"
+    ):
+        raise RuntimeError("FSSQL-R Q manifest training semantics are incomplete")
+    if q_manifest.get("worker_semantics_sha256") != sha256(Path(__file__)):
+        raise RuntimeError("FSSQL-R Q worker-semantics hash mismatch")
+    if (
+        q_manifest.get("official_test_access") != "not used"
+        or q_manifest.get("ground_truth_label_access") != "not used"
+    ):
+        raise RuntimeError("FSSQL-R Q manifest does not preserve label isolation")
     if q_manifest.get("config_sha256") != sha256(q_config_path):
         raise RuntimeError("FSSQL-R Q configuration hash mismatch")
+    expected_inputs = {
+        name: record.get("sha256")
+        for name, record in q_config.get("inputs", {}).items()
+        if isinstance(record, dict)
+    }
+    if q_manifest.get("input_sha256") != expected_inputs:
+        raise RuntimeError("FSSQL-R Q input dependency hashes differ from its protocol")
     matching = [
         row
         for row in q_manifest.get("runs", [])
@@ -795,6 +954,7 @@ def validate_fssql_q_lineage(
 def parse_args() -> argparse.Namespace:
     parser = argparse.ArgumentParser()
     parser.add_argument("--asset-root", type=Path, required=True)
+    parser.add_argument("--package-manifest", type=Path, required=True)
     parser.add_argument("--runtime-config", type=Path, required=True)
     parser.add_argument("--q-config", type=Path)
     parser.add_argument("--q-manifest", type=Path)
@@ -803,6 +963,7 @@ def parse_args() -> argparse.Namespace:
     parser.add_argument("--features", type=Path, required=True)
     parser.add_argument("--risk-features", type=Path, required=True)
     parser.add_argument("--backlog", type=Path, required=True)
+    parser.add_argument("--batch-indices", type=Path, required=True)
     parser.add_argument("--labels", type=Path, required=True)
     parser.add_argument("--policy", required=True)
     parser.add_argument("--condition", required=True)
@@ -816,6 +977,27 @@ def parse_args() -> argparse.Namespace:
 
 def main() -> None:
     args = parse_args()
+    package_document = validate_worker_cli_binding(
+        args.asset_root,
+        args.package_manifest,
+        policy=args.policy,
+        condition=args.condition,
+        seed=args.seed,
+        supplied={
+            "runtime_config": args.runtime_config,
+            "model_hyperparameters": args.model_hyperparameters,
+            "raw_features": args.raw_features,
+            "features": args.features,
+            "risk_features": args.risk_features,
+            "backlog": args.backlog,
+            "batch_indices": args.batch_indices,
+            "labels": args.labels,
+            "q_config": args.q_config,
+            "q_manifest": args.q_manifest,
+            "q_table": args.q_table,
+        },
+    )
+    package_manifest_digest = package_sha256(args.package_manifest)
     if args.output.exists():
         raise FileExistsError(f"refusing to overwrite output: {args.output}")
     args.output.mkdir(parents=True)
@@ -828,24 +1010,40 @@ def main() -> None:
     background = str(workload["background"])
     background_duty = float(workload["background_duty"])
 
-    raw_batches = read_raw_rows(args.raw_features, args.windows, n_records)
-    frozen_features = reshape_window_records(
-        np.load(args.features, allow_pickle=False), args.windows, n_records, "features"
-    )
-    risk_features = reshape_window_records(
-        np.load(args.risk_features, allow_pickle=False), args.windows, n_records, "risk_features"
-    )
-    if np.iscomplexobj(frozen_features) or np.iscomplexobj(risk_features):
+    base_records = int(package_document["base_records"])
+    raw_base = read_raw_base_rows(args.raw_features, expected_rows=base_records)
+    frozen_feature_base = np.load(args.features, allow_pickle=False)
+    risk_feature_base = np.load(args.risk_features, allow_pickle=False)
+    if (
+        frozen_feature_base.ndim != 2
+        or risk_feature_base.ndim != 2
+        or frozen_feature_base.shape[0] != base_records
+        or risk_feature_base.shape[0] != base_records
+    ):
+        raise RuntimeError(
+            f"corrected base feature arrays must each contain {base_records} rows"
+        )
+    if np.iscomplexobj(frozen_feature_base) or np.iscomplexobj(risk_feature_base):
         raise RuntimeError("runtime feature arrays must be real-valued")
     try:
-        frozen_features_numeric = np.asarray(frozen_features, dtype=np.float64)
-        risk_features_numeric = np.asarray(risk_features, dtype=np.float64)
+        frozen_features_numeric = np.asarray(frozen_feature_base, dtype=np.float64)
+        risk_features_numeric = np.asarray(risk_feature_base, dtype=np.float64)
     except (TypeError, ValueError) as error:
         raise RuntimeError("runtime feature arrays must be numeric") from error
     if not np.isfinite(frozen_features_numeric).all() or not np.isfinite(
         risk_features_numeric
     ).all():
         raise RuntimeError("runtime feature arrays must be finite")
+    batch_indices = validate_batch_indices(
+        np.load(args.batch_indices, allow_pickle=False),
+        windows=args.windows,
+        records_per_window=n_records,
+        base_rows=len(raw_base),
+        seed=args.seed,
+    )
+    raw_batches = [[raw_base[int(index)] for index in row] for row in batch_indices]
+    frozen_features = frozen_feature_base[batch_indices]
+    risk_features = risk_feature_base[batch_indices]
     backlog_values = np.load(args.backlog, allow_pickle=False)
     if (
         backlog_values.shape != (args.windows,)
@@ -859,12 +1057,19 @@ def main() -> None:
         args.features.resolve(),
         args.risk_features.resolve(),
         args.backlog.resolve(),
+        args.batch_indices.resolve(),
         args.raw_features.resolve(),
     }:
         raise RuntimeError("scoring labels must be a separate sidecar")
     if any(
         os.path.samefile(args.labels, path)
-        for path in (args.features, args.risk_features, args.backlog, args.raw_features)
+        for path in (
+            args.features,
+            args.risk_features,
+            args.backlog,
+            args.batch_indices,
+            args.raw_features,
+        )
     ):
         raise RuntimeError("scoring labels must not alias a runtime decision input")
 
@@ -887,7 +1092,23 @@ def main() -> None:
     except KeyError as error:
         raise RuntimeError(f"guard has no exact {workload_bin}/{background} cell") from error
 
-    quality = runtime_config["validation_action_quality"]
+    quality_path = args.asset_root / "config/VALIDATION_METRICS.csv"
+    quality_source = runtime_config["validation_action_quality_source"]
+    if sha256(quality_path) != quality_source["sha256"]:
+        raise RuntimeError("validation-quality source hash mismatch")
+    quality = load_validation_action_quality(quality_path)
+    configured_quality = runtime_config["validation_action_quality"]
+    if any(
+        not math.isclose(
+            float(quality[action][metric]),
+            float(configured_quality[action][metric]),
+            rel_tol=0.0,
+            abs_tol=1e-12,
+        )
+        for action in ACTIONS
+        for metric in ("tpr", "fpr", "f1")
+    ):
+        raise RuntimeError("validation-quality values differ from their frozen source")
     reward_config = runtime_config["reward"]
     energy_cost = np.asarray(
         [
@@ -916,9 +1137,41 @@ def main() -> None:
             q_manifest,
             args.q_table,
             args.seed,
+            args.condition,
         )
+        q_input_hashes = q_manifest["input_sha256"]
+        q_runtime_dependencies = {
+            "runtime_config": args.runtime_config,
+            "risk_proxy": args.asset_root / "risk_proxy/risk_proxy.npz",
+            "validation_metrics": args.asset_root / "config/VALIDATION_METRICS.csv",
+            "latency_predictor": args.asset_root / "guard/latency_predictor.csv",
+            "thermal_predictor": args.asset_root / "guard/thermal_predictor.json",
+            "guard_margins": args.asset_root / "guard/guard_margins.json",
+        }
+        mismatched_dependencies = [
+            name
+            for name, path in q_runtime_dependencies.items()
+            if q_input_hashes.get(name) != sha256(path)
+        ]
+        if mismatched_dependencies:
+            raise RuntimeError(
+                "FSSQL-R Q/runtime dependency hash mismatch: "
+                f"{mismatched_dependencies}"
+            )
         with np.load(args.q_table, allow_pickle=False) as q_artifact:
-            required = {"q_values", "actions", "training_seed", "shielded"}
+            required = {
+                "q_values",
+                "actions",
+                "training_seed",
+                "shielded",
+                "records_per_window",
+                "training_condition",
+                "config_sha256",
+                "runtime_config_sha256",
+                "risk_features_sha256",
+                "batch_indices_sha256",
+                "backlog_sha256",
+            }
             if not required.issubset(q_artifact.files):
                 raise RuntimeError("FSSQL-R Q table is missing embedded lineage metadata")
             if tuple(q_artifact["actions"].tolist()) != ACTIONS:
@@ -927,7 +1180,42 @@ def main() -> None:
                 raise RuntimeError("FSSQL-R Q-table seed mismatch")
             if not bool(q_artifact["shielded"]):
                 raise RuntimeError("FSSQL-R received an unshielded Q table")
+            if int(q_artifact["records_per_window"]) != 16:
+                raise RuntimeError("FSSQL-R Q table is not a true-n16 artifact")
+            if str(q_artifact["training_condition"]) != "n16/B0":
+                raise RuntimeError("FSSQL-R Q table training condition mismatch")
+            input_hashes = q_manifest["input_sha256"]
+            embedded_hashes = {
+                "config_sha256": (str(q_artifact["config_sha256"]), sha256(args.q_config)),
+                "runtime_config_sha256": (
+                    str(q_artifact["runtime_config_sha256"]),
+                    input_hashes["runtime_config"],
+                ),
+                "risk_features_sha256": (
+                    str(q_artifact["risk_features_sha256"]),
+                    input_hashes["scheduler_risk_features_base"],
+                ),
+                "batch_indices_sha256": (
+                    str(q_artifact["batch_indices_sha256"]),
+                    input_hashes[f"scheduler_batch_indices_seed_{args.seed}"],
+                ),
+                "backlog_sha256": (
+                    str(q_artifact["backlog_sha256"]),
+                    input_hashes["scheduler_backlog"],
+                ),
+            }
+            mismatched = [
+                name for name, (observed, expected) in embedded_hashes.items()
+                if observed != expected
+            ]
+            if mismatched:
+                raise RuntimeError(f"FSSQL-R embedded lineage hash mismatch: {mismatched}")
             q_values = q_artifact["q_values"].copy()
+        if np.any(backlog_values != 0):
+            raise RuntimeError(
+                "FSSQL-R true-n16 Q is a zero-backlog control and cannot claim "
+                "backlog adaptation"
+            )
         if q_values.shape != (int(runtime_config["state"]["number_of_states"]), len(ACTIONS)):
             raise RuntimeError(f"Q-table shape mismatch: {q_values.shape}")
         if (
@@ -955,7 +1243,10 @@ def main() -> None:
                 "pi_monotonic": run_start_monotonic,
                 "pid": os.getpid(),
                 "runtime_config_sha256": sha256(args.runtime_config),
+                "package_manifest_sha256": package_manifest_digest,
+                "source_manifest_sha256": package_document["source_manifest_sha256"],
                 "threshold_source_sha256": sha256(args.model_hyperparameters),
+                "q_table_sha256": "" if args.q_table is None else sha256(args.q_table),
                 "records_per_window": n_records,
                 "background": background,
                 "background_load_pid": background_load.pid,
@@ -969,7 +1260,7 @@ def main() -> None:
     probabilities_by_window: list[np.ndarray] = []
     start = run_start_monotonic
     previous_action = NO_PREVIOUS_ACTION
-    energy = 1.0
+    energy = float(runtime_config["energy_state_initialization"])
     for window_id in range(args.windows):
         scheduled = start + window_id * float(runtime_config["decision_window_ms"]) / 1000.0
         remaining = scheduled - time.monotonic()
@@ -1024,6 +1315,7 @@ def main() -> None:
             raise RuntimeError("CPU frequency invariant failed")
 
         backlog = float(backlog_values[window_id])
+        threshold_queue_load = float(n_records) + backlog
         step = time.perf_counter_ns()
         state = state_id(
             runtime_config, risk, current_temperature, energy, backlog, previous_action
@@ -1077,6 +1369,7 @@ def main() -> None:
             risk=risk,
             temperature=current_temperature,
             backlog=backlog,
+            threshold_queue_load=threshold_queue_load,
             previous_action=previous_action,
             threshold_config=runtime_config["threshold_controller"],
             q_row=q_row,
@@ -1207,6 +1500,7 @@ def main() -> None:
                 "undervoltage": int(bool((throttle_value | end_throttle_value) & 1)),
                 "risk": risk,
                 "backlog_records": backlog,
+                "threshold_queue_load_records": threshold_queue_load,
                 "background_load_pid": "" if background_load.pid is None else background_load.pid,
                 "background_load_alive": int(
                     int(workload["busy_cpu_count"]) == 0 or background_load.alive
@@ -1237,9 +1531,18 @@ def main() -> None:
     decision_loop_end_pi_monotonic = time.monotonic()
     # Label sidecar access is deliberately after every action and prediction.
     scoring_start_pi_monotonic = time.monotonic()
-    labels = reshape_window_records(
-        np.load(args.labels, allow_pickle=False), args.windows, n_records, "scoring labels"
-    )
+    label_base = np.load(args.labels, allow_pickle=False)
+    if (
+        label_base.shape != (base_records,)
+        or not np.issubdtype(label_base.dtype, np.number)
+        or np.iscomplexobj(label_base)
+        or not np.isfinite(label_base).all()
+        or not np.isin(label_base, [0, 1]).all()
+    ):
+        raise RuntimeError(
+            f"scoring label base must contain {base_records} binary labels"
+        )
+    labels = label_base[batch_indices]
     for row, probabilities, truth in zip(rows, probabilities_by_window, labels):
         step = time.perf_counter_ns()
         result = score_predictions(probabilities, truth, thresholds[row["selected_action"]])
@@ -1277,6 +1580,7 @@ def main() -> None:
                 "records_completed": len(rows) * n_records,
                 "raw_artifact_path": str(output_path),
                 "raw_artifact_sha256": digest,
+                "package_manifest_sha256": package_manifest_digest,
                 "validity_status": "PASS",
             },
             sort_keys=True,

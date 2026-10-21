@@ -1,0 +1,228 @@
+{
+  "status": "FROZEN_BEFORE_PI4B8_TRUE_N16_Q_TRAINING",
+  "actions": [
+    "fisvdd_revision",
+    "lucid_revision",
+    "tinydl_revision",
+    "oi_svdd_as_elm_revision"
+  ],
+  "training": {
+    "policies": [
+      "FSSQL-R"
+    ],
+    "seeds": [
+      5101,
+      5102,
+      5103,
+      5104,
+      5105
+    ],
+    "windows_per_seed": 6000,
+    "episode_windows": 600,
+    "checkpoint_every": 100,
+    "records_per_window": 16,
+    "base_records": 6000,
+    "condition": "n16/B0",
+    "risk_aggregation": "mean_of_16_frozen_proxy_probabilities",
+    "window_order": "seed_specific_frozen_batch_indices",
+    "batch_index_rule": "order=default_rng(seed).permutation(6000);index[w,j]=order[(16*w+j)%6000]",
+    "batch_index_inputs": {
+      "5101": "scheduler_batch_indices_seed_5101",
+      "5102": "scheduler_batch_indices_seed_5102",
+      "5103": "scheduler_batch_indices_seed_5103",
+      "5104": "scheduler_batch_indices_seed_5104",
+      "5105": "scheduler_batch_indices_seed_5105"
+    },
+    "official_test_access": "forbidden",
+    "ground_truth_label_access": "forbidden"
+  },
+  "state": {
+    "ordered_components": [
+      "risk_bin",
+      "temperature_bin",
+      "energy_bin",
+      "backlog_bin",
+      "previous_action"
+    ],
+    "risk_bin_upper_edges": [
+      0.25,
+      0.5,
+      0.75
+    ],
+    "temperature_C_upper_edges": [
+      35.0,
+      45.0,
+      55.0
+    ],
+    "energy_residual_upper_edges": [
+      0.25,
+      0.5,
+      0.75
+    ],
+    "backlog_upper_edges": [
+      0.5,
+      2.0,
+      8.0
+    ],
+    "previous_action_values": [
+      "fisvdd_revision",
+      "lucid_revision",
+      "tinydl_revision",
+      "oi_svdd_as_elm_revision",
+      "none"
+    ],
+    "number_of_states": 1280,
+    "number_of_actions": 4,
+    "number_of_state_action_pairs": 5120
+  },
+  "reward": {
+    "security": "risk*validation_TPR - (1-risk)*validation_FPR",
+    "energy_weight": 0.1,
+    "backlog_weight": 0.05,
+    "switch_weight": 0.02,
+    "backlog_normalizer": 256.0,
+    "ground_truth_label_use": "forbidden"
+  },
+  "development_dynamics": {
+    "backlog_source": "frozen_runtime_input_records",
+    "backlog_scope": "frozen_zero_backlog_no_adaptation_claim",
+    "temperature_initialization": "median valid Pi4B formal-fit n16/B0 T_start_C",
+    "temperature_reset_interval_windows": 600,
+    "energy_initialization": 1.0,
+    "energy_reset_interval_windows": 600,
+    "normalized_energy_cost_by_condition": {
+      "n16/B0": {
+        "fisvdd_revision": 0.3525127703457099,
+        "lucid_revision": 1.0,
+        "tinydl_revision": 0.42625115703297095,
+        "oi_svdd_as_elm_revision": 0.5844038622269349
+      },
+      "n16/B1": {
+        "fisvdd_revision": 0.3525127703457099,
+        "lucid_revision": 1.0,
+        "tinydl_revision": 0.42625115703297095,
+        "oi_svdd_as_elm_revision": 0.5844038622269349
+      },
+      "n16/B2": {
+        "fisvdd_revision": 0.3525127703457099,
+        "lucid_revision": 1.0,
+        "tinydl_revision": 0.42625115703297095,
+        "oi_svdd_as_elm_revision": 0.5844038622269349
+      }
+    },
+    "energy_state_decrement_by_condition": {
+      "n16/B0": {
+        "fisvdd_revision": 0.0003525127703457099,
+        "lucid_revision": 0.001,
+        "tinydl_revision": 0.00042625115703297096,
+        "oi_svdd_as_elm_revision": 0.000584403862226935
+      },
+      "n16/B1": {
+        "fisvdd_revision": 0.0003525127703457099,
+        "lucid_revision": 0.001,
+        "tinydl_revision": 0.00042625115703297096,
+        "oi_svdd_as_elm_revision": 0.000584403862226935
+      },
+      "n16/B2": {
+        "fisvdd_revision": 0.0003525127703457099,
+        "lucid_revision": 0.001,
+        "tinydl_revision": 0.00042625115703297096,
+        "oi_svdd_as_elm_revision": 0.000584403862226935
+      }
+    }
+  },
+  "q_update": {
+    "gamma": 0.95,
+    "alpha_max": 0.5,
+    "alpha_exponent": 0.6,
+    "epsilon_initial": 1.0,
+    "epsilon_final": 0.05,
+    "epsilon_decay_windows": 4500
+  },
+  "replay": {
+    "capacity": 512,
+    "storage": "FIFO",
+    "extra_uniform_updates_per_window": 4,
+    "sample_with_replacement": true,
+    "online_update_before_replay": true
+  },
+  "evaluation": {
+    "training_to_evaluation_seed_map": {
+      "5101": 5101,
+      "5102": 5102,
+      "5103": 5103,
+      "5104": 5104,
+      "5105": 5105
+    },
+    "epsilon": 0.0,
+    "q_updates": false,
+    "replay_updates": false,
+    "conditions": [
+      "n16/B0",
+      "n16/B1",
+      "n16/B2"
+    ]
+  },
+  "inputs": {
+    "runtime_config": {
+      "path": "configs/pi4b8_corrected_runtime_v5.json",
+      "sha256": "6c1a7e093dac8866da3c6f506523b5d67a71ff4128623d11d25a32d120428190"
+    },
+    "input_freeze_manifest": {
+      "path": "protocols/PI4B8_TRUE_N16_INPUT_FREEZE_V1.json",
+      "sha256": "0d9a1675799e11b97dd2ccf0ddcac14ee7d01996970bb1b4a09c426dedd0b142"
+    },
+    "scheduler_risk_features_base": {
+      "path": "device_calibration/inputs/scheduler_train_6000_risk_features.npy",
+      "sha256": "fee72cdd9445e8ebd4ecb12e888848b52269bd0fe81ef259ecf25525bf711dcd"
+    },
+    "scheduler_backlog": {
+      "path": "device_calibration/inputs/pi4b8_true_n16_v1/training_backlog_zero.npy",
+      "sha256": "ec99b6565e80a623db4b78f652b0694af5a9f884154b68ae519521392f614a4e"
+    },
+    "scheduler_batch_indices_seed_5101": {
+      "path": "device_calibration/inputs/pi4b8_true_n16_v1/training_batch_indices_seed_5101.npy",
+      "sha256": "d0b423b9a2f7867166a02ab284e825813705c9c288c1d451de9be6a0dcca767c"
+    },
+    "scheduler_batch_indices_seed_5102": {
+      "path": "device_calibration/inputs/pi4b8_true_n16_v1/training_batch_indices_seed_5102.npy",
+      "sha256": "e1f037b5ffe429898c5ecd2e4d8297fefcf4ff6dcaf7f0e035e65e7ed33a6efb"
+    },
+    "scheduler_batch_indices_seed_5103": {
+      "path": "device_calibration/inputs/pi4b8_true_n16_v1/training_batch_indices_seed_5103.npy",
+      "sha256": "53b3a1d59db14857668edfc840b6dba720976c693c81180d2e15c906738ddb68"
+    },
+    "scheduler_batch_indices_seed_5104": {
+      "path": "device_calibration/inputs/pi4b8_true_n16_v1/training_batch_indices_seed_5104.npy",
+      "sha256": "9f01478e0866761646f93081eeead10ef602480931a80d742d03fdf7795e5028"
+    },
+    "scheduler_batch_indices_seed_5105": {
+      "path": "device_calibration/inputs/pi4b8_true_n16_v1/training_batch_indices_seed_5105.npy",
+      "sha256": "5c7f86b17084373043f5d3a26419b4aa2e39cd73d94767d2b5aa7585ed8335be"
+    },
+    "risk_proxy": {
+      "path": "risk_proxy/risk_proxy.npz",
+      "sha256": "eff41b7f4bd7b6303ba32d39b19be6e896d9b8c2de8d3a32f850000ea3c712c2"
+    },
+    "validation_metrics": {
+      "path": "models/VALIDATION_METRICS.csv",
+      "sha256": "7b2db09489ebc2c2e02c7604b0a7749a3a218d8d0b6abf547123f963affa1755"
+    },
+    "fit_raw": {
+      "path": "calibration/pi4b8/formal_fit_20260910_v3/raw_windows.csv",
+      "sha256": "2bdd3499aa9fd6e9702e01c1101f73f493614d37f1d49a3a5fc11ddac1350079"
+    },
+    "latency_predictor": {
+      "path": "calibration/pi4b8/frozen_guard_fit_margin_v1_run2/latency_predictor.csv",
+      "sha256": "47f9126b40d49e2b085bab34ea595e3a1c339cb97f5d61b644863f8d78cf273c"
+    },
+    "thermal_predictor": {
+      "path": "calibration/pi4b8/frozen_guard_fit_margin_v1_run2/thermal_predictor.json",
+      "sha256": "ba65dfec91c76ee86ad18ebc6f6b99e9c4881c7b46e20cd9cebf086b37d2a6e5"
+    },
+    "guard_margins": {
+      "path": "calibration/pi4b8/frozen_guard_fit_margin_v1_run2/guard_margins.json",
+      "sha256": "bedc7b4ce2be5efce82dea220a9d311052aeea9a80d1022680c38c65c16c523a"
+    }
+  }
+}

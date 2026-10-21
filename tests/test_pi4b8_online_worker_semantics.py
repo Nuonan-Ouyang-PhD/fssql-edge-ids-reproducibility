@@ -28,6 +28,12 @@ def q_config():
     return json.loads((ROOT / "configs/pi4b8_q_training_prereg_v1.json").read_text())
 
 
+def corrected_reward_config():
+    return json.loads(
+        (ROOT / "configs/pi4b8_corrected_runtime_v5.json").read_text()
+    )["reward"]
+
+
 def corrected_state_config():
     state = q_config()["state"]
     state["previous_action_values"] = [*ACTIONS, "none"]
@@ -110,6 +116,28 @@ class WindowBatchTests(unittest.TestCase):
                 one_record_per_window, windows=600, records_per_window=16
             )
 
+    def test_batch_indices_must_match_the_frozen_seed_schedule(self):
+        order = np.random.default_rng(5101).permutation(6000)
+        expected = order[np.arange(600 * 16) % 6000].reshape(600, 16)
+        observed = worker.validate_batch_indices(
+            expected,
+            windows=600,
+            records_per_window=16,
+            base_rows=6000,
+            seed=5101,
+        )
+        np.testing.assert_array_equal(observed, expected)
+        changed = expected.copy()
+        changed[0, 0], changed[0, 1] = changed[0, 1], changed[0, 0]
+        with self.assertRaisesRegex(RuntimeError, "frozen seed schedule"):
+            worker.validate_batch_indices(
+                changed,
+                windows=600,
+                records_per_window=16,
+                base_rows=6000,
+                seed=5101,
+            )
+
     def test_raw_runtime_rows_reject_scoring_and_audit_columns(self):
         with tempfile.TemporaryDirectory() as directory:
             path = Path(directory) / "raw.csv"
@@ -164,9 +192,20 @@ class RuntimeConfigurationGateTests(unittest.TestCase):
             },
             "risk_aggregation": "mean_of_16_frozen_proxy_probabilities",
             "backlog_source": "frozen_runtime_input_records",
+            "energy_state_initialization": 1.0,
+            "energy_state_reset": "once_at_run_start",
+            "threshold_queue_value": "n_records_plus_queued_backlog",
             "state": corrected_state_config(),
             "validation_action_quality": action_quality(),
-            "reward": q_config()["reward"],
+            "validation_action_quality_source": {
+                "path": "models/VALIDATION_METRICS.csv",
+                "sha256": "7b2db09489ebc2c2e02c7604b0a7749a3a218d8d0b6abf547123f963affa1755",
+                "derivation": (
+                    "TPR=recall; validation prevalence is solved from "
+                    "accuracy/precision/recall; FPR=FP/(1-prevalence)"
+                ),
+            },
+            "reward": corrected_reward_config(),
             "normalized_energy_cost_by_condition": {
                 "n16/B0": {action: 1.0 for action in ACTIONS}
             },
@@ -250,6 +289,23 @@ class RuntimeConfigurationGateTests(unittest.TestCase):
         with self.assertRaisesRegex(RuntimeError, "p_hi"):
             worker.validate_runtime_config(config, "n16/B0", "Threshold")
 
+    def test_validation_metrics_are_the_reward_quality_source(self):
+        observed = worker.load_validation_action_quality(
+            ROOT / "models/VALIDATION_METRICS.csv"
+        )
+        expected = json.loads(
+            (ROOT / "configs/pi4b8_corrected_runtime_v5.json").read_text()
+        )["validation_action_quality"]
+        for action in ACTIONS:
+            for metric in ("tpr", "fpr", "f1"):
+                self.assertAlmostEqual(observed[action][metric], expected[action][metric])
+
+    def test_reward_formula_and_label_isolation_are_frozen(self):
+        config = self.valid_config()
+        config["reward"]["ground_truth_label_use"] = "allowed"
+        with self.assertRaisesRegex(RuntimeError, "security/label"):
+            worker.validate_runtime_config(config, "n16/B0", "Safe-Greedy")
+
     def test_legacy_single_record_q_lineage_is_rejected_for_true_n16(self):
         config = self.valid_config()
         old_q_config_path = ROOT / "configs/pi4b8_q_training_prereg_v1.json"
@@ -264,6 +320,7 @@ class RuntimeConfigurationGateTests(unittest.TestCase):
                 old_manifest,
                 ROOT / "q_training/pi4b8_q_v1/tables/fssql_r_seed_5101.npz",
                 5101,
+                "n16/B0",
             )
 
 
@@ -480,10 +537,11 @@ class PolicySelectionTests(unittest.TestCase):
             risk=0.5,
             temperature=40.0,
             backlog=0.0,
+            threshold_queue_load=16.0,
             previous_action=4,
             threshold_config=threshold_config(),
             q_row=np.zeros(4),
-            reward_config=q_config()["reward"],
+            reward_config=corrected_reward_config(),
             quality=action_quality(),
             energy_cost=np.full(4, 1.0),
         )
@@ -495,10 +553,11 @@ class PolicySelectionTests(unittest.TestCase):
             risk=0.80,
             temperature=40.0,
             backlog=0.0,
+            threshold_queue_load=16.0,
             previous_action=4,
             threshold_config=threshold_config(),
             q_row=np.zeros(4),
-            reward_config=q_config()["reward"],
+            reward_config=corrected_reward_config(),
             quality=action_quality(),
             energy_cost=np.full(4, 1.0),
         )
@@ -516,10 +575,11 @@ class PolicySelectionTests(unittest.TestCase):
             risk=0.5,
             temperature=40.0,
             backlog=0.0,
+            threshold_queue_load=16.0,
             previous_action=4,
             threshold_config=threshold_config(),
             q_row=np.asarray([10.0, 1.0, 9.0, 0.0]),
-            reward_config=q_config()["reward"],
+            reward_config=corrected_reward_config(),
             quality=action_quality(),
             energy_cost=np.full(4, 1.0),
         )
@@ -533,10 +593,11 @@ class PolicySelectionTests(unittest.TestCase):
                 risk=0.5,
                 temperature=40.0,
                 backlog=0.0,
+                threshold_queue_load=16.0,
                 previous_action=4,
                 threshold_config=threshold_config(),
                 q_row=None,
-                reward_config=q_config()["reward"],
+                reward_config=corrected_reward_config(),
                 quality=action_quality(),
                 energy_cost=np.ones(4),
             )
@@ -582,7 +643,7 @@ class ScoringAndRewardTests(unittest.TestCase):
         quality = action_quality()
         energy_cost = np.asarray([1.0, 0.5, 0.8, 0.9])
         parts = worker.reward_components(
-            q_config()["reward"],
+            corrected_reward_config(),
             risk=0.75,
             action_index=1,
             backlog=128.0,
@@ -610,7 +671,7 @@ class ScoringAndRewardTests(unittest.TestCase):
 
             def transform(self, _rows):
                 events.append("preprocess")
-                return frozen_features[0]
+                return frozen_features[batch_indices[0]]
 
         class FakeRiskProxy:
             def __init__(self, _path):
@@ -635,9 +696,12 @@ class ScoringAndRewardTests(unittest.TestCase):
                     raise AssertionError(f"model received {values.shape}, not (16, 3)")
                 return np.linspace(0.1, 0.9, 16)
 
-        frozen_features = np.arange(48, dtype=np.float32).reshape(1, 16, 3)
-        risk_features = np.zeros((1, 16, 8), dtype=np.float64)
-        labels = np.asarray([[0, 1] * 8], dtype=np.int8)
+        frozen_features = np.arange(6000 * 3, dtype=np.float32).reshape(6000, 3)
+        risk_features = np.zeros((6000, 8), dtype=np.float64)
+        labels = np.asarray([0, 1] * 3000, dtype=np.int8)
+        batch_indices = (
+            np.random.default_rng(9999).permutation(6000)[:16].reshape(1, 16)
+        )
 
         with tempfile.TemporaryDirectory() as directory:
             root = Path(directory)
@@ -646,6 +710,10 @@ class ScoringAndRewardTests(unittest.TestCase):
             (asset_root / "models").mkdir()
             (asset_root / "preprocessing").mkdir()
             (asset_root / "risk_proxy").mkdir()
+            (asset_root / "config").mkdir()
+            (asset_root / "config/VALIDATION_METRICS.csv").write_bytes(
+                (ROOT / "models/VALIDATION_METRICS.csv").read_bytes()
+            )
 
             with (asset_root / "guard/latency_predictor.csv").open("w") as stream:
                 stream.write("action,workload_bin,background,tau_hat_ms\n")
@@ -684,9 +752,22 @@ class ScoringAndRewardTests(unittest.TestCase):
                 },
                 "risk_aggregation": "mean_of_16_frozen_proxy_probabilities",
                 "backlog_source": "frozen_runtime_input_records",
+                "energy_state_initialization": 1.0,
+                "energy_state_reset": "once_at_run_start",
+                "threshold_queue_value": "n_records_plus_queued_backlog",
                 "state": corrected_state_config(),
-                "validation_action_quality": action_quality(),
-                "reward": q_config()["reward"],
+                "validation_action_quality": json.loads(
+                    (ROOT / "configs/pi4b8_corrected_runtime_v5.json").read_text()
+                )["validation_action_quality"],
+                "validation_action_quality_source": {
+                    "path": "models/VALIDATION_METRICS.csv",
+                    "sha256": "7b2db09489ebc2c2e02c7604b0a7749a3a218d8d0b6abf547123f963affa1755",
+                    "derivation": (
+                        "TPR=recall; validation prevalence is solved from "
+                        "accuracy/precision/recall; FPR=FP/(1-prevalence)"
+                    ),
+                },
+                "reward": corrected_reward_config(),
                 "normalized_energy_cost_by_condition": {
                     "n16/B0": {action: 1.0 for action in ACTIONS}
                 },
@@ -719,19 +800,29 @@ class ScoringAndRewardTests(unittest.TestCase):
                     }
                 )
             )
-            for name in ("raw.csv", "features.npy", "risk.npy", "backlog.npy", "labels.npy"):
+            for name in (
+                "package.json",
+                "raw.csv",
+                "features.npy",
+                "risk.npy",
+                "backlog.npy",
+                "batch_indices.npy",
+                "labels.npy",
+            ):
                 (root / name).touch()
 
             args = Namespace(
                 asset_root=asset_root,
+                package_manifest=root / "package.json",
                 runtime_config=runtime_path,
-                q_config=ROOT / "configs/pi4b8_q_training_prereg_v1.json",
-                q_manifest=q_manifest_path,
+                q_config=None,
+                q_manifest=None,
                 model_hyperparameters=ROOT / "models/MODEL_HYPERPARAMETERS.json",
                 raw_features=root / "raw.csv",
                 features=root / "features.npy",
                 risk_features=root / "risk.npy",
                 backlog=root / "backlog.npy",
+                batch_indices=root / "batch_indices.npy",
                 labels=root / "labels.npy",
                 policy="Static-Light",
                 condition="n16/B0",
@@ -752,6 +843,8 @@ class ScoringAndRewardTests(unittest.TestCase):
                     return risk_features
                 if path == args.backlog:
                     return np.asarray([0.0])
+                if path == args.batch_indices:
+                    return batch_indices
                 if path == args.labels:
                     events.append("label_access")
                     if "prediction" not in events:
@@ -761,7 +854,15 @@ class ScoringAndRewardTests(unittest.TestCase):
 
             with (
                 mock.patch.object(worker, "parse_args", return_value=args),
-                mock.patch.object(worker, "read_raw_rows", return_value=[[{}] * 16]),
+                mock.patch.object(worker, "read_raw_base_rows", return_value=[{}] * 6000),
+                mock.patch.object(
+                    worker,
+                    "validate_worker_cli_binding",
+                    return_value={
+                        "base_records": 6000,
+                        "source_manifest_sha256": "0" * 64,
+                    },
+                ),
                 mock.patch.object(worker, "PortablePreprocessor", FakePreprocessor),
                 mock.patch.object(worker, "RiskProxy", FakeRiskProxy),
                 mock.patch.object(worker, "NumpyActionModel", FakeModel),
