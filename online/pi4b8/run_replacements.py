@@ -1,5 +1,11 @@
 import json, subprocess, time
 from pathlib import Path
+
+raise SystemExit(
+    "historical V4 replacement runner disabled after the 2026-10-21 audit; "
+    "no replacement run is authorized"
+)
+
 ROOT=Path(__file__).resolve().parents[2]; E=ROOT/'evidence/pi4b8_formal_matrix'; py=str(ROOT/'.venv/bin/python')
 cells=[('pi4b8_formal_40_safe_greedy_n16_B2_s5104','Safe-Greedy','n16/B2','robustness_B2',5104),('pi4b8_formal_51_fssql_r_n16_B2_s5105','FSSQL-R','n16/B2','robustness_B2',5105)]
 for orig,policy,condition,cd,seed in cells:

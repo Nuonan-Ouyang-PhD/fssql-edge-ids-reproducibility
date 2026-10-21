@@ -4,6 +4,11 @@ from pathlib import Path
 import hashlib, json, shutil, subprocess, sys
 import numpy as np
 
+raise SystemExit(
+    "historical V4 package builder disabled after the 2026-10-21 audit; "
+    "a corrected package may be built only after the repair protocol is frozen"
+)
+
 ROOT = Path(__file__).resolve().parent
 OUT = ROOT / "online/pi4b8/deployment/pi4b8_formal_runtime_v4"
 missing = []

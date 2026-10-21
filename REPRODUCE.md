@@ -2,6 +2,13 @@
 
 This guide separates software verification, development reconstruction, Raspberry Pi calibration, online execution, physical-energy acquisition, and one-shot test evaluation. Run each stage in a fresh checkout or isolated output directory because frozen-output scripts deliberately refuse to overwrite existing artifacts.
 
+> **Audit notice (21 October 2026).** The historical Pi4B V4 online package
+> does not implement the declared true-`n=16` policies and load conditions.
+> Its results are provenance only. The corrected worker is intentionally
+> fail-closed until a new repair protocol, true-`n=16` input package and
+> compatible Q lineage are frozen. Do not use the historical command or data
+> as a valid Pi4B reproduction.
+
 ## 1. Environment
 
 Reference software versions are pinned in `requirements-lock.txt`.
@@ -26,7 +33,10 @@ data/raw/UNSW_NB15_training-set.csv
 data/raw/UNSW_NB15_testing-set.csv
 ```
 
-Verify both files against `data/DATASET_SHA256.json`. Do not substitute similarly named preprocessed mirrors. The test CSV must remain unopened during development reconstruction.
+Verify both files against `data/DATASET_SHA256.json`. Do not substitute
+similarly named preprocessed mirrors. In a fresh reconstruction, keep the test
+CSV unopened throughout development. In this repository's completed lineage,
+the one authorized test access has already occurred; do not run it again.
 
 ## 3. Development split, preprocessing, and detectors
 
@@ -61,7 +71,9 @@ The four action models are FISVDD, LUCID, TinyDL, and OI-SVDD+AS-ELM. Thresholds
 
 ## 4. Q-learning reconstruction
 
-The Q-learning protocol is frozen in `configs/q_learning_protocol.json`; Pi4B-specific lineage and its erratum are under `q_training/pi4b8_q_v1/`.
+The legacy Q-learning protocol is frozen in
+`configs/q_learning_protocol.json`; Pi4B-specific lineage and its erratum are
+under `q_training/pi4b8_q_v1/`.
 
 ```bash
 python scripts/train_q_tables.py \
@@ -69,7 +81,12 @@ python scripts/train_q_tables.py \
   --output q_training_reproduced
 ```
 
-The checked-in seed-specific tables have `q_values` shape `1280 × 4`. Evaluation uses epsilon 0 with no Q or replay updates. The reported convergence result is late-budget behavioral stability on visited states, not proof of full-state mathematical convergence.
+The checked-in seed-specific tables have `q_values` shape `1280 × 4`. They
+were trained with one record per window, `n1/B0` predictor inputs and zero
+backlog despite the old Pi4B config label. They may be inspected as legacy
+single-record lineage, but the corrected worker rejects them for a true-`n=16`
+FSSQL-R run. A new development-only Q protocol and tables are required if the
+corrected experiment retains true-`n=16` or nonzero-backlog semantics.
 
 ## 5. Device-specific guard calibration
 
@@ -125,7 +142,7 @@ python online/pi3b/run_stress_extension_v3_campaign.py \
 
 The reference campaign contains 6 policies × 10 matched seeds × 600 windows. Do not use policy outcomes to alter the workload or guard.
 
-## 7. Pi4B online runtime
+## 7. Pi4B corrected online runtime (not yet authorized for execution)
 
 The Pi worker is `online/pi4b8/pi4b8_online_worker.py`. Its decision path is:
 
@@ -139,25 +156,21 @@ features/risk features
   → reward and per-window evidence
 ```
 
-A direct worker invocation from a frozen Pi runtime package is:
+The corrected interface additionally requires a hash-bound asset root,
+runtime/Q configurations and manifest, the model-threshold source, 9,600 raw
+and transformed development records, a separately frozen backlog source, and
+the scoring-only label sidecar. It refuses the 600-row V4 inputs, missing B1/B2
+load process definitions, and legacy single-record Q tables. Because the
+scientific decisions listed in
+`protocols/PI4B8_CORRECTED_RUNTIME_DECISION_DRAFT.md` are not yet frozen, this
+guide deliberately provides no executable formal command.
 
-```bash
-python online/pi4b8/pi4b8_online_worker.py \
-  --features <features.npy> \
-  --risk-features <risk_features.npy> \
-  --labels <scoring-only-labels.npy> \
-  --policy FSSQL-R \
-  --condition n16/B0 \
-  --seed 5101 \
-  --run-id <unique-run-id> \
-  --q-table q_training/pi4b8_q_v1/tables/fssql_r_seed_5101.npz \
-  --output <new-output-directory> \
-  --windows 600
-```
-
-The label file is a scoring sidecar. The worker reads its scoring label only after prediction. Run `python online/pi4b8/test_label_leakage.py` before deployment.
-
-The original formal Mac orchestrator and direct meter implementation are retained under `online/pi4b8/`. Hostnames and deployment directories in the frozen orchestrator are environment-specific and must be replaced only for an independent reproduction—not for reinterpretation of the published evidence.
+The label file is opened only after every action and detector prediction has
+been produced. B1/B2 require the exact pinned-CPU load lifecycle and
+contemporaneous process evidence; a condition label alone is rejected. The
+historical Mac orchestrator, V4 package builder and replacement runner remain
+under `online/pi4b8/` for audit and are not compatible with the corrected
+worker.
 
 ## 8. POWER-Z KM003C acquisition
 
@@ -187,7 +200,9 @@ The frozen specification is `protocols/POWER_Z_HID_ACQUISITION_V1.md`.
 
 ## 9. Statistical reproduction
 
-The checked-in Pi4B run-level data are `results/pi4b8/RUN_LEVEL_METRICS.csv`; paired results are `results/pi4b8/PAIRED_SEED_RESULTS.json`.
+The checked-in Pi4B run-level data and paired results are historical V4
+arithmetic summaries only. They are not valid corrected policy or energy
+comparisons.
 
 The analysis implementation is `analyze_pi4b8_formal.py`. It expects the private raw evidence layout used by the original campaign. To recompute from a locally restored raw archive, place that archive under `evidence/pi4b8_formal_matrix/` with the accepted-cell manifest and run:
 
@@ -199,15 +214,15 @@ The statistical unit is the matched seed/run, never a pooled window. With five P
 
 ## 10. One-shot official-test evaluator
 
-`run_official_test_once.py` is the exact evaluator retained for audit. It loads the frozen portable preprocessor and four detector artifacts, applies frozen thresholds, and writes confusion matrices plus AUROC/PR-AUC.
+`run_official_test_once.py` is retained for audit. It loads thresholds from
+`models/MODEL_HYPERPARAMETERS.json`, writes only below
+`results/official_test/`, and refuses to run while the immutable one-shot lock
+exists.
 
-The historical official test has already been opened and the empirical phase is closed. A third-party reproduction may execute:
-
-```bash
-python run_official_test_once.py
-```
-
-only after reproducing/fixing all development artifacts. Do not tune any model or threshold from its output. Reference results and output hashes are under `results/official_test/`.
+The official test has already been opened once and the empirical phase is
+closed. Do not execute it again in this artifact or use its saved results to
+choose any repair parameter. Reference aggregate results and output hashes are
+under `results/official_test/`.
 
 ## 11. Integrity checks
 

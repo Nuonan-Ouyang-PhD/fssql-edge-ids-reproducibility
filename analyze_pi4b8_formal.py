@@ -1,34 +1,303 @@
 #!/usr/bin/env python3
-import csv,json,hashlib,math
+"""Retain provenance analysis for historical V4 Pi4B runs.
+
+The V4 technical-validity labels do not certify corrected true-n=16 execution.
+They must not be used as the results of a future corrected Pi4B campaign.
+"""
+from __future__ import annotations
+
+import csv
+import hashlib
+import json
 from pathlib import Path
+
 import numpy as np
-from scipy.stats import ttest_rel,wilcoxon
-ROOT=Path(__file__).resolve().parent; BASE=ROOT/'evidence/pi4b8_formal_matrix'; OUT=ROOT/'analysis/pi4b8_formal_v1'; OUT.mkdir(parents=True,exist_ok=True)
-def sha(p): return hashlib.sha256(Path(p).read_bytes()).hexdigest()
-def rows(p): return list(csv.DictReader(open(p,newline='')))
-comp=json.load(open(ROOT/'PI4B8_FORMAL_EVIDENCE_COMPLETENESS_AFTER_RECOVERY.json')); selected=[]
-for x in comp['runs']:
- rid=x['run_id']; aid=rid+'_attempt2' if x['execution_order'] in (40,51) else rid; d=BASE/aid; files=list(d.glob('*/windows.csv')); assert files,aid
- selected.append({'cell_run_id':rid,'accepted_attempt_id':aid,'execution_order':x['execution_order'],'policy':x['policy'],'condition':x['condition'],'seed':x['seed'],'pi_raw':str(files[0]),'powerz':str(d/'POWERZ_raw.csv'),'handshake':str(d/'HANDSHAKE.json')})
-manifest={'status':'FROZEN_ACCEPTED_SELECTOR','accepted_cell_count':60,'selection_rule':'original attempt for 58 valid cells; _attempt2 for execution orders 40 and 51; never mix attempts','runs':selected}; mp=OUT/'ACCEPTED_RUN_MANIFEST.json'; mp.write_text(json.dumps(manifest,indent=2)+'\n'); (OUT/'ACCEPTED_RUN_MANIFEST_SHA256.txt').write_text(sha(mp)+'\n')
-metrics=[]
-for a in selected:
- rr=rows(a['pi_raw']); vals=lambda k:np.array([float(r[k]) for r in rr]); c={k:sum(int(r[k]) for r in rr) for k in ('tp','fp','fn','tn')}; tp,fp,fn,tn=[c[k] for k in ('tp','fp','fn','tn')]; pr=tp/(tp+fp) if tp+fp else 0; re=tp/(tp+fn) if tp+fn else 0; f1=2*pr*re/(pr+re) if pr+re else 0; actions={}
- for r in rr: actions[r['selected_action']]=actions.get(r['selected_action'],0)+1
- e2=vals('e2e_ms'); ctl=vals('controller_ms'); det=vals('detector_inference_ms'); temp=vals('temperature_C'); sw=sum(r['previous_action'] not in ('','None') and r['previous_action']!=r['selected_action'] for r in rr)
- energy=power=peak=float('nan'); pz=Path(a['powerz']); hs=Path(a['handshake'])
- if pz.exists() and hs.exists():
-  mm=rows(pz); mt=np.array([float(r['sample_monotonic']) for r in mm]); pw=np.array([float(r['power_W']) for r in mm]); h=json.load(open(hs)); s,e=h['start_ack_receive_mac_monotonic'],h['end_ack_receive_mac_monotonic']; tt=np.r_[s,mt[(mt>s)&(mt<e)],e]; pp=np.interp(tt,mt,pw); energy=float(np.trapz(pp,tt)); power=energy/(e-s); peak=float(pp.max())
- metrics.append({**a,**c,'precision':pr,'recall':re,'f1':f1,'fpr':fp/(fp+tn) if fp+tn else 0,'cumulative_reward':float(vals('reward').sum()),'mean_reward':float(vals('reward').mean()),'p50_e2e':float(np.percentile(e2,50)),'p95_e2e':float(np.percentile(e2,95)),'p99_e2e':float(np.percentile(e2,99)),'max_e2e':float(e2.max()),'mean_controller':float(ctl.mean()),'p95_controller':float(np.percentile(ctl,95)),'p99_controller':float(np.percentile(ctl,99)),'mean_detector':float(det.mean()),'switch_count':int(sw),'switch_rate':sw/len(rr),'switch_cost':float(vals('reward_switch').sum()),'latency_violations':int((e2>40).sum()),'thermal_violations':int((temp>82).sum()),'safe_set_mean':float(vals('safe_set_size').mean()),'mean_temperature':float(temp.mean()),'max_temperature':float(temp.max()),'mean_power_W':power,'peak_power_W':peak,'total_energy_J':energy,'total_energy_Wh':energy/3600 if math.isfinite(energy) else float('nan'),'J_per_window':energy/len(rr) if math.isfinite(energy) else float('nan'),'J_per_1000_records':energy*1000/len(rr) if math.isfinite(energy) else float('nan'),'J_per_correct_attack':energy/tp if tp and math.isfinite(energy) else float('nan'),'action_composition':actions})
- fields=[k for k in metrics[0] if k not in ('pi_raw','powerz','handshake','action_composition')]+['action_composition']; outcsv=OUT/'RUN_LEVEL_METRICS.csv'
-with outcsv.open('w',newline='') as f:
- w=csv.DictWriter(f,fieldnames=fields); w.writeheader(); [w.writerow({k:(json.dumps(m[k],sort_keys=True) if k=='action_composition' else m[k]) for k in fields}) for m in metrics]
-def boot(x):
- rng=np.random.default_rng(20260911); z=[np.mean(rng.choice(x,len(x),replace=True)) for _ in range(10000)]; return [float(np.percentile(z,2.5)),float(np.percentile(z,97.5))]
-keys=['f1','precision','recall','fpr','cumulative_reward','mean_reward','p50_e2e','p95_e2e','p99_e2e','max_e2e','mean_controller','p95_controller','p99_controller','mean_detector','switch_count','switch_rate','switch_cost','latency_violations','thermal_violations','safe_set_mean','mean_temperature','max_temperature','mean_power_W','peak_power_W','total_energy_J','total_energy_Wh','J_per_window','J_per_1000_records','J_per_correct_attack']; pairs=[]
-for cond in ('n16/B0','n16/B1','n16/B2'):
- for pa,pb in (('FSSQL-R','Safe-Greedy'),('FSSQL-R','Threshold'),('FSSQL-R','Static-Light'),('Safe-Greedy','Threshold')):
-  for k in keys:
-   aa=np.array([m[k] for m in metrics if m['policy']==pa and m['condition']==cond]); bb=np.array([m[k] for m in metrics if m['policy']==pb and m['condition']==cond]); diff=aa-bb
-   pairs.append({'metric':k,'condition':cond,'policy_a':pa,'policy_b':pb,'a_values':aa.tolist(),'b_values':bb.tolist(),'paired_difference_values':diff.tolist(),'mean_difference':float(np.mean(diff)),'sd_difference':float(np.std(diff,ddof=1)),'median_difference':float(np.median(diff)),'bootstrap_ci95_mean_difference':boot(diff),'paired_t_p':float(ttest_rel(aa,bb).pvalue),'wilcoxon_p_exact':float(wilcoxon(diff).pvalue) if np.any(diff) else 1.0,'paired_cohen_dz':float(np.mean(diff)/np.std(diff,ddof=1)) if np.std(diff,ddof=1)>0 else float('nan')})
-(OUT/'PAIRED_SEED_RESULTS.json').write_text(json.dumps(pairs,indent=2,allow_nan=True)+'\n'); (OUT/'ANALYSIS_README.md').write_text('Statistical unit is matched run/seed (n=5), never pooled windows. Energy is absolute KM003C DC input-side integration over Mac ACK boundaries. Official test remains sealed.\n'); print('PI4B8_ANALYSIS_PIPELINE_PASS',len(metrics),'runs',len(pairs),'paired results')
+from scipy.stats import ttest_rel, wilcoxon
+
+from online.pi4b8.run_pi4b8_formal_matrix import (
+    RunValidationError,
+    validate_power_capture,
+)
+
+
+ROOT = Path(__file__).resolve().parent
+BASE = ROOT / "evidence/pi4b8_formal_matrix"
+OUT = ROOT / "analysis/pi4b8_formal_v1"
+
+
+class EvidenceError(RuntimeError):
+    """A raw historical artifact does not satisfy its technical validity rules."""
+
+
+def sha256(path: Path) -> str:
+    return hashlib.sha256(path.read_bytes()).hexdigest()
+
+
+def csv_rows(path: Path) -> list[dict[str, str]]:
+    if not path.is_file():
+        raise EvidenceError(f"missing CSV: {path}")
+    with path.open(newline="") as stream:
+        return list(csv.DictReader(stream))
+
+
+def json_object(path: Path) -> dict:
+    if not path.is_file():
+        raise EvidenceError(f"missing JSON: {path}")
+    try:
+        return json.loads(path.read_text())
+    except json.JSONDecodeError as exc:
+        raise EvidenceError(f"malformed JSON: {path}") from exc
+
+
+def validated_energy(
+    powerz_path: Path,
+    handshake_path: Path,
+    validation_path: Path,
+    *,
+    expected_run_id: str,
+    minimum_roll_s: float = 5.0,
+) -> dict:
+    validation = json_object(validation_path)
+    if validation.get("status") != "VALID_COMPLETE":
+        raise EvidenceError(f"{expected_run_id}: run validation is not VALID_COMPLETE")
+    if validation.get("run_id") != expected_run_id:
+        raise EvidenceError(f"{expected_run_id}: run validation binding mismatch")
+    if validation.get("powerz", {}).get("sha256") != sha256(powerz_path):
+        raise EvidenceError(f"{expected_run_id}: POWER-Z hash mismatch")
+    if validation.get("handshake_sha256") != sha256(handshake_path):
+        raise EvidenceError(f"{expected_run_id}: handshake hash mismatch")
+
+    handshake = json_object(handshake_path)
+    if handshake.get("status") != "VALID_COMPLETE":
+        raise EvidenceError(f"{expected_run_id}: handshake is not VALID_COMPLETE")
+    try:
+        result = validate_power_capture(
+            powerz_path,
+            handshake,
+            run_id=expected_run_id,
+            minimum_roll_s=minimum_roll_s,
+        )
+    except RunValidationError as exc:
+        raise EvidenceError(str(exc)) from exc
+    recorded_energy = validation.get("powerz", {}).get("energy_J")
+    if recorded_energy is None or not np.isclose(
+        result["energy_J"], float(recorded_energy), rtol=1e-12, atol=1e-9
+    ):
+        raise EvidenceError(f"{expected_run_id}: energy is not independently reproducible")
+    return result
+
+
+def accepted_cells(root: Path, base: Path) -> list[dict]:
+    completeness = json_object(root / "PI4B8_FORMAL_EVIDENCE_COMPLETENESS_AFTER_RECOVERY.json")
+    selected = []
+    for item in completeness.get("runs", []):
+        run_id = item["run_id"]
+        attempt_id = run_id + "_attempt2" if item["execution_order"] in (40, 51) else run_id
+        directory = base / attempt_id
+        window_files = list(directory.glob("*/windows.csv"))
+        if len(window_files) != 1:
+            raise EvidenceError(
+                f"{attempt_id}: expected one windows.csv, found {len(window_files)}"
+            )
+        selected.append(
+            {
+                "cell_run_id": run_id,
+                "accepted_attempt_id": attempt_id,
+                "execution_order": item["execution_order"],
+                "policy": item["policy"],
+                "condition": item["condition"],
+                "seed": item["seed"],
+                "pi_raw": str(window_files[0]),
+                "powerz": str(directory / "POWERZ_raw.csv"),
+                "handshake": str(directory / "HANDSHAKE.json"),
+                "validation": str(directory / "RUN_VALIDATION.json"),
+            }
+        )
+    if len(selected) != 60:
+        raise EvidenceError(f"expected 60 accepted cells, found {len(selected)}")
+    return selected
+
+
+def bootstrap_ci(values: np.ndarray) -> list[float]:
+    rng = np.random.default_rng(20260911)
+    means = [np.mean(rng.choice(values, len(values), replace=True)) for _ in range(10000)]
+    return [float(np.percentile(means, 2.5)), float(np.percentile(means, 97.5))]
+
+
+def main() -> None:
+    selected = accepted_cells(ROOT, BASE)
+    OUT.mkdir(parents=True, exist_ok=True)
+    manifest = {
+        "status": "HISTORICAL_V4_PROVENANCE_ONLY",
+        "accepted_cell_count": 60,
+        "selection_rule": (
+            "original attempt for 58 valid cells; _attempt2 for execution orders "
+            "40 and 51; never mix attempts. These are historical V4 attempts, "
+            "not corrected true-n=16 evidence."
+        ),
+        "runs": selected,
+    }
+    manifest_path = OUT / "ACCEPTED_RUN_MANIFEST.json"
+    manifest_path.write_text(json.dumps(manifest, indent=2) + "\n")
+    (OUT / "ACCEPTED_RUN_MANIFEST_SHA256.txt").write_text(
+        sha256(manifest_path) + "\n"
+    )
+
+    metrics = []
+    for accepted in selected:
+        raw = csv_rows(Path(accepted["pi_raw"]))
+        if len(raw) != 600:
+            raise EvidenceError(
+                f"{accepted['accepted_attempt_id']}: expected 600 windows, found {len(raw)}"
+            )
+        values = lambda key: np.array([float(row[key]) for row in raw])
+        counts = {key: sum(int(row[key]) for row in raw) for key in ("tp", "fp", "fn", "tn")}
+        tp, fp, fn, tn = [counts[key] for key in ("tp", "fp", "fn", "tn")]
+        precision = tp / (tp + fp) if tp + fp else 0
+        recall = tp / (tp + fn) if tp + fn else 0
+        f1 = 2 * precision * recall / (precision + recall) if precision + recall else 0
+        actions = {}
+        for row in raw:
+            actions[row["selected_action"]] = actions.get(row["selected_action"], 0) + 1
+        e2e = values("e2e_ms")
+        controller = values("controller_ms")
+        detector = values("detector_inference_ms")
+        temperature = values("temperature_C")
+        switches = sum(
+            row["previous_action"] not in ("", "None")
+            and row["previous_action"] != row["selected_action"]
+            for row in raw
+        )
+        power = validated_energy(
+            Path(accepted["powerz"]),
+            Path(accepted["handshake"]),
+            Path(accepted["validation"]),
+            expected_run_id=accepted["accepted_attempt_id"],
+        )
+        energy = power["energy_J"]
+        metrics.append(
+            {
+                **accepted,
+                **counts,
+                "precision": precision,
+                "recall": recall,
+                "f1": f1,
+                "fpr": fp / (fp + tn) if fp + tn else 0,
+                "cumulative_reward": float(values("reward").sum()),
+                "mean_reward": float(values("reward").mean()),
+                "p50_e2e": float(np.percentile(e2e, 50)),
+                "p95_e2e": float(np.percentile(e2e, 95)),
+                "p99_e2e": float(np.percentile(e2e, 99)),
+                "max_e2e": float(e2e.max()),
+                "mean_controller": float(controller.mean()),
+                "p95_controller": float(np.percentile(controller, 95)),
+                "p99_controller": float(np.percentile(controller, 99)),
+                "mean_detector": float(detector.mean()),
+                "switch_count": int(switches),
+                "switch_rate": switches / len(raw),
+                "switch_cost": float(values("reward_switch").sum()),
+                "latency_violations": int((e2e > 40).sum()),
+                "thermal_violations": int((temperature > 82).sum()),
+                "safe_set_mean": float(values("safe_set_size").mean()),
+                "mean_temperature": float(temperature.mean()),
+                "max_temperature": float(temperature.max()),
+                "mean_power_W": power["mean_power_W"],
+                "peak_power_W": power["peak_power_W"],
+                "total_energy_J": energy,
+                "total_energy_Wh": energy / 3600,
+                "J_per_window": energy / len(raw),
+                "J_per_1000_records": energy * 1000 / len(raw),
+                "J_per_correct_attack": energy / tp if tp else float("nan"),
+                "action_composition": actions,
+            }
+        )
+
+    excluded = {"pi_raw", "powerz", "handshake", "validation", "action_composition"}
+    fields = [key for key in metrics[0] if key not in excluded] + ["action_composition"]
+    with (OUT / "RUN_LEVEL_METRICS.csv").open("w", newline="") as stream:
+        writer = csv.DictWriter(stream, fieldnames=fields)
+        writer.writeheader()
+        for metric in metrics:
+            writer.writerow(
+                {
+                    key: json.dumps(metric[key], sort_keys=True)
+                    if key == "action_composition"
+                    else metric[key]
+                    for key in fields
+                }
+            )
+
+    keys = [
+        "f1", "precision", "recall", "fpr", "cumulative_reward", "mean_reward",
+        "p50_e2e", "p95_e2e", "p99_e2e", "max_e2e", "mean_controller",
+        "p95_controller", "p99_controller", "mean_detector", "switch_count",
+        "switch_rate", "switch_cost", "latency_violations", "thermal_violations",
+        "safe_set_mean", "mean_temperature", "max_temperature", "mean_power_W",
+        "peak_power_W", "total_energy_J", "total_energy_Wh", "J_per_window",
+        "J_per_1000_records", "J_per_correct_attack",
+    ]
+    pairs = []
+    for condition in ("n16/B0", "n16/B1", "n16/B2"):
+        for policy_a, policy_b in (
+            ("FSSQL-R", "Safe-Greedy"),
+            ("FSSQL-R", "Threshold"),
+            ("FSSQL-R", "Static-Light"),
+            ("Safe-Greedy", "Threshold"),
+        ):
+            for key in keys:
+                a_values = np.array(
+                    [m[key] for m in metrics if m["policy"] == policy_a and m["condition"] == condition]
+                )
+                b_values = np.array(
+                    [m[key] for m in metrics if m["policy"] == policy_b and m["condition"] == condition]
+                )
+                difference = a_values - b_values
+                pairs.append(
+                    {
+                        "metric": key,
+                        "condition": condition,
+                        "policy_a": policy_a,
+                        "policy_b": policy_b,
+                        "a_values": a_values.tolist(),
+                        "b_values": b_values.tolist(),
+                        "paired_difference_values": difference.tolist(),
+                        "mean_difference": float(np.mean(difference)),
+                        "sd_difference": float(np.std(difference, ddof=1)),
+                        "median_difference": float(np.median(difference)),
+                        "bootstrap_ci95_mean_difference": bootstrap_ci(difference),
+                        "paired_t_p": float(ttest_rel(a_values, b_values).pvalue),
+                        "wilcoxon_p_exact": float(wilcoxon(difference).pvalue)
+                        if np.any(difference)
+                        else 1.0,
+                        "paired_cohen_dz": float(
+                            np.mean(difference) / np.std(difference, ddof=1)
+                        )
+                        if np.std(difference, ddof=1) > 0
+                        else float("nan"),
+                    }
+                )
+    (OUT / "PAIRED_SEED_RESULTS.json").write_text(
+        json.dumps(pairs, indent=2, allow_nan=True) + "\n"
+    )
+    (OUT / "ANALYSIS_README.md").write_text(
+        "Historical V4 provenance analysis only. VALID_COMPLETE denotes the "
+        "technical acquisition classification used at the time; it does not make "
+        "these runs corrected true-n=16 evidence. The official test was sealed "
+        "during V4 collection and was subsequently opened once for the frozen "
+        "detector-generalization evaluation. Do not use these outputs as results "
+        "from a future corrected Pi4B campaign.\n"
+    )
+    print(
+        "PI4B8_HISTORICAL_V4_PROVENANCE_ANALYSIS_COMPLETE",
+        len(metrics),
+        "runs",
+        len(pairs),
+        "paired results",
+    )
+
+
+if __name__ == "__main__":
+    try:
+        main()
+    except EvidenceError as exc:
+        raise SystemExit(f"Pi4B8 analysis blocked: {exc}") from exc

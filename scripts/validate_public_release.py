@@ -7,6 +7,7 @@ import ast
 import csv
 import hashlib
 import json
+import subprocess
 from pathlib import Path
 
 import numpy as np
@@ -36,6 +37,7 @@ for path in [
     "preprocessing/preprocessor_portable.npz",
     "risk_proxy/risk_proxy.npz",
     "results/pi4b8/RUN_LEVEL_METRICS.csv",
+    "results/pi4b8/ANALYSIS_README.md",
     "results/official_test/OFFICIAL_TEST_RESULTS.csv",
 ]:
     require(path)
@@ -68,6 +70,10 @@ if len(rows) != 60:
     errors.append(f"expected 60 Pi4B run-level rows, found {len(rows)}")
 if rows and len({(row["policy"], row["condition"], row["seed"]) for row in rows}) != 60:
     errors.append("Pi4B policy-condition-seed mapping is not one-to-one")
+if "HISTORICAL_V4_PROVENANCE_ONLY" not in require(
+    "results/pi4b8/ANALYSIS_README.md"
+).read_text(encoding="utf-8"):
+    errors.append("Pi4B V4 results are not marked as withdrawn historical provenance")
 
 with require("results/official_test/OFFICIAL_TEST_RESULTS.csv").open(newline="", encoding="utf-8") as stream:
     official = list(csv.DictReader(stream))
@@ -84,21 +90,39 @@ for forbidden in [
 
 manifest = ROOT / "PUBLIC_RELEASE_MANIFEST_SHA256.txt"
 if manifest.exists():
+    listed: set[str] = set()
     for line in manifest.read_text(encoding="utf-8").splitlines():
         digest, relative = line.split("  ", 1)
+        if relative in listed:
+            errors.append(f"duplicate checksum entry: {relative}")
+        listed.add(relative)
         path = ROOT / relative
         if not path.is_file() or sha256(path) != digest:
             errors.append(f"checksum mismatch: {relative}")
+    if (ROOT / ".git").exists():
+        tracked = {
+            value.decode()
+            for value in subprocess.check_output(
+                ["git", "ls-files", "-z"], cwd=ROOT
+            ).split(b"\0")
+            if value
+        }
+        tracked.discard(manifest.name)
+        for relative in sorted(tracked - listed):
+            errors.append(f"tracked file missing from checksum manifest: {relative}")
+        for relative in sorted(listed - tracked):
+            errors.append(f"checksum manifest contains untracked file: {relative}")
 
 if errors:
     print(json.dumps({"status": "FAIL", "errors": errors}, indent=2))
     raise SystemExit(1)
 
 print(json.dumps({
-    "status": "PUBLIC_TECHNICAL_RELEASE_PASS",
+    "status": "PUBLIC_ARCHIVE_INTEGRITY_PASS_WITH_PI4B_V4_WITHDRAWN",
     "portable_models": len(model_paths),
     "pi4b_q_tables": len(q_paths),
-    "pi4b_run_level_cells": len(rows),
+    "pi4b_historical_v4_cells": len(rows),
+    "pi4b_scientific_status": "WITHDRAWN_PENDING_CORRECTED_PREREGISTERED_RERUN",
     "official_test_detectors": len(official),
 }, indent=2))
 

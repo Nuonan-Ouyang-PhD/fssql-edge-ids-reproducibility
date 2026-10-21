@@ -6,6 +6,10 @@ from pathlib import Path
 ROOT=Path(__file__).resolve().parents[2]
 def sha(p): return hashlib.sha256(Path(p).read_bytes()).hexdigest()
 def main():
+ raise SystemExit(
+  'historical V4 commissioning orchestrator disabled after the 2026-10-21 audit; '
+  'the corrected runtime package and protocol are not frozen'
+ )
  p=argparse.ArgumentParser(); p.add_argument('--run-id',default='pi4b8_commissioning_v4'); p.add_argument('--seed',type=int,default=5101); p.add_argument('--windows',type=int,default=600); a=p.parse_args(); out=ROOT/'evidence/pi4b8_commissioning'/a.run_id; out.mkdir(parents=True,exist_ok=False)
  py=str(ROOT/'.venv/bin/python'); gate=subprocess.run([py,str(ROOT/'online/pi4b8/pi4b8_formal_runner.py'),'--commissioning'],capture_output=True,text=True); (out/'gate.txt').write_text(gate.stdout+gate.stderr)
  if gate.returncode: raise SystemExit('lineage gate failed')
