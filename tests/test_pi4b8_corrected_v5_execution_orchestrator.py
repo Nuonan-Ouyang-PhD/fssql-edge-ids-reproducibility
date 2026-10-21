@@ -8,6 +8,7 @@ from pathlib import Path
 from unittest import mock
 
 from online.pi4b8 import pi4b8_corrected_v5_execution_orchestrator as execution
+from online.pi4b8 import powerz_hid_capture as capture
 
 
 def digest(path: Path) -> str:
@@ -108,6 +109,9 @@ def sixty_run_plan(package_hash: str) -> dict:
 
 
 class CorrectedExecutionAuthorizationTests(unittest.TestCase):
+    def test_orchestrator_and_capture_share_mac_monotonic_clock(self):
+        self.assertLess(abs(execution.mac_monotonic() - capture.shared_monotonic()), 0.1)
+
     def _fixture(self, root: Path):
         package_root = root / "package"
         authorization = root / "authorization"

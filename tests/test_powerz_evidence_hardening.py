@@ -2,6 +2,8 @@ import csv
 import datetime
 import json
 import struct
+import subprocess
+import sys
 import tempfile
 import unittest
 from pathlib import Path
@@ -87,6 +89,22 @@ def write_meter(path, *, mutate=None):
 
 
 class CaptureTests(unittest.TestCase):
+    def test_default_monotonic_clock_is_shared_across_processes(self):
+        child = float(
+            subprocess.check_output(
+                [
+                    sys.executable,
+                    "-c",
+                    "import time; print(time.clock_gettime(time.CLOCK_MONOTONIC))",
+                ],
+                text=True,
+            ).strip()
+        )
+        self.assertLess(abs(capture.shared_monotonic() - child), 1.0)
+        self.assertIs(
+            capture.capture.__kwdefaults__["monotonic"], capture.shared_monotonic
+        )
+
     def test_ready_identity_and_streamed_rows(self):
         with tempfile.TemporaryDirectory() as directory:
             path = Path(directory) / "power.csv"

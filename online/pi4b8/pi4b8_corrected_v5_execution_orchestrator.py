@@ -70,6 +70,11 @@ class ExecutionError(RuntimeError):
     """A corrected execution dependency or technical run condition failed."""
 
 
+def mac_monotonic() -> float:
+    """Return the system-wide monotonic clock shared by Mac processes."""
+    return time.clock_gettime(time.CLOCK_MONOTONIC)
+
+
 def validate_commissioning_identity(policy: str, condition: str, seed: int) -> None:
     """Keep commissioning outside the five formal matched seeds."""
     expected = (
@@ -156,16 +161,16 @@ def read_ack(
     if not math.isfinite(timeout_s) or timeout_s <= 0:
         raise ExecutionError(f"invalid {event} timeout")
     lines: list[str] = []
-    deadline = time.monotonic() + timeout_s
+    deadline = mac_monotonic() + timeout_s
     selector = selectors.DefaultSelector()
     try:
         selector.register(stream, selectors.EVENT_READ)
         while True:
-            remaining = deadline - time.monotonic()
+            remaining = deadline - mac_monotonic()
             if remaining <= 0 or not selector.select(remaining):
                 raise ExecutionError(f"timeout waiting for {event}")
             line = stream.readline()
-            received = time.monotonic()
+            received = mac_monotonic()
             if not line:
                 raise ExecutionError(f"missing {event}")
             lines.append(line)
@@ -193,16 +198,16 @@ def read_powerz_ready(
     if not math.isfinite(timeout_s) or timeout_s <= 0:
         raise ExecutionError("invalid POWERZ_READY timeout")
     lines: list[str] = []
-    deadline = time.monotonic() + timeout_s
+    deadline = mac_monotonic() + timeout_s
     selector = selectors.DefaultSelector()
     try:
         selector.register(stream, selectors.EVENT_READ)
         while True:
-            remaining = deadline - time.monotonic()
+            remaining = deadline - mac_monotonic()
             if remaining <= 0 or not selector.select(remaining):
                 raise ExecutionError("timeout waiting for POWERZ_READY")
             line = stream.readline()
-            received = time.monotonic()
+            received = mac_monotonic()
             if not line:
                 raise ExecutionError("missing POWERZ_READY")
             lines.append(line)
@@ -1564,7 +1569,7 @@ def execute_cell(
         cooldown = collect_idle_cooldown_gate(
             dependency, ssh_target=ssh_target, evidence_dir=local_run
         )
-        meter_start = time.monotonic()
+        meter_start = mac_monotonic()
         handshake["meter_capture_start_mac_monotonic"] = meter_start
         meter = subprocess.Popen(
             [
@@ -1595,10 +1600,10 @@ def execute_cell(
         time.sleep(
             max(
                 0.0,
-                meter_ready_time + PRE_POST_ROLL_SECONDS - time.monotonic(),
+                meter_ready_time + PRE_POST_ROLL_SECONDS - mac_monotonic(),
             )
         )
-        request_time = time.monotonic()
+        request_time = mac_monotonic()
         handshake["start_request_mac_monotonic"] = request_time
         worker = subprocess.Popen(
             ["ssh", ssh_target, shlex.join(run["worker_argv"])],
@@ -1650,7 +1655,7 @@ def execute_cell(
             raise ExecutionError(f"{run_id}: Pi evidence retrieval failed")
 
         time.sleep(
-            max(0.0, end_ack_time + PRE_POST_ROLL_SECONDS - time.monotonic())
+            max(0.0, end_ack_time + PRE_POST_ROLL_SECONDS - mac_monotonic())
         )
         try:
             meter_stdout, meter_stderr = meter.communicate(
@@ -1659,7 +1664,7 @@ def execute_cell(
         except subprocess.TimeoutExpired as error:
             raise ExecutionError(f"{run_id}: POWER-Z capture did not terminate") from error
         meter_stdout_lines.append(meter_stdout)
-        meter_end = time.monotonic()
+        meter_end = mac_monotonic()
         meter_stdout_path.write_text("".join(meter_stdout_lines), encoding="utf-8")
         meter_stderr_path.write_text(meter_stderr, encoding="utf-8")
         if meter.returncode:
@@ -1784,7 +1789,7 @@ def execute_cell(
             meter_stderr += remaining_meter_stderr
         meter_stdout_path.write_text("".join(meter_stdout_lines), encoding="utf-8")
         meter_stderr_path.write_text(meter_stderr, encoding="utf-8")
-        handshake.setdefault("meter_capture_end_mac_monotonic", time.monotonic())
+        handshake.setdefault("meter_capture_end_mac_monotonic", mac_monotonic())
         handshake["status"] = "INVALID_TECHNICAL"
         handshake["reason"] = str(error)
         handshake_path.write_text(

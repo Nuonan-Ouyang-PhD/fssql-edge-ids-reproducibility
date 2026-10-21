@@ -26,6 +26,11 @@ SCHEMA = (
 )
 
 
+def shared_monotonic() -> float:
+    """Return the system-wide monotonic clock shared by Mac processes."""
+    return time.clock_gettime(time.CLOCK_MONOTONIC)
+
+
 class HidDevice(Protocol):
     def open(self, vendor_id: int, product_id: int, serial: str) -> None: ...
 
@@ -56,7 +61,7 @@ def capture(
     seconds: float = 20.0,
     sps: float = 10.0,
     device_factory: Callable[[], HidDevice] = _default_device_factory,
-    monotonic: Callable[[], float] = time.monotonic,
+    monotonic: Callable[[], float] = shared_monotonic,
     utc_now: Callable[[], datetime.datetime] = lambda: datetime.datetime.now(
         datetime.timezone.utc
     ),
