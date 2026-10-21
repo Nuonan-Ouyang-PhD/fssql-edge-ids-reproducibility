@@ -5,14 +5,13 @@ This guide separates software verification, development reconstruction, Raspberr
 > **Audit notice (21 October 2026).** The historical Pi4B V4 online package
 > does not implement the declared true-`n=16` policies and load conditions.
 > Its results are provenance only. The corrected protocol, true-`n=16` input
-> lineage and five corrected Q tables are frozen. V5 R3 passed local and remote
-> inventory/hash gates, but its remote smoke stopped before inference on a
-> stale complete-worker hash in the Q manifest. The check was not bypassed.
-> The same frozen Q training reproduced all tables byte for byte under the
-> hardened worker, and the additive lineage is in
-> `q_training/pi4b8_true_n16_v3/`. A new package revision, commissioning, final
-> authorization and corrected formal matrix are still required. Do not use the
-> historical command or data as a valid Pi4B reproduction.
+> lineage and five corrected Q tables are frozen. V5 R3 stopped before
+> inference on a stale complete-worker hash in the Q manifest; the check was
+> not bypassed. The same frozen Q training reproduced all tables byte for byte
+> under the hardened worker. V5 R4 now passes local materialization, exact
+> remote inventory/hash validation, and a 16-record FSSQL smoke. Commissioning,
+> final authorization and the corrected formal matrix have not run. Do not use
+> the historical command or data as a valid Pi4B reproduction.
 
 ## 1. Environment
 
@@ -152,7 +151,7 @@ python online/pi3b/run_stress_extension_v3_campaign.py \
 
 The reference campaign contains 6 policies × 10 matched seeds × 600 windows. Do not use policy outcomes to alter the workload or guard.
 
-## 7. Pi4B corrected online runtime (not yet authorized for execution)
+## 7. Pi4B corrected online runtime and execution gates
 
 The Pi worker is `online/pi4b8/pi4b8_online_worker.py`. Its decision path is:
 
@@ -183,13 +182,45 @@ python3 scripts/train_pi4b8_q_true_n16.py \
   --output <new-q-output> \
   --execute-training
 python3 build_pi4b8_corrected_runtime_v5.py \
-  --source-manifest protocols/PI4B8_CORRECTED_RUNTIME_SOURCE_MANIFEST_V5_R3.json \
+  --source-manifest protocols/PI4B8_CORRECTED_RUNTIME_SOURCE_MANIFEST_V5_R4.json \
   --output <new-v5-package-directory>
 ```
 
-There is still no formal execution command in this guide: a corrected
-commissioning validation, final execution manifest and final authorization
-gate must pass first.
+Freeze the 60-cell plan without starting hardware execution:
+
+```bash
+.venv/bin/python online/pi4b8/pi4b8_corrected_v5_execution_orchestrator.py plan \
+  --package-root <new-v5-package-directory> \
+  --package-manifest <new-v5-package-directory>/PI4B8_CORRECTED_RUNTIME_PACKAGE_MANIFEST_V5.json \
+  --remote-package-root /home/pi/tsusc_major_revision/pi4b8_formal_runtime_v5_r4 \
+  --remote-output-root /home/pi/tsusc_major_revision/pi4b8_corrected_v5_r4_runs \
+  --authorization-dir <new-authorization-directory> \
+  --evidence-root <new-evidence-directory> \
+  --ssh-target pi@pi4b8g.local \
+  --mac-python .venv/bin/python
+```
+
+With KM003C serial `075356` connected and all four Pi governors set to
+`performance`, execute the frozen non-formal commissioning cell:
+
+```bash
+.venv/bin/python online/pi4b8/pi4b8_corrected_v5_execution_orchestrator.py commissioning \
+  --package-root <new-v5-package-directory> \
+  --package-manifest <new-v5-package-directory>/PI4B8_CORRECTED_RUNTIME_PACKAGE_MANIFEST_V5.json \
+  --remote-package-root /home/pi/tsusc_major_revision/pi4b8_formal_runtime_v5_r4 \
+  --remote-output-root /home/pi/tsusc_major_revision/pi4b8_corrected_v5_r4_runs \
+  --authorization-dir <new-authorization-directory> \
+  --evidence-root <new-evidence-directory> \
+  --ssh-target pi@pi4b8g.local \
+  --mac-python .venv/bin/python \
+  --run-id <unique-commissioning-run-id> \
+  --policy Static-Light --condition n16/B0 --seed 5099
+```
+
+A passing commissioning freezes and reopens the final execution manifest. Only
+then may the same command prefix be invoked with the `formal` subcommand. The
+formal path revalidates the gate, runs the 60 frozen cells, and refuses duplicate
+or unplanned run IDs.
 
 The label file is opened only after every action and detector prediction has
 been produced. B1/B2 require the exact pinned-CPU load lifecycle and

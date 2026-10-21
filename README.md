@@ -43,14 +43,15 @@ an executable background-load specification. It also rejects the legacy
 single-record Q tables for a corrected true-`n=16` run. Five seed-specific
 corrected Q tables (`5101–5105`) have been trained from development-only inputs,
 independently reproduced byte for byte, and hash-frozen. A corrected V5 runtime
-R3 package passed the local package and remote inventory/hash gates, but its
-remote smoke stopped before inference because the Q manifest bound the complete
-pre-hardening worker file. The check was not bypassed. Re-executing the frozen
-development-only training with the hardened worker reproduced all five Q tables
-and the checkpoint CSV byte for byte; a new manifest changes only that worker
-hash binding. A new package revision, remote smoke, corrected commissioning and
-corrected formal matrix are still required; no corrected Pi 4B result has been
-generated.
+R3 package passed the local and remote hash gates, but its smoke stopped before
+inference on the old complete-worker Q binding; the check was not bypassed.
+Re-executing the same frozen development-only training with the hardened worker
+reproduced all five Q tables and the checkpoint CSV byte for byte. The resulting
+R4 package passes its local gate, exact 43-file remote hash gate, and a complete
+16-record FSSQL smoke covering preprocessing, RiskProxy, the joint guard,
+safe-set masked Q selection, detector prediction, and post-prediction scoring.
+The corrected 600-window commissioning and formal matrix have not run, so no
+corrected Pi 4B result has yet been generated.
 
 This audit does not by itself invalidate the Pi 3B campaign, Pi 4B independent
 fit/margin/coverage observations, or the already saved one-shot official-test

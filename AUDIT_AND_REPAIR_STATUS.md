@@ -94,22 +94,29 @@ status `PI4B8_TRUE_N16_Q_TRAINING_COMPLETE`, and the five tables plus checkpoint
 CSV are byte-identical. These are development-only training artifacts, not
 corrected online results.
 
+R3 remains the immutable failed-smoke package: its local and remote hashes
+passed, but the Q manifest still bound the complete pre-hardening worker file.
+The check was not bypassed. The deterministic reproduction and additive
+lineage repair are recorded in `protocols/PI4B8_Q_WORKER_HASH_ERRATUM_V1.md`
+and `q_training/pi4b8_true_n16_v3/`.
+
 The current source freeze is
-`protocols/PI4B8_CORRECTED_RUNTIME_SOURCE_MANIFEST_V5_R3.json` (SHA-256
-`684dcdb79204f24dc4e75b64535af22847f0642d011638837594a477179dd6d7`).
-Its materialized package manifest has SHA-256
-`e1573990988ca606b7dbd844e55390c7b429b3bd03e2914915104f7c7706e2c3`.
-The R3 package passes the local gate and exact remote inventory/hash validation
-at `/home/pi/tsusc_major_revision/pi4b8_formal_runtime_v5_r3`. Its remote smoke
-then stopped before inference because the Q manifest still bound the complete
-pre-hardening worker file. The check was not bypassed and the R3 package remains
-unchanged. A deterministic training reproduction with the hardened worker
-produced the same five Q tables and checkpoint CSV byte for byte; only the
-worker hash in the new Q manifest changed. That additive lineage repair is
-recorded in `protocols/PI4B8_Q_WORKER_HASH_ERRATUM_V1.md` and
-`q_training/pi4b8_true_n16_v3/`. A new package revision must pass local, remote
-hash and smoke gates before the remaining 600-window commissioning,
-POWER-Z/ACK validation, final authorization and corrected formal matrix.
+`protocols/PI4B8_CORRECTED_RUNTIME_SOURCE_MANIFEST_V5_R4.json` (SHA-256
+`f2e2310aa782c6492da35209a4668a55972a628ccd9f57e2706761392b740283`).
+Its package manifest has SHA-256
+`c2f1faf2153721bd4c5b623ec31aeb05db02cb0fd3182cc6ff5e363c4cea62ae`.
+R4 passes the local gate, exact 43-file remote inventory/hash gate, and a
+read-only 16-record FSSQL smoke from
+`/home/pi/tsusc_major_revision/pi4b8_formal_runtime_v5_r4`. The smoke loaded
+all four models and RiskProxy, reproduced preprocessing, built the joint safe
+set, applied masked Q argmax, predicted 16 records, and accessed labels only
+after prediction. Its evidence SHA-256 is
+`39d02398fd721f5b87a696e8c932ee2a59fe7e570457a0c976347b5cdb4f3f01`.
+The 60-cell plan is frozen at SHA-256
+`f73229a30f52e4bdb988ae8b0ef9c763c4e571bf30a0883c6558299e848aefc7`.
+The remaining gates are the 600-window commissioning with POWER-Z/ACK
+validation, final authorization, corrected formal matrix and independent
+evidence validation.
 
 The frozen scientific boundary is recorded in
 `protocols/PI4B8_CORRECTED_TRUE_N16_PROTOCOL_V1.md`. It authorizes the corrected
