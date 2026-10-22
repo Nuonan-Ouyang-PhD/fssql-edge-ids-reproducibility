@@ -7,4 +7,6 @@
 - `validation/`: local test log, environment and release-check summary.
 - Existing calibration, execution, Q, model and official-test artifacts: preserved unchanged.
 
+The public package does not include the 60 Pi4B8 raw window files or 60 raw KM003C captures. Complete R6 raw-evidence recomputation requires the existing evidence archive referenced by the accepted manifest.
+
 Do not confuse the paper-only submission archive with the repository update. No new training, hardware run or test-set access is part of this release update.

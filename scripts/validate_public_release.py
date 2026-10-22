@@ -1,7 +1,7 @@
 #!/usr/bin/env python3
 """Validate current R6 analysis/manuscript release; validate submission-ready evidence."""
 from __future__ import annotations
-import argparse,hashlib,json,sys
+import argparse,hashlib,json,sys,subprocess
 from pathlib import Path
 import pandas as pd
 import numpy as np
@@ -21,6 +21,16 @@ def main():
    if not target.is_relative_to(ROOT.resolve()) or relative in seen: errors.append('Invalid/duplicate path: '+relative);continue
    seen.add(relative)
    if not target.is_file() or sha(target)!=digest:errors.append('Checksum mismatch: '+relative)
+  try:
+   tracked={x for x in subprocess.check_output(['git','ls-files','-z'],cwd=ROOT).decode().split('\0') if x}
+   tracked.discard('PUBLIC_RELEASE_MANIFEST_SHA256.txt')
+   listed=set(seen)
+   omitted=sorted(tracked-listed)
+   extra=sorted(listed-tracked)
+   if omitted: errors.append('Unlisted release files: '+', '.join(omitted))
+   if extra: errors.append('Manifest paths not tracked: '+', '.join(extra))
+  except (OSError,subprocess.CalledProcessError):
+   errors.append('Cannot enumerate tracked release files for completeness check')
  d=ROOT/'results/pi4b8_r6_revision'
  for n in ['RUN_LEVEL_METRICS.csv','PAIRED_ALL_POLICY_CONTRASTS.csv','Q_STATE_SUPPORT.csv','ACCEPTED_RUN_MANIFEST.json','ANALYSIS_VALIDATION.json']:
   if not (d/n).is_file():errors.append('Missing current analysis: '+n)

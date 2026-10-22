@@ -19,6 +19,8 @@ This repository contains the synchronized manuscript, reproducible analysis, fro
 | Audit and repair record | `AUDIT_AND_REPAIR_STATUS.md` |
 | Release checksums | `PUBLIC_RELEASE_MANIFEST_SHA256.txt` |
 
+The public repository package does not include the 60 Pi4B8 raw window files or the 60 raw KM003C meter captures. Complete R6 raw-evidence recomputation requires the existing evidence archive referenced by the accepted manifest; the public package is not itself a complete raw-measurement archive.
+
 ## Findings
 
 Safe-Greedy outperforms FSSQL-R in the Pi 3B stationary binding comparison. In Pi4B8 runs, their mean F1 is close under B0/B1; under B2 it is 0.8869 versus 0.9608, with FPR 0.5199 versus 0.1327. The learned policy reaches training-unvisited states in 1,322/3,000 B2 windows and follows its fixed zero-Q tie rule. This is a post hoc execution diagnostic, not a population failure probability.
