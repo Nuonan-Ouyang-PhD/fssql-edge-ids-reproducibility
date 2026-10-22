@@ -9,3 +9,11 @@
 - No new hardware collection, detector training, Q training, threshold selection or official-test access was performed for this release.
 
 These are checks of the supplied record and current analysis/manuscript, not an external replication of physical execution or a guarantee of journal acceptance. Historical result-copy provenance, thermal/queue nonbinding scope, development-workload reuse, five-pair inference and timing boundaries remain disclosed. The release is ready for coauthor review and submission preparation.
+
+## Manuscript consistency corrections
+
+- Main text, supplement and response now describe Safe-Greedy as maximizing the complete immediate reward under the shared guard, consistent with the frozen executed worker. The incorrect different-objective explanation was removed.
+- Q lookup and policy selection are described as separate measured intervals within controller time. Guard subcomponents remain included in their parent totals.
+- All three documents and the submission README distinguish derived summaries in the public/source package from the separate R6 raw-evidence archive required for complete recomputation.
+- Four PDFs were rebuilt with Tectonic 0.17.0. Explicit T1 encoding in the IEEEtran sources preserves the Times font. Page counts remain 8/4/14/1 for main/supplement/response/cover letter. Final logs contain no unresolved references or citations; all 27 pages were rendered and inspected. Remaining underfull-box warnings do not produce clipped or overlapping content.
+- All 118 unit tests passed. The 333 tracked experiment, model, Q, configuration, analysis-result and supporting table/figure files checked against the preceding commit are byte-identical. No experimental or numerical result changes accompany these text corrections.

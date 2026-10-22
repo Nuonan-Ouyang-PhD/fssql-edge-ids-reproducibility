@@ -1,4 +1,5 @@
 \documentclass[journal]{IEEEtran}
+\usepackage[T1]{fontenc}
 \usepackage{amsmath,amssymb,graphicx,booktabs,array,tabularx,microtype}
 \usepackage[hidelinks]{hyperref}
 \renewcommand{\thesection}{S\arabic{section}}
@@ -8,7 +9,7 @@
 \author{Nuonan Ouyang, Adrian Shatte, Zhigang Lu, Chao Chen, and Wei Xiang}
 \begin{document}\maketitle
 \section{Evidence scope and chronology}
-This supplement distinguishes four sources: independently held-out guard coverage, the Pi 3B+ stationary binding campaign, the corrected Pi 4B R6 online campaign, and the saved official detector test. The Pi 4B analysis contains 60 accepted cells, 36,000 windows, and 576,000 record evaluations, each window processing 16 records. These are repeated scheduler-development inputs, not 576,000 independent test samples. Per-run metrics and all paired contrasts accompany the source in \texttt{data/}; the reproduction package retains the original raw files and selection manifests.
+This supplement distinguishes four sources: independently held-out guard coverage, the Pi 3B+ stationary binding campaign, the corrected Pi 4B R6 online campaign, and the saved official detector test. The Pi 4B analysis contains 60 accepted cells, 36,000 windows, and 576,000 record evaluations, each window processing 16 records. These are repeated scheduler-development inputs, not 576,000 independent test samples. Per-run summaries and paired contrasts accompany the source in \texttt{data/}. The public repository and submission source package do not include the R6 raw Pi or KM003C measurements. Complete recomputation requires the separate existing evidence archive at the paths specified by the accepted-run manifest.
 
 The earlier submitted hardware-profiled replay tables cannot be numerically reproduced from their unavailable historical artifacts. Revision implementations were reconstructed and frozen. A subsequent code audit invalidated the earlier Pi 4B online campaign (V4): batch size, RiskProxy/controller behavior, masking, reward, background load, timing, and energy alignment did not consistently match the declared method. None of its policy rankings, FPR patterns, or energy results is used in the revised tables. The corrected R6 execution is a separate campaign, not relabelled V4 data.
 
@@ -53,7 +54,7 @@ Pi 3B+ FSSQL-R rolling reward rises from 0.483742 at window 600 to 0.526027 at 6
 \section{Corrected Pi 4B deployment}
 The accepted R6 matrix is four policies by three conditions by five seeds. Two original attempts (cells 21 and 45) failed the initial temperature criterion; only their complete contemporaneous replacements enter the accepted set. The originals remain archived. These are not the V4 power-capture replacements at cells 40 and 51. The selected 60 Pi traces, meter CSVs, and run manifests are individually hash-bound.
 
-All conditions use the same seed-specific n16 schedules. B1/B2 start a separate load process pinned to CPU 3 at 0.5/1.0 configured duty; the process is started before the ACK boundary and remains alive through the experiment. PID, affinity, configured duty, and lifecycle evidence are available. No separate utilization trace supports a claim of exactly 50\%/100\% measured CPU occupation. The queued backlog is explicitly zero; the Threshold queue input is $16+q_t$.
+All conditions use the same seed-specific n16 schedules. B1/B2 start a separate load process pinned to CPU 3 at 0.5/1.0 configured duty; the process is started before the ACK boundary and remains alive through the experiment. PID, affinity, configured duty, and lifecycle evidence are available. No separate utilization trace supports a claim of exactly 50\%/100\% measured CPU occupation. The queued backlog is explicitly zero; the Threshold queue input is $16+q_t$. Safe-Greedy maximizes the same complete one-step reward used by FSSQL-R over the shared admissible set, including security, energy, backlog, and switching terms; FSSQL-R selects by learned Q values.
 
 The complete set of 60 run summaries, all 18 condition-specific pairwise FPR contrasts, other endpoints, and the accepted-run selector are supplied as CSV/JSON files. No seed is excluded from the primary analysis. The table below reports FPR and F1 for all learned-policy seeds with the matched deterministic comparators.
 
@@ -80,7 +81,7 @@ The corrected Pi 4B Q tables use five development-only n16/B0 training sequences
 \caption{Archived corrected Pi 4B training checkpoints for the five fixed seeds. Curves are descriptive rolling rewards, not held-out learning-performance estimates.}\end{figure}
 
 \section{Timing and energy accounting}
-The resident-model implementation measures action binding on a switch; no per-window model load is performed. Controller time begins after preprocessing and ends after binding. E2E begins at preprocessing and ends after post-action telemetry. These component intervals overlap: Q lookup is within selection, guard subcomponents are within guard, and neither should be added again to a parent total. Reward calculation, row serialization, and end-of-run label scoring are excluded from E2E and are not claimed negligible.
+The resident-model implementation measures action binding on a switch; no per-window model load is performed. Controller time begins after preprocessing and ends after binding. E2E begins at preprocessing and ends after post-action telemetry. Q lookup and policy selection are timed separately; both are included in controller time. Guard subcomponents are included in guard total and controller time. Component times must not be added again to their parent totals. Reward calculation, row serialization, and end-of-run label scoring are excluded from E2E and are not claimed negligible.
 
 The KM003C trace is recorded on the Mac in a separate clock domain from Pi internal timers. The primary electrical interval is between Mac receipts of the start and end ACKs, not a comparison between unrelated Pi and Mac monotonic values. It includes scheduled idle time, background work, and tail scoring/writeout. Recorded durations are 60.070--60.282 s. Sampling is nominally 10 Hz; actual timestamps, boundary interpolation, and the trapezoidal rule are used. Integration outside the measured range is prohibited. The measurement is DC input-side and does not include AC adapter loss or the Mac.
 

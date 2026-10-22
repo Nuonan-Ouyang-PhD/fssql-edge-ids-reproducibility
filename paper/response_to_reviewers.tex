@@ -73,7 +73,7 @@ The corrected Pi 4B Threshold baseline reads temperature, queue load, and risk, 
 \commentbox{The incremental value of learning over the shield is unclear. Report dispersion, paired tests, learning schedules, state-space size, and whether any improvement justifies the complexity.}
 \responsebox{The corrected evidence does not establish an incremental practical advantage for Q-learning. On Pi 3B+, Safe-Greedy has higher F1/reward and lower mean latency and switching cost. On Pi 4B, B0/B1 F1 is close (FSSQL-R about 0.9598; Safe-Greedy 0.9608), but B2 FSSQL-R falls to 0.8869 with FPR 0.5199. The B2 mean paired F1 difference is $-0.0739$; the exact two-sided sign-flip $p$ is 0.0625 at five pairs. All five seeds are retained.
 
-The comparison uses the same guard, but Safe-Greedy maximizes security utility whereas FSSQL-R has the full resource/switching reward. We now state that it does not isolate decision horizon alone. State support and checkpoint stability are reported separately from a mathematical convergence claim.}
+The comparison uses the same guard and complete one-step reward, including security, energy, backlog, and switching terms. Safe-Greedy maximizes that immediate reward; FSSQL-R selects by its learned Q values. The evidence therefore evaluates the incremental value of learned selection under the sampled workloads, subject to the model-based training and state-support limitations. Checkpoint stability is reported separately from a mathematical convergence claim.}
 \changebox{Main IV-B, V-E, VI-B--C and VII-B; Tables IV--VI; Supplement S3--S4.}
 
 \clearpage
@@ -141,9 +141,9 @@ The suggested study, ``Safety-Aware Reinforcement Learning for Self-Healing Intr
 
 Unshielded-Q is now defined as the reconstructed Q policy with the same state/reward formulation and without the admissible-action mask. It is not claimed to reproduce the executables of an earlier energy-aware/multi-objective author scheduler. The unavailable historical implementation prevents that stronger equivalence from being verified, and we do not invent a predecessor baseline from its reported averages. The revised empirical claim is therefore a comparison with the specified current baselines, not proof of superiority over every predecessor.
 
-We also clarify that Safe-Greedy shares the shield but optimizes current security utility only. Since FSSQL-R includes resource and switching penalties, their comparison varies the objective as well as the temporal optimization. The manuscript no longer claims that this contrast alone strictly isolates the value of a longer horizon.}
+We also clarify that Safe-Greedy shares the shield and complete one-step reward with FSSQL-R. It includes the same security, energy, backlog, and switching terms, choosing the admissible action with the greatest immediate reward. FSSQL-R instead uses learned Q values. Model-based training, sparse state support, and the stationary zero-backlog workload limit the interpretation of this comparison.}
 \changebox{Main II, III, IV-B, V-C and VII-B; Table I.}
-\begin{excerptbox}\emph{Safe-Greedy is a same-guard security-greedy reference, not a full-objective myopic ablation: the comparison does not isolate decision horizon alone.}\end{excerptbox}
+\begin{excerptbox}\emph{It is a same-guard, same-reward myopic baseline; FSSQL-R instead selects the admissible action with the largest learned Q value.}\end{excerptbox}
 
 \clearpage
 \section*{Reviewer 2, Comments 2 and 4: simple control and physical energy}
@@ -163,7 +163,7 @@ The paired FSSQL-R-minus-Safe-Greedy energy differences are $+0.908$, $-1.209$, 
 \commentbox{The controller reads telemetry, constructs state, evaluates guards, selects models and performs Q/replay updates. Measure its mean/tail cost and switching, and state which costs enter the latency and energy accounting.}
 \responsebox{The corrected timing fields distinguish preprocessing, risk proxy, telemetry, state, guards, selection, resident action binding, inference and post-action telemetry. Across the three Pi 4B conditions, mean controller time is 4.673 ms for FSSQL-R and 4.516 ms for Safe-Greedy; detector inference is 0.520/0.441 ms. Controller and E2E are no longer duplicated fields. Per-run P50/P95/P99 and maxima are retained.
 
-Controller time starts after preprocessing and ends at action binding. E2E begins at preprocessing and ends after post-action telemetry; reward computation, serialization and delayed scoring are outside it. These exclusions are explicit. Evaluation has no Q or replay updates, so training-update time is not an online cost in these runs. The resident switching timer is not presented as model-load cost. Energy, measured at the DC input over the ACK interval, includes controller work and tail scoring/writeout.}
+Controller time starts after preprocessing and ends at action binding. Q lookup and policy selection are timed separately, with both included in controller time; guard subcomponents are included in guard total. E2E begins at preprocessing and ends after post-action telemetry; reward computation, serialization and delayed scoring are outside it. These exclusions are explicit. Evaluation has no Q or replay updates, so training-update time is not an online cost in these runs. The resident switching timer is not presented as model-load cost. Energy, measured at the DC input over the ACK interval, includes controller work and tail scoring/writeout.}
 \changebox{Main V-D, VI-D; Supplement S5 and per-run timing CSV.}
 \commentbox{With only 600 decision windows and a large discretized state space, Q-learning may not have stabilized. Report state/action counts, exploration and learning-rate schedules, and learning curves.}
 \responsebox{We separate the 600-window evaluation runs from 6000-window training sequences. The state space has 1280 states and 5120 state-action pairs; the visit-count learning rate, discount 0.95, epsilon decay and replay settings are listed in Table II. Figure S3 plots the five corrected Pi 4B training traces.
@@ -255,7 +255,7 @@ Official detector test & Saved 11 September fixed-detector evaluation. October c
 
 \textbf{Remaining boundaries.} The original artifacts are unavailable; reconstructed results do not reproduce old replay numbers. R6 follows earlier official-test access and is not a new blinded generalization study. Thermal/queue control is not empirically established in the cold, zero-backlog setting. Five seeds limit inference, the support diagnosis is post hoc, and exact CPU-utilization trajectories are unavailable. These qualifications are retained in the manuscript.
 
-The main text, supplement and response have been synchronized with the corrected results. The source and generated tables share the same analysis files. We appreciate the reviewers' comments and submit the revised findings for their assessment without preserving unsupported claims of superiority.
+The main text, supplement and response have been synchronized with the corrected results. The source and generated tables share the same analysis files. The submission source and public repository include derived summaries; complete R6 raw-evidence recomputation requires the separate evidence archive referenced by the accepted-run manifest. We appreciate the reviewers' comments and submit the revised findings for their assessment without preserving unsupported claims of superiority.
 \end{authorresponsebox}
 \vspace{8pt}\noindent\textbf{Corresponding author:} Nuonan Ouyang\\
 \texttt{nuonan.ouyang@my.jcu.edu.au}
