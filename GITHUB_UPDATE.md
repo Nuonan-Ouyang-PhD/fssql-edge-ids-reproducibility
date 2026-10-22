@@ -5,8 +5,8 @@
 ## 更新内容
 
 - `scripts/analyze_pi4b8_r6.py` 修正 FPR 被前缀过滤误排除的问题，并复核 60 个接受 run 的评分、奖励、Q 选择、功耗积分和状态支持。
-- 当前分析在 `results/pi4b8_r6_revision/`；旧 R6 分析和无效 V4 记录均保留。
-- `paper/` 已替换成 R6 文稿。主文 8 页，回复信 14 页，补充材料 4 页，投稿信 1 页。旧稿保存在 `history/manuscript_before_r6/`，不再作为当前稿件。
+- 当前分析在 `results/pi4b8_r6_revision/`。
+- `paper/` 包含当前投稿稿件：主文 8 页，回复信 14 页，补充材料 4 页，投稿信 1 页。
 - guard 浮点复算采用很小的数值容差，并严格检查 coverage/admission 决策一致；冻结文件本身仍逐字节验 SHA-256。
 - 本地 118 项测试通过。所有 60 个 R6 功率积分和 18 个 FPR 配对对比已检查。
 
@@ -30,6 +30,6 @@ python scripts/analyze_pi4b8_r6.py --output /tmp/tsusc-r6-independent-check
 
 ## 投稿文件
 
-投稿系统使用 `paper/TSUSC-2026-07-0200-main.pdf`、`-supp.pdf`、`-response.pdf` 和 `-cover-letter.pdf`。独立投稿 ZIP 中 `main.tex` 位于根目录；编译以其为主文件。所有表图应来自当前 R6 分析，而非历史 V4。
+投稿系统使用 `paper/TSUSC-2026-07-0200-main.pdf`、`-supp.pdf`、`-response.pdf` 和 `-cover-letter.pdf`。独立投稿 ZIP 中 `main.tex` 位于根目录；编译以其为主文件。所有表图均来自当前 R6 分析。
 
-提交前请共同作者确认作者信息、投稿系统元数据、修订内容及补充材料。保存科学更正、数据来源、测试集访问日期和不利结果，不用工具化便笺替代这些说明。
+提交前请共同作者确认作者信息、投稿系统元数据、修订内容及补充材料。

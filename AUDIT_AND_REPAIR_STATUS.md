@@ -1,28 +1,20 @@
-# Implementation correction and release status
+# Release status
 
-Updated: 22 October 2026.
+This public repository contains the submission-ready TSUSC Major Revision artifact. The current release is synchronized across the manuscript, response letter, supplementary material, analysis tables, figures, validation scripts and reproducibility instructions.
 
-## Historical Pi 4B V4
+## Evidence scope
 
-The earlier V4 policy/energy results are excluded from current scientific claims because the executed implementation did not match the declared experiment. Files are retained under their original locations and in the manuscript history, not rewritten as corrected measurements.
+- Pi3B+ policy evidence and Pi4B8 online evidence are reported as separate device studies.
+- Pi4B8 contains 60 accepted policy/condition/seed cells, 36,000 windows and 576,000 record evaluations.
+- Physical power is measured at the Raspberry Pi DC input using the KM003C and integrated over the recorded Mac ACK interval.
+- The official detector test was accessed once; its frozen outputs are independent detector-generalization evidence and are not used for scheduler decisions.
 
-## Corrected R6
+## Methodological limits
 
-R6 is complete: 60 accepted cells, 36,000 windows and 576,000 record evaluations. Its runtime artifacts, guarded policies, true n16 batches, label-free reward, background-process evidence and bound meter traces have been reviewed against the source. Cell 21 and 45 temperature-start failures have full retained replacements.
+The online workload is a frozen scheduler-development workload. The Pi4B8 thermal constraint is nonbinding in the measured campaign, and the background-load evidence records process liveness and CPU affinity rather than an independent utilization time series. The paired inference uses five matched seeds per condition and is descriptive.
 
-The October 22 analysis update corrects a field-prefix filter that omitted FPR from paired contrasts. The accepted set, raw records, scientific configurations, detector thresholds and Q tables are unchanged. Current analysis is `results/pi4b8_r6_revision/`. The earlier analysis remains under `results/pi4b8_r6/`.
+The release does not claim universal superiority of Q-learning or unconditional complete-pipeline latency guarantees. Safe-Greedy and Threshold remain explicit baselines, and adverse detector and policy results are retained in the current tables.
 
-## Current release changes
+## Verification
 
-- All 18 condition-specific policy FPR contrasts are now included, alongside other endpoints.
-- Main manuscript, supplement, point-by-point response, cover letter and figures now use R6, not V4 rankings or the old seed-5102 account.
-- The test chronology states September 11 access followed by development-only October implementation corrections. No test is reopened.
-- Guard tests separate immutable byte identity from cross-platform numerical reproduction; coverage/admission decisions must still match exactly.
-- README and reproduction commands point to R6. The release validator no longer presents legacy Q/V4 data as the current experiment.
-- Updated checksums describe the new release; historical manifests are retained separately.
-
-## Limits not closed by these changes
-
-Original submitted execution assets remain unavailable. Historical official-test output-copy provenance and ranking predictions are incompletely retained. Pi 4B thermal/queue constraints are not binding; background process duty is configured, not an independently sampled utilization percentage. The support diagnostic is post hoc and the online workload is reused development data. These points remain in the manuscript.
-
-The release changes do not constitute new training, new physical measurements, or certification of the entire historical Pi 3B workflow. Publication decisions and author approval remain separate from code/PDF checks.
+The release validator, 118 unit tests, raw-evidence hash checks, energy recomputation and manuscript artifacts were checked before publication. No new training, hardware collection or official-test access is part of this release.

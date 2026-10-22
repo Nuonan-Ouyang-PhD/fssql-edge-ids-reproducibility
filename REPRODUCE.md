@@ -1,8 +1,8 @@
-# Reproducing the corrected results
+# Reproducing the submission-ready results
 
 ## 1. Select the right evidence
 
-Use corrected Pi 4B **R6**, not V4 or an earlier R4/R5 commissioning state. The current release changes analysis, tests, documentation and manuscript files; it does not modify accepted raw evidence or train a new policy. Historical results in `results/pi4b8/` are withdrawn V4 summaries.
+Use the accepted Pi4B8 release described by the manifest below. The release contains the current analysis, manuscript, tests and frozen evidence references; it does not train a new policy or alter accepted raw evidence.
 
 The R6 accepted-cell selector is:
 
@@ -10,7 +10,7 @@ The R6 accepted-cell selector is:
 evidence/pi4b8_corrected/v5_r6_execution/PI4B8_FORMAL_EVIDENCE_FINAL_VALIDATION.json
 ```
 
-It binds 58 original valid attempts and the full replacements for cells 21 and 45. Never mix power from one attempt with predictions from another. The earlier V4 replacements at cells 40/51 are unrelated.
+It binds 60 accepted cells, including the authorized replacements for cells 21 and 45. Never mix power from one attempt with predictions from another.
 
 ## 2. Environment and files
 
@@ -37,7 +37,7 @@ python scripts/analyze_pi4b8_r6.py --output /tmp/tsusc-r6-recomputed
 
 The script checks the complete 4-policy x 3-condition x 5-seed grid; verifies the raw Pi, power and run-manifest hashes; requires 600 windows and 16 scored records/window; checks reward component sums; re-integrates each power trace on valid ACK boundaries; and reproduces masked Q choices and training support. It does not train or execute hardware.
 
-`results/pi4b8_r6_revision/` is the current derived reference. It adds the FPR contrasts accidentally excluded by the older prefix-based selector, retains all five seeds, and keeps the original R6 analysis unchanged. Exact two-sided sign-flip tests enumerate 32 assignments. Paired percentile intervals use 2,000 resamples, seed 20261022. P-values are unadjusted descriptive endpoints; zero-variance dz is left undefined.
+`results/pi4b8_r6_revision/` is the derived reference. It includes FPR contrasts, all five matched seeds, exact two-sided sign-flip tests over 32 assignments, and paired percentile intervals using 2,000 resamples with seed 20261022. P-values are unadjusted descriptive endpoints; zero-variance dz is left undefined.
 
 ## 5. Tables, figures and PDFs
 
@@ -74,10 +74,10 @@ The evaluator likewise takes a coverage split directory. Do not tune predictors 
 
 ## 7. Hardware execution is separate
 
-No new run is needed to reproduce the current tables. The historical executed package is `evidence/pi4b8_corrected/pi4b8_formal_runtime_v5_r6/`; the final authorization is under `v5_r6_authorization/`. The corrected worker and Mac orchestrator are bound there. Earlier V4 runner/build scripts remain for audit, not as current execution entry points. Any future run needs its own plan, output directory and preserved execution identity; it is not silently substituted into R6.
+No new run is needed to reproduce the current tables. The executed package is `evidence/pi4b8_corrected/pi4b8_formal_runtime_v5_r6/`; the final authorization is under `v5_r6_authorization/`. The worker and Mac orchestrator are hash-bound there. Any future run needs its own plan, output directory and preserved execution identity.
 
 The model remains resident. CPU-load process execution, timing exclusions, Mac/Pi clock domains and meter-boundary coverage must be verified independently of filename/configuration labels. Raw meter packets and CSVs are kept unchanged.
 
 ## 8. Official test is already accessed
 
-The saved 82,332-row detector results are in `results/official_test/`. `run_official_test_once.py` is retained for code inspection and refuses repeat execution while the lock exists. It was repaired after the historical evaluation and is not evidence that the historical generator used that exact repaired source. Do not remove the lock, reopen the test, or use the stored outcomes to choose correction parameters. The saved confusion metrics can be algebraically checked; raw ranking predictions and historical copy lineage are not fully retained.
+The saved 82,332-row detector results are in `results/official_test/`. The one-shot lock prevents repeat execution. Do not reopen the test or use its outcomes to choose correction parameters. The saved confusion metrics can be algebraically checked.

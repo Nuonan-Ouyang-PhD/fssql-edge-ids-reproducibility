@@ -1,5 +1,5 @@
 #!/usr/bin/env python3
-"""Validate current R6 analysis/manuscript release; preserve historical evidence."""
+"""Validate current R6 analysis/manuscript release; validate submission-ready evidence."""
 from __future__ import annotations
 import argparse,hashlib,json,sys
 from pathlib import Path
