@@ -1,0 +1,32 @@
+{
+  "status": "PASS",
+  "comparisons": [
+    {
+      "file": "RUN_LEVEL_METRICS.csv",
+      "rows": 60,
+      "exact_dataframe_match": true
+    },
+    {
+      "file": "PAIRED_ALL_POLICY_CONTRASTS.csv",
+      "rows": 972,
+      "exact_dataframe_match": true
+    },
+    {
+      "file": "PAIRED_FSSQL_VS_SAFE_GREEDY.csv",
+      "rows": 162,
+      "exact_dataframe_match": true
+    },
+    {
+      "file": "POLICY_SUMMARY.csv",
+      "rows": 648,
+      "exact_dataframe_match": true
+    },
+    {
+      "file": "Q_STATE_SUPPORT.csv",
+      "rows": 15,
+      "exact_dataframe_match": true
+    }
+  ],
+  "new_hardware_runs": 0,
+  "official_test_opened": false
+}

@@ -1,0 +1,26 @@
+\begin{table*}[t]
+\caption{Corrected Pi 4B online evaluation: five matched seeds per condition, 600 windows of 16 records per run. FPR is median [minimum, maximum]; other entries are mean $\pm$ SD. All four policies have zero observed latency and thermal violations. Energy includes the acknowledged run interval, not detector execution alone.}
+\label{tab:pi4}
+\centering\scriptsize
+\setlength{\tabcolsep}{3pt}
+\begin{tabular}{llcccccc}
+\toprule
+Load & Policy & F1 & FPR: median [range] & Mean reward & P99 E2E (ms) & Controller (ms) & Energy (J) \\
+\midrule
+B0 & FSSQL-R & $0.9598\pm0.0009$ & 0.1377 [0.1302,0.1453] & $0.5803\pm0.0038$ & $11.279\pm1.247$ & $4.660\pm0.011$ & $177.39\pm0.94$ \\
+B0 & Safe-Greedy & $0.9608\pm0.0008$ & 0.1309 [0.1302,0.1386] & $0.5832\pm0.0022$ & $10.081\pm0.083$ & $4.497\pm0.013$ & $176.48\pm0.53$ \\
+B0 & Threshold & $0.9605\pm0.0010$ & 0.1328 [0.1309,0.1418] & $0.5827\pm0.0022$ & $10.036\pm0.279$ & $4.458\pm0.019$ & $176.02\pm0.93$ \\
+B0 & Static-Light & $0.8101\pm0.0011$ & 1.0000 [1.0000,1.0000] & $0.3341\pm0.0039$ & $10.322\pm0.221$ & $4.462\pm0.023$ & $176.64\pm0.78$ \\
+\midrule
+B1 & FSSQL-R & $0.9598\pm0.0008$ & 0.1377 [0.1315,0.1453] & $0.5802\pm0.0038$ & $11.157\pm0.994$ & $4.687\pm0.019$ & $200.07\pm1.21$ \\
+B1 & Safe-Greedy & $0.9608\pm0.0008$ & 0.1309 [0.1302,0.1386] & $0.5832\pm0.0022$ & $10.389\pm0.375$ & $4.531\pm0.020$ & $201.28\pm0.86$ \\
+B1 & Threshold & $0.9605\pm0.0010$ & 0.1328 [0.1309,0.1418] & $0.5827\pm0.0022$ & $10.478\pm0.438$ & $4.503\pm0.021$ & $200.97\pm2.09$ \\
+B1 & Static-Light & $0.8101\pm0.0011$ & 1.0000 [1.0000,1.0000] & $0.3341\pm0.0039$ & $10.239\pm0.141$ & $4.454\pm0.011$ & $200.76\pm1.18$ \\
+\midrule
+B2 & FSSQL-R & $0.8869\pm0.0203$ & 0.5425 [0.3414,0.6579] & $0.4671\pm0.0327$ & $11.374\pm0.791$ & $4.672\pm0.006$ & $224.60\pm2.08$ \\
+B2 & Safe-Greedy & $0.9608\pm0.0008$ & 0.1309 [0.1302,0.1386] & $0.5832\pm0.0022$ & $10.487\pm0.290$ & $4.521\pm0.027$ & $223.95\pm1.42$ \\
+B2 & Threshold & $0.9605\pm0.0010$ & 0.1328 [0.1309,0.1418] & $0.5827\pm0.0022$ & $10.361\pm0.488$ & $4.499\pm0.018$ & $224.09\pm1.89$ \\
+B2 & Static-Light & $0.8101\pm0.0011$ & 1.0000 [1.0000,1.0000] & $0.3341\pm0.0039$ & $10.306\pm0.231$ & $4.441\pm0.013$ & $223.31\pm0.84$ \\
+\bottomrule
+\end{tabular}
+\end{table*}

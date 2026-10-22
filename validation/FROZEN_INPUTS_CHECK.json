@@ -1,0 +1,8 @@
+{
+  "source_archive": "TSUSC_PI4B8_COMPLETE_REPRODUCTION_20261022.zip",
+  "source_archive_sha256": "3d6b3c1c445a939b27aa29151b57a67ac41820fe56f786c89d1c133a51d974eb",
+  "status": "PASS",
+  "files_checked": 1541,
+  "modified_frozen_files": [],
+  "scope": "Original evidence, calibration, config/protocol, model/preprocessor, risk/Q, runtime, input and online execution files are byte-identical. Analysis, manuscript and selected tests are intentionally updated."
+}

@@ -1,0 +1,21 @@
+\begin{table}[t]
+\caption{FSSQL-R minus Safe-Greedy on Pi 4B. Paired mean difference and percentile bootstrap 95\% interval; exact two-sided sign-flip $p$. Five pairs per condition.}
+\label{tab:paired}
+\centering\scriptsize
+\setlength{\tabcolsep}{3pt}
+\begin{tabular}{llrrr}
+\toprule
+Load & Metric & Difference & 95\% interval & $p$ \\
+\midrule
+B0 & F1 & -0.0009 & [-0.0019,-0.0002] & 0.1250 \\
+B0 & FPR & +0.0051 & [+0.0011,+0.0103] & 0.1250 \\
+B0 & Energy (J) & +0.908 & [+0.173,+1.867] & 0.1250 \\
+B1 & F1 & -0.0010 & [-0.0019,-0.0003] & 0.0625 \\
+B1 & FPR & +0.0054 & [+0.0016,+0.0103] & 0.0625 \\
+B1 & Energy (J) & -1.209 & [-1.884,-0.440] & 0.1250 \\
+B2 & F1 & -0.0739 & [-0.0888,-0.0568] & 0.0625 \\
+B2 & FPR & +0.3872 & [+0.2933,+0.4740] & 0.0625 \\
+B2 & Energy (J) & +0.645 & [-0.874,+2.481] & 0.5625 \\
+\bottomrule
+\end{tabular}
+\end{table}

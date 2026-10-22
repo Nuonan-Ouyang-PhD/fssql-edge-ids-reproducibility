@@ -1,298 +1,83 @@
-# Reproduction guide
+# Reproducing the corrected results
 
-This guide separates software verification, development reconstruction, Raspberry Pi calibration, online execution, physical-energy acquisition, and one-shot test evaluation. Run each stage in a fresh checkout or isolated output directory because frozen-output scripts deliberately refuse to overwrite existing artifacts.
+## 1. Select the right evidence
 
-> **Audit notice (21 October 2026).** The historical Pi4B V4 online package
-> does not implement the declared true-`n=16` policies and load conditions.
-> Its results are provenance only. The corrected protocol, true-`n=16` input
-> lineage and five corrected Q tables are frozen. V5 R3 stopped before
-> inference on a stale complete-worker hash in the Q manifest; the check was
-> not bypassed. The same frozen Q training reproduced all tables byte for byte
-> under the hardened worker. V5 R4 now passes local materialization, exact
-> remote inventory/hash validation, and a 16-record FSSQL smoke. Commissioning,
-> final authorization and the corrected formal matrix have not run. Do not use
-> the historical command or data as a valid Pi4B reproduction.
+Use corrected Pi 4B **R6**, not V4 or an earlier R4/R5 commissioning state. The current release changes analysis, tests, documentation and manuscript files; it does not modify accepted raw evidence or train a new policy. Historical results in `results/pi4b8/` are withdrawn V4 summaries.
 
-## 1. Environment
-
-Reference software versions are pinned in `requirements-lock.txt`.
-
-```bash
-git clone https://github.com/Nuonan-Ouyang-PhD/fssql-edge-ids-reproducibility.git
-cd fssql-edge-ids-reproducibility
-python3 -m venv .venv
-source .venv/bin/activate
-python -m pip install --upgrade pip
-python -m pip install -r requirements-lock.txt
-```
-
-For KM003C access on macOS, install `hidapi` and ensure the current user can access the meter. Raspberry Pi execution additionally requires SSH connectivity and the packages listed in the same lock file.
-
-## 2. Dataset placement and integrity
-
-The public repository does not redistribute UNSW-NB15. Obtain the official training and testing CSVs from the dataset owner and place them as:
+The R6 accepted-cell selector is:
 
 ```text
-data/raw/UNSW_NB15_training-set.csv
-data/raw/UNSW_NB15_testing-set.csv
+evidence/pi4b8_corrected/v5_r6_execution/PI4B8_FORMAL_EVIDENCE_FINAL_VALIDATION.json
 ```
 
-Verify both files against `data/DATASET_SHA256.json`. Do not substitute
-similarly named preprocessed mirrors. In a fresh reconstruction, keep the test
-CSV unopened throughout development. In this repository's completed lineage,
-the one authorized test access has already occurred; do not run it again.
+It binds 58 original valid attempts and the full replacements for cells 21 and 45. Never mix power from one attempt with predictions from another. The earlier V4 replacements at cells 40/51 are unrelated.
 
-## 3. Development split, preprocessing, and detectors
+## 2. Environment and files
 
-The deterministic split is group-safe with respect to exact feature duplicates, uses seed `20260909`, and maps five stratified group folds to model training (0–2), validation (3), and scheduler development (4).
+Use Python with NumPy and pandas for analysis and Matplotlib for figures. The original `requirements-lock.txt` and frozen runtime dependency manifest describe the execution environment; do not overwrite them with the analyst's environment. `validation/environment.json` records the environment used for this release check.
 
-Run these in an isolated copy where their outputs do not already exist:
+For a public checkout, restore the exact archived evidence and non-public development inputs into their recorded relative paths before tests that need those files. The complete reproduction archive includes the R6 evidence. Missing inputs are not permission to regenerate labels from predictions or open the official test.
+
+## 3. File identity and behavior tests
 
 ```bash
-python scripts/split_development_data.py
-python scripts/fit_preprocessor.py
-python scripts/train_action_pool.py
-python scripts/train_risk_proxy.py
-python scripts/export_portable_preprocessor.py
-python scripts/verify_portable_inference.py
+python scripts/validate_public_release.py
+python -m unittest discover -s tests -v
 ```
 
-Expected audit/artifact locations:
+The local release check ran 118 tests. Strict SHA checks apply to stored frozen artifacts. Re-fitting the calibration on another numerical platform uses absolute tolerance 1e-10 and relative tolerance 1e-12, and additionally requires exactly unchanged held-out coverage and cap-admission decisions. This is not permission to edit the frozen predictor files.
 
-```text
-data/SPLIT_MANIFEST.csv
-data/LEAKAGE_AUDIT.json
-data/PREPROCESSOR_PROVENANCE.json
-preprocessing/preprocessor.joblib
-preprocessing/preprocessor_portable.npz
-models/artifacts/
-models/MODEL_SHA256.json
-models/PORTABLE_INFERENCE_PARITY.json
-risk_proxy/risk_proxy.npz
-```
+## 4. Recompute the accepted R6 analysis
 
-The four action models are FISVDD, LUCID, TinyDL, and OI-SVDD+AS-ELM. Thresholds and hyperparameters are recorded in `models/MODEL_HYPERPARAMETERS.json`.
-
-## 4. Q-learning reconstruction
-
-The legacy Q-learning protocol is frozen in
-`configs/q_learning_protocol.json`; Pi4B-specific lineage and its erratum are
-under `q_training/pi4b8_q_v1/`.
+Run from any working directory. Use a new output directory; the analyzer refuses to overwrite an existing one.
 
 ```bash
-python scripts/train_q_tables.py \
-  --config configs/q_learning_protocol.json \
-  --output q_training_reproduced
+python scripts/analyze_pi4b8_r6.py --output /tmp/tsusc-r6-recomputed
 ```
 
-The checked-in seed-specific tables have `q_values` shape `1280 × 4`. They
-were trained with one record per window, `n1/B0` predictor inputs and zero
-backlog despite the old Pi4B config label. They may be inspected as legacy
-single-record lineage, but the corrected worker rejects them for a true-`n=16`
-FSSQL-R run. Corrected development-only tables were first frozen under
-`q_training/pi4b8_true_n16_v2/` and are bound to
-`configs/pi4b8_true_n16_q_v2.json`. After worker evidence hardening changed the
-complete-file hash, the same training was deterministically reproduced under
-`q_training/pi4b8_true_n16_v3/`; every table and checkpoint byte is identical,
-and only the Q manifest's worker hash differs. Their completion is Q-training
-lineage evidence, not commissioning or online-result evidence.
+The script checks the complete 4-policy x 3-condition x 5-seed grid; verifies the raw Pi, power and run-manifest hashes; requires 600 windows and 16 scored records/window; checks reward component sums; re-integrates each power trace on valid ACK boundaries; and reproduces masked Q choices and training support. It does not train or execute hardware.
 
-## 5. Device-specific guard calibration
+`results/pi4b8_r6_revision/` is the current derived reference. It adds the FPR contrasts accidentally excluded by the older prefix-based selector, retains all five seeds, and keeps the original R6 analysis unchanged. Exact two-sided sign-flip tests enumerate 32 assignments. Paired percentile intervals use 2,000 resamples, seed 20261022. P-values are unadjusted descriptive endpoints; zero-variance dz is left undefined.
 
-The required sequence is `preflight → fit → margin → freeze → held-out coverage`. Pi3B+ and Pi4B parameters must never be reused across devices.
-
-Collection interface:
+## 5. Tables, figures and PDFs
 
 ```bash
-python device_calibration/collect_calibration_split.py \
-  --config <device-calibration-config.json> \
-  --split fit \
-  --run-id <unique-run-id> \
-  --output <new-output-directory> \
-  --git-commit <source-commit>
+python scripts/build_paper_tables.py
+python scripts/plot_pi4b8_revision.py
+cd paper
+pdflatex -interaction=nonstopmode -halt-on-error main.tex
+bibtex main
+pdflatex -interaction=nonstopmode -halt-on-error main.tex
+pdflatex -interaction=nonstopmode -halt-on-error main.tex
+pdflatex -interaction=nonstopmode -halt-on-error supplement.tex
+pdflatex -interaction=nonstopmode -halt-on-error supplement.tex
+pdflatex -interaction=nonstopmode -halt-on-error response_to_reviewers.tex
+pdflatex -interaction=nonstopmode -halt-on-error cover_letter.tex
 ```
 
-Repeat with `--split margin` and `--split coverage`, preserving the frozen order and configuration. Fit the predictors only after fit and margin are complete:
+The response retains the editor/reviewer/author/change/excerpt box format. Main and supplement tables point to the same corrected analysis. Compiler logs and temporary files are not submission material. IEEEtran and standard LaTeX packages are required.
+
+## 6. Existing guard reproduction (no new collection)
+
+Fit/margin arguments are **split directories**, not `raw_windows.csv` filenames:
 
 ```bash
 python device_calibration/fit_guard_predictors.py \
-  --collection-config <device-calibration-config.json> \
-  --predictor-config <device-guard-config.json> \
-  --fit <fit/raw_windows.csv> \
-  --margin <margin/raw_windows.csv> \
-  --output <new-frozen-predictor-directory>
+  --collection-config calibration/pi4b8/PI4B8_CALIBRATION_CONFIG.json \
+  --predictor-config configs/pi4b8_guard_predictor_protocol_v1.json \
+  --fit calibration/pi4b8/formal_fit_20260910_v3 \
+  --margin calibration/pi4b8/formal_margin_20260910 \
+  --output /tmp/tsusc-pi4b-guard-check
 ```
 
-Evaluate once on the held-out coverage split:
+The evaluator likewise takes a coverage split directory. Do not tune predictors or margins from held-out coverage. A local numerical reproduction does not replace the original frozen artifacts or constitute a new calibration experiment.
 
-```bash
-python device_calibration/evaluate_guard_coverage.py \
-  --collection-config <device-calibration-config.json> \
-  --predictor-config <device-guard-config.json> \
-  --predictors <new-frozen-predictor-directory> \
-  --coverage <coverage/raw_windows.csv> \
-  --output <new-coverage-evaluation-directory>
-```
+## 7. Hardware execution is separate
 
-Accepted reference outputs are in `calibration/pi3b/protocol_v2/` and `calibration/pi4b8/`.
+No new run is needed to reproduce the current tables. The historical executed package is `evidence/pi4b8_corrected/pi4b8_formal_runtime_v5_r6/`; the final authorization is under `v5_r6_authorization/`. The corrected worker and Mac orchestrator are bound there. Earlier V4 runner/build scripts remain for audit, not as current execution entry points. Any future run needs its own plan, output directory and preserved execution identity; it is not silently substituted into R6.
 
-## 6. Pi3B+ binding-resource campaign
+The model remains resident. CPU-load process execution, timing exclusions, Mac/Pi clock domains and meter-boundary coverage must be verified independently of filename/configuration labels. Raw meter packets and CSVs are kept unchanged.
 
-The V3 protocol is frozen in `protocols/BINDING_STRESS_PROTOCOL_V3_FREEZE.md` and `configs/pi3b_stress_extension_v3.json`. The formal matrix is `configs/pi3b_stress_extension_v3_matrix.csv`.
+## 8. Official test is already accessed
 
-```bash
-python online/pi3b/run_stress_extension_v3_campaign.py \
-  --config configs/pi3b_stress_extension_v3.json \
-  --matrix configs/pi3b_stress_extension_v3_matrix.csv \
-  --input <frozen-scheduler-development-input> \
-  --output <new-campaign-directory> \
-  --git-commit <source-commit>
-```
-
-The reference campaign contains 6 policies × 10 matched seeds × 600 windows. Do not use policy outcomes to alter the workload or guard.
-
-## 7. Pi4B corrected online runtime and execution gates
-
-The Pi worker is `online/pi4b8/pi4b8_online_worker.py`. Its decision path is:
-
-```text
-features/risk features
-  → preprocessing/state/telemetry
-  → Pi4B guard and admissible set
-  → policy action
-  → selected detector prediction
-  → post-action label scoring
-  → reward and per-window evidence
-```
-
-The corrected interface requires a hash-bound asset root, runtime/Q
-configurations and manifest, the model-threshold source, a shared 6,000-row
-development base with deterministic `600 × 16` seed schedules, explicit zero
-backlog, and a physically separate scoring-only label sidecar. It refuses the
-600-row V4 inputs, missing B1/B2 load process definitions, and legacy
-single-record Q tables. The scientific semantics are frozen in
-`protocols/PI4B8_CORRECTED_TRUE_N16_PROTOCOL_V1.md`.
-
-After restoring the hash-bound development inputs, reproduce the corrected
-Q/package gates with:
-
-```bash
-python3 scripts/train_pi4b8_q_true_n16.py \
-  --config configs/pi4b8_true_n16_q_v2.json \
-  --output <new-q-output> \
-  --execute-training
-python3 build_pi4b8_corrected_runtime_v5.py \
-  --source-manifest protocols/PI4B8_CORRECTED_RUNTIME_SOURCE_MANIFEST_V5_R4.json \
-  --output <new-v5-package-directory>
-```
-
-Freeze the 60-cell plan without starting hardware execution:
-
-```bash
-.venv/bin/python online/pi4b8/pi4b8_corrected_v5_execution_orchestrator.py plan \
-  --package-root <new-v5-package-directory> \
-  --package-manifest <new-v5-package-directory>/PI4B8_CORRECTED_RUNTIME_PACKAGE_MANIFEST_V5.json \
-  --remote-package-root /home/pi/tsusc_major_revision/pi4b8_formal_runtime_v5_r4 \
-  --remote-output-root /home/pi/tsusc_major_revision/pi4b8_corrected_v5_r4_runs \
-  --authorization-dir <new-authorization-directory> \
-  --evidence-root <new-evidence-directory> \
-  --ssh-target pi@pi4b8g.local \
-  --mac-python .venv/bin/python
-```
-
-With KM003C serial `075356` connected and all four Pi governors set to
-`performance`, execute the frozen non-formal commissioning cell:
-
-```bash
-.venv/bin/python online/pi4b8/pi4b8_corrected_v5_execution_orchestrator.py commissioning \
-  --package-root <new-v5-package-directory> \
-  --package-manifest <new-v5-package-directory>/PI4B8_CORRECTED_RUNTIME_PACKAGE_MANIFEST_V5.json \
-  --remote-package-root /home/pi/tsusc_major_revision/pi4b8_formal_runtime_v5_r4 \
-  --remote-output-root /home/pi/tsusc_major_revision/pi4b8_corrected_v5_r4_runs \
-  --authorization-dir <new-authorization-directory> \
-  --evidence-root <new-evidence-directory> \
-  --ssh-target pi@pi4b8g.local \
-  --mac-python .venv/bin/python \
-  --run-id <unique-commissioning-run-id> \
-  --policy Static-Light --condition n16/B0 --seed 5099
-```
-
-A passing commissioning freezes and reopens the final execution manifest. Only
-then may the same command prefix be invoked with the `formal` subcommand. The
-formal path revalidates the gate, runs the 60 frozen cells, and refuses duplicate
-or unplanned run IDs.
-
-The label file is opened only after every action and detector prediction has
-been produced. B1/B2 require the exact pinned-CPU load lifecycle and
-contemporaneous process evidence; a condition label alone is rejected. The
-historical Mac orchestrator, V4 package builder and replacement runner remain
-under `online/pi4b8/` for audit and are not compatible with the corrected
-worker.
-
-## 8. POWER-Z KM003C acquisition
-
-Measurement boundary: DC input-side power/energy measured inline on the Raspberry Pi 4B 8GB supply path.
-
-A commissioning capture:
-
-```bash
-python online/pi4b8/powerz_hid_capture.py \
-  --output commissioning_power.csv \
-  --seconds 30 \
-  --sps 10
-```
-
-Do not assume exact 10.000 SPS. Integrate power using recorded monotonic timestamps and the trapezoidal rule. For each online run:
-
-1. Start meter capture at least 5 s before the Pi run.
-2. Record Mac monotonic start-request and start-ACK timestamps.
-3. Execute all 600 Pi windows.
-4. Record Mac monotonic end-ACK.
-5. Continue capture for at least 5 s.
-6. Hash and bind the unchanged meter CSV to exactly one run ID.
-7. Integrate only from the Mac start-ACK boundary to the end-ACK boundary.
-8. Preserve invalid attempts; never combine Pi metrics from one attempt with energy from another.
-
-The frozen specification is `protocols/POWER_Z_HID_ACQUISITION_V1.md`.
-
-## 9. Statistical reproduction
-
-The checked-in Pi4B run-level data and paired results are historical V4
-arithmetic summaries only. They are not valid corrected policy or energy
-comparisons.
-
-The analysis implementation is `analyze_pi4b8_formal.py`. It expects the private raw evidence layout used by the original campaign. To recompute from a locally restored raw archive, place that archive under `evidence/pi4b8_formal_matrix/` with the accepted-cell manifest and run:
-
-```bash
-python analyze_pi4b8_formal.py
-```
-
-The statistical unit is the matched seed/run, never a pooled window. With five Pi4B pairs per condition, the minimum nonzero two-sided exact Wilcoxon p-value is 0.0625; paired t tests, exact Wilcoxon tests, bootstrap 95% confidence intervals, and paired effect sizes are all retained.
-
-## 10. One-shot official-test evaluator
-
-`run_official_test_once.py` is the repaired, non-executed evaluator retained
-for code audit. It loads thresholds from `models/MODEL_HYPERPARAMETERS.json`,
-writes only below `results/official_test/`, and refuses to run while the
-immutable one-shot lock exists. It must not be confused with the historical
-one-shot implementation, which embedded the same numerical threshold values
-and wrote root-level outputs. The subsequent copy path into
-`results/official_test/` is incompletely documented; the existing aggregate is
-therefore preserved with that provenance limitation rather than regenerated.
-
-The official test has already been opened once and the empirical phase is
-closed. Do not execute it again in this artifact or use its saved results to
-choose any repair parameter. Reference aggregate results and output hashes are
-under `results/official_test/`.
-
-## 11. Integrity checks
-
-```bash
-python -m compileall -q runtime scripts online device_calibration
-python scripts/validate_public_release.py
-shasum -a 256 -c PUBLIC_RELEASE_MANIFEST_SHA256.txt
-```
-
-The checksum manifest covers the public technical release, excluding itself and Git metadata.
-
-The original deployment label-leakage gate is retained as `online/pi4b8/test_label_leakage.py`; it requires the non-redistributed `.formal_inputs/pi4b8_scheduler_train_v1/` package and should be run after that package is reconstructed locally.
+The saved 82,332-row detector results are in `results/official_test/`. `run_official_test_once.py` is retained for code inspection and refuses repeat execution while the lock exists. It was repaired after the historical evaluation and is not evidence that the historical generator used that exact repaired source. Do not remove the lock, reopen the test, or use the stored outcomes to choose correction parameters. The saved confusion metrics can be algebraically checked; raw ranking predictions and historical copy lineage are not fully retained.
