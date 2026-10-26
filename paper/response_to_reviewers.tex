@@ -1,0 +1,264 @@
+\documentclass[10pt,a4paper]{article}
+\usepackage[margin=0.92in]{geometry}
+\usepackage[T1]{fontenc}
+\usepackage[utf8]{inputenc}
+\usepackage[english]{babel}
+\usepackage{microtype}
+\usepackage{amsmath,amssymb}
+\usepackage{booktabs,tabularx,array,longtable}
+\usepackage{enumitem}
+\usepackage{pifont}
+\usepackage{xcolor}
+\definecolor{ReviewerBlue}{RGB}{33,150,243}
+\definecolor{AuthorGreen}{RGB}{67,160,71}
+\definecolor{WhereOrange}{RGB}{251,140,0}
+\definecolor{ExcerptPurple}{RGB}{142,36,170}
+\definecolor{SoftGray}{RGB}{245,245,245}
+\usepackage{hyperref}
+\hypersetup{colorlinks=true,linkcolor=black,urlcolor=black,citecolor=black}
+\setlist[itemize]{topsep=2pt,itemsep=2pt,parsep=0pt,leftmargin=1.5em}
+\setlist[enumerate]{topsep=2pt,itemsep=2pt,parsep=0pt,leftmargin=1.7em}
+\usepackage[most]{tcolorbox}
+\tcbset{sharp corners,boxsep=4pt,left=7pt,right=7pt,top=6pt,bottom=6pt,coltitle=black,colbacktitle=white,enhanced,breakable}
+\newtcolorbox{rcommentbox}[1][]{colback=ReviewerBlue!6!white,colframe=ReviewerBlue!70!black,title=\textbf{Reviewer / AE Comment (summary)},#1}
+\newtcolorbox{authorresponsebox}[1][]{colback=AuthorGreen!5!white,colframe=AuthorGreen!60!black,title=\textbf{Author Response},#1}
+\newtcolorbox{wherebox}[1][]{colback=WhereOrange!6!white,colframe=WhereOrange!80!black,title=\textbf{Location in Revised Manuscript},#1}
+\newtcolorbox{excerptbox}[1][]{colback=ExcerptPurple!4!white,colframe=ExcerptPurple!70!black,title=\textbf{Revised Text -- Representative Excerpt},#1}
+\newcommand{\commentbox}[1]{\begin{rcommentbox}#1\end{rcommentbox}}
+\newcommand{\responsebox}[1]{\begin{authorresponsebox}#1\end{authorresponsebox}}
+\newcommand{\changebox}[1]{\begin{wherebox}#1\end{wherebox}}
+\newcommand{\paperid}{TSUSC-2026-07-0200}
+\newcommand{\manutitle}{Shielded Q-learning for Thermally-Safe, Energy-Aware Multi-Model Intrusion Detection Scheduling on Lightweight Edge Devices}
+\newcommand{\journal}{IEEE Transactions on Sustainable Computing}
+\newcommand{\authors}{Nuonan Ouyang, Adrian Shatte, Zhigang Lu, Chao Chen, and Wei Xiang}
+\newcommand{\editor}{Editor-in-Chief and Associate Editor}
+\usepackage{fancyhdr}
+\pagestyle{fancy}
+\fancyhf{}
+\lhead{\small TSUSC-2026-07-0200}
+\rhead{\small Response to Reviewers}
+\cfoot{\thepage}
+\setlength{\headheight}{14pt}
+
+\begin{document}
+\begin{center}
+{\LARGE\bfseries Response to the Editor and Reviewers}\\[6pt]
+{\large Manuscript ID: TSUSC-2026-07-0200}\\[4pt]
+\emph{Shielded Q-learning for Thermally-Safe, Energy-Aware Multi-Model Intrusion Detection Scheduling on Lightweight Edge Devices}\\[4pt]
+Nuonan Ouyang, Adrian Shatte, Zhigang Lu, Chao Chen, and Wei Xiang
+\end{center}
+\begin{tcolorbox}[colback=SoftGray,colframe=black!25,title=How to Read This Letter]
+Blue-framed boxes summarize the review concerns; green-framed boxes give our responses; orange-framed boxes identify changes; purple-framed boxes quote representative revised text. Comment numbers follow the decision letter. Locations refer to the current main manuscript and supplement, not the submitted numbering.
+\end{tcolorbox}
+\begin{authorresponsebox}
+Dear Editor-in-Chief, Associate Editor, and Reviewers,
+
+Thank you for the detailed review. We have revised the empirical evaluation, added the requested deterministic controller, and narrowed the claims where the new measurements do not support the earlier interpretation. The submitted FSSQL-R formulation and nominal 40-ms/$82^\circ$C caps are retained, but the revised empirical tables are replacement evidence, not a numerical reproduction of the earlier replay tables.
+
+Two corrections require explicit explanation. First, the original execution artifacts were unavailable. We reconstructed and froze the detector, preprocessing, calibration, and scheduler implementations; they are not claimed to be byte-identical historical artifacts. Second, review of the initial Pi 4B online implementation exposed differences between the declared and executed batch size, risk/controller logic, masking, reward, and background load, together with timing and power-alignment problems. We exclude that campaign and use only the corrected R6 Pi 4B campaign in this submission. Earlier files remain archived as superseded material.
+
+The submitted paper stated that test-set TPR/FPR supplied the reward-quality terms. As described, this permits test information to affect the controller objective. Because the historical artifacts are unavailable, we do not reinterpret it as a verified wording error. The revised reward uses validation-partition quality terms only.
+
+The official detector test was opened on 11 September 2026. The October implementation corrections and Q-policy reconstruction occurred afterwards on development data without reopening the test. The detector, preprocessor, threshold, and validation-quality hashes remain unchanged. We have removed the earlier claim that the test was opened after all of the now-reported hardware work. The saved test aggregates and their provenance limits are reported separately from scheduler-development results.
+\end{authorresponsebox}
+\clearpage
+\section*{Associate Editor: contribution and learning value}
+\commentbox{The contribution should be separated from prior shielding/RL work and simpler controllers. Clarify the relation to earlier energy-aware and multi-objective schedulers, define Unshielded-Q, discuss recent shielded-RL IDS work, and include a conventional threshold controller.}
+\responsebox{The revised Related Work states that shielding and constrained RL are established ideas. It compares the action semantics and measurement boundary with recent TSUSC sustainable scheduling, TMC edge inference, TIFS IDS, and the suggested 2026 self-healing IDS study (DOI 10.32604/cmc.2026.074274). We do not claim novelty for shielding alone.
+
+Unshielded-Q is explicitly the reconstructed FSSQL state/reward/Q implementation without masking, evaluated in the Pi 3B+ campaign. It is not described as an exact executable reproduction of an earlier author scheduler. The unavailable predecessor execution assets prevent that stronger equivalence claim; the paper confines its contribution to the defined revision implementation and measured comparisons.
+
+The corrected Pi 4B Threshold baseline reads temperature, queue load, and risk, with hysteresis and fixed light/heavy roles. Its temperature/queue branches are tested as implementation behavior but are not activated under the evaluated cold, zero-backlog conditions. It is a no-training, unshielded comparator, not a risk-only branch renamed as the requested controller.}
+\changebox{Main Sections II, IV and V-C; Table I; Supplement S4 and S7.}
+\commentbox{The incremental value of learning over the shield is unclear. Report dispersion, paired tests, learning schedules, state-space size, and whether any improvement justifies the complexity.}
+\responsebox{The corrected evidence does not establish an incremental practical advantage for Q-learning. On Pi 3B+, Safe-Greedy has higher F1/reward and lower mean latency and switching cost. On Pi 4B, B0/B1 F1 is close (FSSQL-R about 0.9598; Safe-Greedy 0.9608), but B2 FSSQL-R falls to 0.8869 with FPR 0.5199. The B2 mean paired F1 difference is $-0.0739$; the exact two-sided sign-flip $p$ is 0.0625 at five pairs. All five seeds are retained.
+
+The comparison uses the same guard and complete one-step reward, including security, energy, backlog, and switching terms. Safe-Greedy maximizes that immediate reward; FSSQL-R selects by its learned Q values. The evidence therefore evaluates the incremental value of learned selection under the sampled workloads, subject to the model-based training and state-support limitations. Checkpoint stability is reported separately from a mathematical convergence claim.}
+\changebox{Main IV-B, V-E, VI-B--C and VII-B; Tables IV--VI; Supplement S3--S4.}
+
+\clearpage
+\section*{Associate Editor: deployment, safety, and scope}
+\commentbox{The setup should demonstrate real deployment cost: distinguish measured and reconstructed quantities, provide an online Pi run, measure controller/tail and switching overhead, and validate physical energy.}
+\responsebox{The corrected Pi 4B campaign comprises 60 accepted runs, 36,000 windows, and 576,000 record evaluations. Every window actually processes 16 inputs, executes RiskProxy, constructs the state and guard, selects an action, and runs the selected resident detector. Labels are loaded after the decision loop for scoring; the reward is label-free. These online measurements are distinct from the model-based environment used for Q training.
+
+We define the boundaries rather than call every recorded interval complete program cost. Controller time is measured after preprocessing through action binding; E2E spans preprocessing through post-action telemetry. Reward calculation, serialization, and end-of-run scoring are outside E2E. The resident-model switching timer measures binding rather than model reload. Mac-side KM003C sampling is outside the Pi decision path.
+
+Physical energy is integrated over the measured Mac ACK interval and includes idle periods, background work, and tail scoring/writeout. The raw traces cover both integration boundaries, with no endpoint extrapolation. Energy differences change sign across conditions and do not support consistent savings.}
+\changebox{Main V-D and VI-D; Fig. 2; Supplement S5.}
+\commentbox{Report calibration sizes, residual distributions and empirical coverage; test a second configuration or changed background load; scope safety and MCU claims; correct presentation inconsistencies.}
+\responsebox{Each device has its own fit, margin, and held-out coverage splits: 2880 windows per split over 72 cells. Pi 3B+ joint coverage is 2879/2880; Pi 4B is 2877/2880. All misses are retained. Residual ECDFs and the actual residual margins plus buffers are supplied. The conditional admissibility statement is not presented as an unconditional complete-pipeline guarantee.
+
+Pi 4B adds a second configuration and real B1/B2 load-process execution. PID, affinity, duty configuration and liveness are recorded; an independent CPU-utilization curve is not available, so the paper does not claim exactly measured 50\%/100\% utilization. The thermal cap remains nonbinding. Claims are limited to the tested Pi configurations and data. Revised tables/figures replace the inconsistent earlier aggregates, and the parameter and timing definitions are consolidated.}
+\changebox{Main V-B--D, VI-A, VIII; Tables II--III; Supplement S2, S4--S5.}
+
+\clearpage
+\section*{Reviewer 1, Comment 1: practical advantage and uncertainty}
+\commentbox{Justify Q-learning over Safe-Greedy. The ten-seed means lack dispersion, confidence intervals and baseline rows; small violation-count means may be driven by one or two runs. Report paired-seed inference and discuss complexity and switching in absolute terms.}
+\responsebox{We replaced the old comparison with explicit baseline rows, run-level summaries, paired differences, and seed-level tables. The Pi 3B+ matched comparison gives FSSQL-R/Safe-Greedy mean F1 0.8523/0.8708, mean reward 0.5434/0.5839, and mean E2E 8.3149/7.9775 ms. Switching cost is 5.348/0 per run. Exact sign-flip $p$ is 0.00195 for F1, reward, and switching cost, and 0.00586 for E2E; both methods have zero observed violations. We therefore do not retain the submitted interpretation of a learning-induced safety gain.
+
+Corrected Pi 4B data are analyzed independently. The online table includes all four policies, FPR, reward, latency, controller time, and measured energy. Safe-Greedy is no longer an all-positive reference: its FPR is 0.1327 and mean F1 0.9608 in all three conditions. Threshold is close at F1 0.9605/FPR 0.1341; Static-Light retains the poor FISVDD operating point. The old Pi 4B positive F1 differences and seed-5102 account belonged to the excluded worker and have been removed.
+
+R6 FSSQL-R has 22.6, 23.0, and 162.8 mean switches/run under B0, B1 and B2, respectively. Every switch incurs the fixed $0.02$ reward penalty. This is not equated with the measured resident binding time or with physical joules. The corrected data show additional switching without an established detection or energy benefit.
+
+Five Pi 4B pairs limit exact inference. We report the exact sign-flip test and paired percentile interval used by the R6 analysis, not the earlier excluded campaign's tests. For B2 the F1 difference has interval $[-0.0888,-0.0568]$, but exact $p=0.0625$; the interval is not used to assert a two-sided $p<0.05$ result. Multiple endpoints remain descriptive.}
+\changebox{Main Tables IV--VI, VI-B--D, VII-B; Supplement Tables S2--S4 and the supplied run-level/paired CSV files.}
+\begin{excerptbox}\emph{Neither evaluated Pi regime establishes a practical need for the learned layer over the simpler same-guard rule. B0/B1 Pi 4B detection scores are close, while B2 and the Pi 3B+ binding comparison favor Safe-Greedy.}\end{excerptbox}
+
+\clearpage
+\section*{Reviewer 1, Comments 2--3: online evidence and calibrated bounds}
+\commentbox{The submitted evaluation is hardware-profiled trace-driven replay rather than complete closed-loop execution. Clarify measured versus reconstructed quantities and add at least one online end-to-end Pi experiment.}
+\responsebox{The revised deployment evidence executes detectors and controllers on the devices. Pi 4B R6 includes actual 16-record batches, frozen RiskProxy, live temperature/frequency/fault readings, admissible-set construction, policy selection and detector inference. The 60 accepted runs use matched inputs with contemporaneous power traces. The guard predictor outputs remain predictions; they are not substituted for measured online times.
+
+Q training is still a development simulation using the device-specific thermal predictor and resource proxy. Backlog is zero in the online campaign, so running the loop on hardware does not establish queue control or the need for long-horizon reasoning. We separate these claims explicitly. The corrected campaign is a replacement for the invalid earlier Pi 4B online implementation, not a reuse of its records.}
+\changebox{Main V-A, V-C--D; Supplement S1 and S4--S5.}
+\commentbox{Hard safety relies on bounded errors in Assumption A1, but the margins are empirical residual quantiles and residual violations remain. Supply residual distributions, calibration size and empirical coverage.}
+\responsebox{We retain only a conditional one-step admissibility proposition. For each device the fit, margin and held-out coverage splits contain 2880 windows each; held-out observations are not used to change margins. The supplement gives latency/thermal residual ECDFs, per-action residual margins, the separate 10-ms/$0.6^\circ$C buffers and the uncovered cells.
+
+Pi 3B+ has one latency-bound miss in 2880 coverage observations. Pi 4B has three thermal-prediction-bound misses, not three observed violations of the $82^\circ$C cap. The online Pi 3B+ 52.522-ms E2E tail is retained and shows that an admitted detector does not guarantee that every runtime operation will meet the same deadline. The paper now distinguishes calibrated action admissibility, empirical prediction coverage, and realized E2E exceedances.}
+\changebox{Main III--IV, Table III and VI-A; Supplement S2--S3.}
+
+\clearpage
+\section*{Reviewer 1, Comment 4: robustness and reconstruction boundary}
+\commentbox{The evaluation uses one Pi 3B+ configuration and UNSW-NB15. Test changed ambient temperature, CPU/background load, or a second device, or narrow the deployment claims.}
+\responsebox{We added an independently calibrated Pi 4B 8GB and corrected B0/B1/B2 online runs. The Pi 3B+ guard was not transferred: the second device has its own latency lookup, thermal coefficients, residual margins and held-out coverage. B1/B2 execute a separate worker pinned to CPU 3 with the frozen 100-ms duty cycle. The evidence includes process identity, affinity and liveness throughout the runs, but no independently sampled utilization curve. We describe the programmed load accordingly.
+
+The result is not a universal robustness claim. All Pi 4B safe sets contain four actions, the maximum recorded temperature is $47.712^\circ$C, and queued backlog is zero. The highest load exposes a learned-policy weakness rather than a robustness advantage. The two platforms also differ in workload and training history; we do not interpret their comparison as an isolated hardware-generation effect.
+
+The rebuilt Pi 3B+ uses a heatsink, continuously active fan, open-top enclosure and stabilized supply. Its temperature measurements are not direct replications of the earlier replay profiles. The paper states this together with the unavailability of historical execution artifacts. No MCU measurements or second IDS dataset are claimed.}
+\changebox{Main V-A--C, VI-A--C, VII and VIII; Supplement S1--S4.}
+\begin{excerptbox}\emph{Hardware and workload both differ, so this contrast is not a controlled estimate of processor-generation effects.}\end{excerptbox}
+
+\begin{authorresponsebox}
+\textbf{Scope retained after the new measurements.} The additional platform and actual load process answer the specific deployment checks requested. They do not remove the single-dataset limitation, prove behavior near the thermal cap, or establish performance on unvisited Q states. Those limitations are stated in the main manuscript rather than left only to the response letter.
+\end{authorresponsebox}
+
+\clearpage
+\section*{Reviewer 2, Comment 1: novelty and related work}
+\commentbox{Shielding and constrained RL are established. Explain the relation to earlier author schedulers and whether Unshielded-Q is the earlier method; otherwise include that method. Discuss the recent safety-aware self-healing IDS study and clarify the technical distinction.}
+\responsebox{We agree that feasibility shielding alone is not a new RL technique. The paper now separates the established ingredients from the deployment question being evaluated. Our actions select resident detectors; the guard uses device-calibrated latency and next-temperature estimates; the evaluation measures the controller path and DC input energy. The contribution is limited to that implementation and its observed trade-offs, including results unfavorable to the learned controller.
+
+The suggested study, ``Safety-Aware Reinforcement Learning for Self-Healing Intrusion Detection in 5G-Enabled IoT Networks,'' is cited as Malwi et al. (2026), DOI 10.32604/cmc.2026.074274. We distinguish self-healing remediation and its safety semantics from detector selection under physical resource caps. Table I also compares the control decisions and measurement boundaries of recent TSUSC, TMC and TIFS work supplied in the revised bibliography.
+
+Unshielded-Q is now defined as the reconstructed Q policy with the same state/reward formulation and without the admissible-action mask. It is not claimed to reproduce the executables of an earlier energy-aware/multi-objective author scheduler. The unavailable historical implementation prevents that stronger equivalence from being verified, and we do not invent a predecessor baseline from its reported averages. The revised empirical claim is therefore a comparison with the specified current baselines, not proof of superiority over every predecessor.
+
+We also clarify that Safe-Greedy shares the shield and complete one-step reward with FSSQL-R. It includes the same security, energy, backlog, and switching terms, choosing the admissible action with the greatest immediate reward. FSSQL-R instead uses learned Q values. Model-based training, sparse state support, and the stationary zero-backlog workload limit the interpretation of this comparison.}
+\changebox{Main II, III, IV-B, V-C and VII-B; Table I.}
+\begin{excerptbox}\emph{It is a same-guard, same-reward myopic baseline; FSSQL-R instead selects the admissible action with the largest learned Q value.}\end{excerptbox}
+
+\clearpage
+\section*{Reviewer 2, Comments 2 and 4: simple control and physical energy}
+\commentbox{Include a conventional threshold controller driven by temperature and backlog. Such controllers need no training and may suffice, especially given the competitive round-robin results.}
+\responsebox{The corrected Pi 4B Threshold implementation uses temperature, queue load and risk with hysteresis. At $T\ge80.1495^\circ$C or $n+q\ge512$ it chooses FISVDD; at $T\le78.1495^\circ$C, $n+q\le256$, and risk $\ge0.7$ it chooses TinyDL; otherwise it keeps the previous action, initially FISVDD. It is unshielded and requires no learned Q table. The light/heavy roles and thresholds are fixed in the runtime configuration, not fitted to official-test performance.
+
+In the evaluated regime, zero queued backlog and low temperatures leave the thermal/queue triggers inactive. Counterexample tests verify those code branches, but the paper does not claim that the measured runs demonstrate thermal regulation. Threshold mean F1/FPR is 0.9605/0.1341, close to Safe-Greedy's 0.9608/0.1327. Both outperform FSSQL-R in B2; we retain that unfavorable comparison.}
+\changebox{Main V-C, Table V, VI-B and VII-B; Supplement S4.}
+\commentbox{Energy-aware claims need physical validation, including controller energy. Report measured power/joules or validate the proxy, and provide operational energy metrics.}
+\responsebox{All 60 accepted R6 runs have contemporaneous KM003C DC input traces. Actual timestamps, in-range ACK boundaries, 5-s pre/post capture and trapezoidal integration are checked independently. No idle power is subtracted. The interval includes the entire scheduled run and tail work; it is neither AC wall energy nor isolated detector energy.
+
+The paired FSSQL-R-minus-Safe-Greedy energy differences are $+0.908$, $-1.209$, and $+0.645$ J in B0/B1/B2. The direction is inconsistent and exact $p$ values are 0.125, 0.125 and 0.5625. The manuscript therefore makes no consistent physical energy-saving claim. The internal resource proxy remains in the frozen objective, explicitly separate from measured joules. J/run, J/window, J/1000 records and J/correctly detected attack are available per run; J/window is a run-normalized quantity, not a 100-ms resolved electrical measurement.}
+\changebox{Main V-D, Table VI, VI-D and VII-C; Fig. 2; Supplement S5.}
+
+\clearpage
+\section*{Reviewer 2, Comments 3 and 5: overhead and learning stability}
+\commentbox{The controller reads telemetry, constructs state, evaluates guards, selects models and performs Q/replay updates. Measure its mean/tail cost and switching, and state which costs enter the latency and energy accounting.}
+\responsebox{The corrected timing fields distinguish preprocessing, risk proxy, telemetry, state, guards, selection, resident action binding, inference and post-action telemetry. Across the three Pi 4B conditions, mean controller time is 4.673 ms for FSSQL-R and 4.516 ms for Safe-Greedy; detector inference is 0.520/0.441 ms. Controller and E2E are no longer duplicated fields. Per-run P50/P95/P99 and maxima are retained.
+
+Controller time starts after preprocessing and ends at action binding. Q lookup and policy selection are timed separately, with both included in controller time; guard subcomponents are included in guard total. E2E begins at preprocessing and ends after post-action telemetry; reward computation, serialization and delayed scoring are outside it. These exclusions are explicit. Evaluation has no Q or replay updates, so training-update time is not an online cost in these runs. The resident switching timer is not presented as model-load cost. Energy, measured at the DC input over the ACK interval, includes controller work and tail scoring/writeout.}
+\changebox{Main V-D, VI-D; Supplement S5 and per-run timing CSV.}
+\commentbox{With only 600 decision windows and a large discretized state space, Q-learning may not have stabilized. Report state/action counts, exploration and learning-rate schedules, and learning curves.}
+\responsebox{We separate the 600-window evaluation runs from 6000-window training sequences. The state space has 1280 states and 5120 state-action pairs; the visit-count learning rate, discount 0.95, epsilon decay and replay settings are listed in Table II. Figure S3 plots the five corrected Pi 4B training traces.
+
+At 600/6000 windows Pi 4B mean visited states are 22.2/25.8 and state-action pairs 73.4/91.0; rolling reward is 0.4736/0.5541. Final checkpoint greedy-policy change reaches zero, but mean absolute TD error remains 0.1293. Pi 3B+ has similarly sparse support. These are stability diagnostics over visited states, not full-state convergence.
+
+We additionally report that 1322/3000 B2 online FSSQL-R windows reach states unvisited during training, with zero Q rows and the fixed FISVDD tie action. This post hoc trace result demonstrates why a stable training curve alone is insufficient evidence of deployment reliability. No corrective retraining is performed after observing it.}
+\changebox{Main IV-B, Table II, VI-C and VII-B; Supplement S3--S4.}
+
+\clearpage
+\section*{Reviewer 2: presentation and reproducibility}
+\commentbox{Other suggestions 1--5: report the guard latency actually compared with the cap in Table VII; reconcile Tables XIV and XI; provide a consolidated parameter table; repair the empty Figure 13 and Figure 11 legend; and complete Sections VI-F/VI-G.}
+\responsebox{
+\begin{enumerate}
+\item \textbf{Latency quantity.} The old table is replaced. Main Eq. (3) defines the guarded latency as the action/service point prediction plus its action-specific residual margin and separate fixed buffer. Table S1 gives the residual margins; the per-window records retain upper predictions and headroom. In the retained Pi 3B+ event, the point prediction is 5.147 ms, the guarded upper prediction is 15.703 ms and headroom is 24.297 ms. These are not conflated with observed E2E latency.
+\item \textbf{Table consistency.} The inconsistent submitted aggregates are removed, not retrospectively assigned a convenient denominator. Revised Pi 4B tables use one R6 accepted-run selector and one analysis pipeline. An accepted cell contributes all its metrics from the same attempt; no F1/energy mixing across attempts is allowed. Pi 3B summaries are identified separately.
+\item \textbf{Parameters.} Table II lists interval/caps, calibration sizes, state bins and cardinalities, training budget, learning/exploration/replay schedules, and the online matrix. The method gives reward weights, Threshold rules and background-process definitions; Table S1 supplies margins and buffer distinctions.
+\item \textbf{Figures.} Main Figs. 1--2 replace obsolete plots with corrected FPR and measured DC input energy. Supplemental Figs. S1--S3 show the actual held-out residual ECDFs and corrected Q-training checkpoints. Axes include all data, and legends do not cover the principal curves. No empty-axis figure is retained.
+\item \textbf{Results and discussion.} The Results section now addresses admissibility, controller comparisons, training support, runtime/energy costs and detector generalization. Discussion distinguishes resource safety from detection quality, considers whether learning earns its cost, and states the measurement boundaries. A separate Limitations section describes the unresolved restrictions.
+\end{enumerate}
+These changes are generated from the corrected evidence rather than by editing the old numerical tables. The supplement and machine-readable data retain unfavorable results and all seed values.
+}
+\changebox{Main Eq. (3), Tables II--VI, Figs. 1--2, Sections V--VIII; Supplement S2--S7. Table numbers refer to the revised manuscript, not the earlier submitted version.}
+
+\clearpage
+\section*{Reviewer 3, Comments 1--2: aggregation and state dynamics}
+\commentbox{Table XIII is inconsistent with fallback being an empty safe set. If both columns use the same windows, the unconditional admissible-action ratio must not exceed one minus the fallback rate. Clarify denominators or correct the aggregation.}
+\responsebox{We agree with the stated identity. The old aggregate table is removed rather than reinterpreted. In the Pi 3B+ binding experiment every accepted window has exactly three of four actions admissible and no empty-set fallback; the unconditional ratio is therefore 0.75. In the corrected Pi 4B experiment all four actions are admissible in every window and fallback is zero; its unconditional ratio is 1.00. Both summaries use all 36,000 accepted windows of their respective campaigns, not a subset conditioned on non-fallback.
+
+The code separately records the safe-set mask, its cardinality and the fallback flag. Empty-set behavior is a flagged fixed FISVDD default, not a claim that the default is automatically safe. A max-Q action outside the admissible set is rejected in a dedicated functional test, since the nonbinding Pi 4B traces alone cannot exercise that case.}
+\changebox{Main III, VI-A; Supplement S2 and S7.}
+\commentbox{Clarify whether replay carries action-dependent temperature/backlog state forward or draws independent profiled values. This affects the strength of the closed-loop claim.}
+\responsebox{The new online evidence does not substitute replayed latency for measured execution. Each Pi 4B window reads actual temperature/frequency, constructs the current risk/state, and executes the selected detector. The controller energy state is still a normalized modeled quantity, not measured battery charge. Queued backlog is explicitly zero in the stationary online workload.
+
+Training uses the device-specific one-step thermal model and action-dependent resource proxy, with the documented episode reset schedule. It is a model-based development process and is reported as such. We do not infer queue dynamics from an online loop merely because a backlog field exists.
+
+A separately frozen Pi 3B+ stateful extension measured action-dependent service times but could not establish both accumulation under pressure and recovery under the specified low-load phase. It stopped before policy runs. This is an unmet experimental precondition, not evidence for or against a long-horizon benefit.}
+\changebox{Main IV-B, V-C, VI-C and VIII; Supplement S3--S4.}
+
+\clearpage
+\section*{Reviewer 3, Comments 3--4: workload and residual violations}
+\commentbox{Parameterize the near-cap workload and report uncertainty. Means such as 0.1 versus 1.8 violations or utility 0.057 versus 0.056 need per-seed dispersion. A multi-level stress sweep would be useful but is not necessary.}
+\responsebox{We no longer preserve the old replay means as deployment evidence. The Pi 3B+ binding campaign and the corrected Pi 4B campaign each have explicit frozen inputs, guard versions and seed schedules. The Pi 4B conditions are n16/B0, n16/B1 and n16/B2, with 600 windows and five matched seeds per condition. B1/B2 specify a pinned worker and duty cycle, not only a condition label. They are called background-load conditions, not near-cap conditions: all four actions remain admissible and the largest R6 E2E latency is below 40 ms.
+
+All seed-level F1/FPR values, paired differences, bootstrap intervals and exact sign-flip tests are reported. FPR is not omitted from the paired endpoint selection. The R6 statistical unit is the run/seed; repeated records and 600 windows are not used to inflate the sample size. Pi 3B+ retains ten paired seeds. No favorable seed subset is selected in either campaign.}
+\changebox{Main Table II, Tables IV--VI and V-E; Supplement S3--S4 and CSV files.}
+\commentbox{Explain why FSSQL-R has fewer realized violations than Safe-Greedy despite sharing the same admissible set. Is it larger guard margins, different state evolution or some other mechanism?}
+\responsebox{The revised hardware comparison does not reproduce the submitted 0.1-versus-1.8 gap. Pi 3B+ FSSQL-R and Safe-Greedy both have zero realized violations; corrected Pi 4B likewise shows no observed E2E or thermal-cap violation. We remove the earlier causal interpretation rather than assign the missing gap to larger learned margins.
+
+The one retained Pi 3B+ Threshold event exceeds the E2E deadline while the selected TinyDL action remains admitted. Its inference interval is 0.446 ms, controller interval 50.414 ms, and E2E 52.522 ms. No switching or current hardware fault is observed. The record shows a long controller interval, but does not identify its operating-system cause. It demonstrates the need to distinguish a modeled action-level bound from full runtime behavior; it does not show that the shield reduced the probability of such events.}
+\changebox{Main VI-A--B and VII-A; Supplement S3.}
+\begin{excerptbox}\emph{The cause of the controller tail is not resolved by these timings; the observation limits an unconditional complete-pipeline safety claim.}\end{excerptbox}
+
+\clearpage
+\section*{Reviewer 3, Comments 5--6: claim scope and comparison}
+\commentbox{Soften the statement that shielding is necessary for safety, since Static-Light and Round-Robin can have zero violations. Scope empirical validation to Pi-class devices, not MCUs.}
+\responsebox{The revised paper does not say that every safe controller needs a shield. It describes a calibrated mechanism for excluding predicted-infeasible actions from an adaptive choice when the guard becomes binding. The Pi 3B+ experiment shows this restriction; Pi 4B remains nonbinding, so it cannot demonstrate a safety improvement due to filtering.
+
+We also separate resource admissibility from detection quality. Static-Light can meet the resource constraints while the FISVDD detector produces FPR 1.0. In the B2 learned-policy diagnostic, FISVDD remains admissible when a zero Q row invokes the tie rule. A resource shield does not prevent that classification failure.
+
+All empirical deployment claims are limited to the two actively cooled Raspberry Pi configurations, the archived development workload and UNSW-NB15. There is no MCU experiment, sustained operation near the thermal cap, or accepted queue-recovery experiment. These limitations appear in the main manuscript, not only in the supplement.}
+\changebox{Abstract; main VI-A, VII-A--B and VIII.}
+\commentbox{Complete positioning against the earlier energy-aware and multi-objective Q-learning scheduling papers. Cite them if public; otherwise clarify their status.}
+\responsebox{We do not rely on unavailable predecessor manuscripts or their execution artifacts as evidence of novelty or benchmark equivalence. The revised Related Work describes the current Unshielded-Q baseline explicitly and distinguishes the submitted method from published shielding, constrained RL, sustainable scheduling, adaptive inference and IDS studies. The supplied reference set includes the reviewer-suggested self-healing IDS paper and recent TSUSC/TMC/TIFS studies.
+
+No claim is made that the reconstructed baseline reproduces a separate earlier author implementation exactly. A direct historical executable comparison is outside the evidence available here. We have correspondingly limited the contribution and the interpretation of the new baseline results.}
+\changebox{Main II and V-C; response to Reviewer 2, Comment 1.}
+
+\clearpage
+\section*{Revision evidence and final checks}
+
+\begin{authorresponsebox}
+The revised claims rest on the evidence below. The Pi 4B correction is not hidden by retaining the old ranking or changing only labels; all current Pi 4B tables, figures and interpretations use the same corrected R6 accepted set.
+\end{authorresponsebox}
+\begin{center}\small
+\begin{tabularx}{\textwidth}{@{}p{3.4cm}X@{}}\toprule
+Evidence & Scope in this revision \\\midrule
+Pi 3B+ calibration & 2880 held-out windows; joint 2879/2880, one retained miss. \\
+Pi 3B+ policy comparison & Six policies, ten matched seeds, 36,000 windows; three admissible actions throughout. FSSQL-R does not outperform Safe-Greedy. \\
+Pi 4B calibration & Separate fit/margin/coverage; 2877/2880 joint coverage, three retained thermal-bound misses. \\
+Pi 4B corrected online runs & Four policies, three loads, five seeds, 600 actual n16 windows/run. Sixty accepted cells; original failed attempts retained. \\
+Physical energy & Sixty contemporaneous KM003C traces; independently recomputed in-range ACK-boundary integrals. No consistent energy advantage. \\
+Learning support & Pi 4B n16/B0 Q training; checkpoints and runtime state-support lookup. B2 has 1322/3000 unvisited-state FSSQL windows. \\
+Official detector test & Saved 11 September fixed-detector evaluation. October corrections do not reopen the test or change detector/threshold hashes; later scheduler results remain development-workload evidence. \\
+\bottomrule\end{tabularx}
+\end{center}
+\begin{authorresponsebox}
+\textbf{Implementation and analysis checks.} The corrected runtime has behavior-level checks for n16 processing, RiskProxy use, Threshold transitions, masked Q selection, label-free reward, nonzero switching penalties and background-worker lifecycle. Meter validation rejects out-of-range boundaries. The R6 analysis explicitly retains FPR in all policy contrasts and verifies the complete matched grid. Stored artifacts retain strict identity checks; cross-platform refitting uses a stated numerical tolerance and requires unchanged coverage/admission decisions. The local test suite contains 118 passing tests. This verifies the checks that were run; it is not a guarantee against every implementation error or an independent field certification.
+
+\textbf{Remaining boundaries.} The original artifacts are unavailable; reconstructed results do not reproduce old replay numbers. R6 follows earlier official-test access and is not a new blinded generalization study. Thermal/queue control is not empirically established in the cold, zero-backlog setting. Five seeds limit inference, the support diagnosis is post hoc, and exact CPU-utilization trajectories are unavailable. These qualifications are retained in the manuscript.
+
+The main text, supplement and response have been synchronized with the corrected results. The source and generated tables share the same analysis files. The submission source and public repository include derived summaries; complete R6 raw-evidence recomputation requires the separate evidence archive referenced by the accepted-run manifest. We appreciate the reviewers' comments and submit the revised findings for their assessment without preserving unsupported claims of superiority.
+\end{authorresponsebox}
+\vspace{8pt}\noindent\textbf{Corresponding author:} Nuonan Ouyang\\
+\texttt{nuonan.ouyang@my.jcu.edu.au}
+
+
+\end{document}
